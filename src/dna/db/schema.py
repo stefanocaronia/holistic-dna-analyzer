@@ -15,6 +15,25 @@ CREATE TABLE IF NOT EXISTS snps (
 CREATE INDEX IF NOT EXISTS idx_snps_rsid ON snps(rsid);
 CREATE INDEX IF NOT EXISTS idx_snps_chromosome_position ON snps(chromosome, position);
 CREATE INDEX IF NOT EXISTS idx_snps_chromosome ON snps(chromosome);
+
+CREATE TABLE IF NOT EXISTS annotations (
+    rsid TEXT NOT NULL,
+    source TEXT NOT NULL,
+    gene TEXT,
+    clinical_significance TEXT,
+    condition TEXT,
+    summary TEXT,
+    risk_allele TEXT,
+    population_frequency TEXT,
+    raw_data TEXT,
+    fetched_at TEXT NOT NULL,
+    PRIMARY KEY (rsid, source)
+);
+
+CREATE INDEX IF NOT EXISTS idx_annotations_rsid ON annotations(rsid);
+CREATE INDEX IF NOT EXISTS idx_annotations_source ON annotations(source);
+CREATE INDEX IF NOT EXISTS idx_annotations_gene ON annotations(gene);
+CREATE INDEX IF NOT EXISTS idx_annotations_clinical ON annotations(clinical_significance);
 """
 
 

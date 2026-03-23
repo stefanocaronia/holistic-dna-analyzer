@@ -43,6 +43,8 @@ Import and call from `dna.tools.agent_tools`:
 | `get_stats(subject?)` | Total SNPs + per-chromosome breakdown |
 | `compare_variant(rsid, subject_a, subject_b)` | Compare one SNP between two subjects |
 | `compare(subject_a, subject_b, only_different?, chromosome?, limit?)` | Bulk compare SNPs between subjects |
+| `annotate(rsid, subject?, sources?, force_refresh?)` | Fetch annotations from online DBs (SNPedia, ClinVar, Ensembl). Cached locally |
+| `annotate_my_snp(rsid, sources?)` | Look up genotype + annotate in one call — the go-to tool for "what does this SNP mean for me?" |
 
 ## CLI Commands
 
@@ -52,6 +54,7 @@ dna switch <name>     # Switch active subject
 dna import [name]     # Import source CSV into SQLite
 dna snp <rsid>        # Look up a SNP
 dna stats             # Chromosome summary
+dna annotate <rsid>   # Fetch online annotations (SNPedia, ClinVar, Ensembl)
 ```
 
 ## Data Format
@@ -65,7 +68,7 @@ Each SQLite database contains a `snps` table:
 ## How to Query
 
 ```python
-from dna.tools.agent_tools import lookup_snp, search, get_stats
+from dna.tools.agent_tools import lookup_snp, search, get_stats, annotate_my_snp
 
 # Look up the "empathy gene"
 result = lookup_snp("rs53576")
@@ -75,16 +78,21 @@ results = search(chromosome="7", position_start=1_000_000, position_end=2_000_00
 
 # Get overview
 stats = get_stats()
+
+# What does this SNP mean for the active subject? (genotype + online annotation)
+info = annotate_my_snp("rs1801133")
+# Returns: genotype, gene (MTHFR), clinical significance, conditions, summary
 ```
 
-## Online Databases for Annotation
+## Online Annotation
 
-When interpreting SNPs, cross-reference with:
-- **SNPedia** (snpedia.com) — community-curated SNP annotations
-- **ClinVar** (ncbi.nlm.nih.gov/clinvar) — clinical significance of variants
-- **Ensembl** (rest.ensembl.org) — variant effect predictor, gene context
-- **dbSNP** (ncbi.nlm.nih.gov/snp) — reference SNP database
-- **PharmGKB** (pharmgkb.org) — pharmacogenomics
+Annotations are fetched from three sources and cached locally in the subject's SQLite DB:
+- **SNPedia** — community-curated wiki with genotype-specific interpretations
+- **ClinVar** (NCBI) — clinical significance and associated conditions
+- **Ensembl** — variant consequences, gene context, population frequencies
+
+Results are cached in the `annotations` table so each SNP is fetched only once.
+Use `force_refresh=True` to bypass cache.
 
 ## Important Notes
 

@@ -5,6 +5,7 @@ dicts/lists that are easy to serialize. The active subject from config.yaml
 is used as default when no subject is specified.
 """
 
+from dna.api.annotator import annotate_snp_sync
 from dna.config import get_active_subject, get_subject_profile, list_subjects
 from dna.db.query import (
     chromosome_summary,
@@ -137,4 +138,56 @@ def compare(
         "only_different": only_different,
         "count": len(results),
         "results": results,
+    }
+
+
+def annotate(
+    rsid: str,
+    subject: str | None = None,
+    sources: list[str] | None = None,
+    force_refresh: bool = False,
+) -> dict:
+    """Annotate a SNP with info from online databases (SNPedia, ClinVar, Ensembl).
+
+    Fetches gene name, clinical significance, associated conditions,
+    population frequencies, and more. Results are cached locally.
+
+    Args:
+        rsid: SNP identifier (e.g. 'rs1234')
+        subject: Subject key (for cache DB). Uses active subject if not specified.
+        sources: List of sources to query. Options: 'snpedia', 'clinvar', 'ensembl'.
+                 Defaults to all three.
+        force_refresh: If True, bypass cache and re-fetch from online.
+
+    Returns:
+        Dict with merged annotations: gene, clinical_significance, condition,
+        summary, population_frequency, and per-source details.
+    """
+    return annotate_snp_sync(rsid, subject, sources, force_refresh)
+
+
+def annotate_my_snp(rsid: str, sources: list[str] | None = None) -> dict:
+    """Look up a SNP in the active subject's genome AND annotate it from online databases.
+
+    Combines genotype lookup with annotation in a single call.
+
+    Args:
+        rsid: SNP identifier (e.g. 'rs1234')
+        sources: Which online sources to query. Defaults to all.
+
+    Returns:
+        Dict with genotype from the subject's DNA plus annotations from online DBs.
+    """
+    subject = get_active_subject()
+    genotype_data = get_snp(rsid, subject)
+    annotation_data = annotate_snp_sync(rsid, subject, sources)
+
+    return {
+        "rsid": rsid,
+        "subject": subject,
+        "genotype": genotype_data["genotype"] if genotype_data else None,
+        "chromosome": genotype_data["chromosome"] if genotype_data else None,
+        "position": genotype_data["position"] if genotype_data else None,
+        "found_in_genome": genotype_data is not None,
+        "annotation": annotation_data,
     }

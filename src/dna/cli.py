@@ -115,5 +115,38 @@ def stats(subject: str | None):
     console.print(table)
 
 
+@main.command()
+@click.argument("rsid")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--source", multiple=True, help="Sources to query (snpedia, clinvar, ensembl)")
+@click.option("--refresh", is_flag=True, help="Bypass cache and re-fetch")
+def annotate(rsid: str, subject: str | None, source: tuple, refresh: bool):
+    """Annotate a SNP with info from online databases."""
+    import asyncio
+    from dna.api.annotator import annotate_snp
+
+    sources = list(source) if source else None
+
+    with console.status(f"Fetching annotations for [bold]{rsid}[/]..."):
+        result = asyncio.run(annotate_snp(rsid, subject, sources, refresh))
+
+    if not result.get("sources"):
+        console.print(f"[yellow]No annotations found for {rsid}.[/]")
+        return
+
+    table = Table(title=f"Annotations for {rsid}")
+    table.add_column("Field", style="bold")
+    table.add_column("Value")
+
+    for field in ("gene", "clinical_significance", "condition", "summary",
+                  "risk_allele", "population_frequency"):
+        value = result.get(field)
+        if value:
+            table.add_row(field.replace("_", " ").title(), str(value))
+
+    table.add_row("Sources", ", ".join(result.get("sources", [])))
+    console.print(table)
+
+
 if __name__ == "__main__":
     main()
