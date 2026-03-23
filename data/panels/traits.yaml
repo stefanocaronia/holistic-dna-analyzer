@@ -1,0 +1,88 @@
+name: Physical Traits
+description: Genetic variants associated with observable physical characteristics
+category: traits
+
+variants:
+  - rsid: rs12913832
+    gene: HERC2/OCA2
+    trait: Eye color
+    genotypes:
+      GG:
+        effect: blue_eyes
+        description: Likely blue or light-colored eyes. Strong predictor (~72% accuracy for blue).
+      AG:
+        effect: mixed
+        description: Likely green, hazel, or blue-brown mix. Intermediate pigmentation.
+      AA:
+        effect: brown_eyes
+        description: Likely brown eyes. Standard melanin production.
+
+  - rsid: rs1805007
+    gene: MC1R
+    trait: Red hair and fair skin (R151C)
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal pigmentation. No MC1R R151C variant.
+      CT:
+        effect: carrier
+        description: Carrier of one red hair allele. May have lighter skin or freckling.
+      TT:
+        effect: red_hair
+        description: Homozygous MC1R variant. Red hair likely, very fair skin, high sun sensitivity.
+
+  - rsid: rs17822931
+    gene: ABCC11
+    trait: Earwax type and body odor
+    genotypes:
+      CC:
+        effect: wet
+        description: Wet earwax type. Standard apocrine gland activity (more body odor).
+      CT:
+        effect: wet
+        description: Wet earwax type (dominant). Standard body odor.
+      TT:
+        effect: dry
+        description: Dry earwax. Reduced body odor. Common in East Asian populations.
+
+  - rsid: rs4481887
+    gene: ALDH2 region
+    trait: Alcohol flush reaction
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal aldehyde dehydrogenase. No flush reaction to alcohol.
+      AG:
+        effect: flush
+        description: Reduced enzyme activity. May experience facial flushing with alcohol.
+      GG:
+        effect: strong_flush
+        description: Strongly reduced activity. Significant alcohol intolerance and flush.
+
+  - rsid: rs4570625
+    gene: TPH2
+    trait: Serotonin production
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal serotonin synthesis in the brain.
+      GT:
+        effect: altered
+        description: Altered serotonin synthesis. May have increased emotional reactivity.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered serotonin production. Higher anxiety susceptibility.
+
+  - rsid: rs53576
+    gene: OXTR
+    trait: Oxytocin receptor — social behavior
+    genotypes:
+      GG:
+        effect: enhanced
+        description: Enhanced oxytocin signaling. Associated with higher empathy and social bonding.
+      AG:
+        effect: intermediate
+        description: Intermediate oxytocin receptor expression.
+      AA:
+        effect: reduced
+        description: Reduced oxytocin receptor expression. May be less socially sensitive.

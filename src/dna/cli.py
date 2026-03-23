@@ -148,5 +148,104 @@ def annotate(rsid: str, subject: str | None, source: tuple, refresh: bool):
     console.print(table)
 
 
+@main.command()
+def panels():
+    """List available analysis panels."""
+    from dna.analysis.panels import list_panels
+
+    all_panels = list_panels()
+    table = Table(title="Available Panels")
+    table.add_column("ID", style="bold")
+    table.add_column("Name")
+    table.add_column("Category")
+    table.add_column("Variants", justify="right")
+    table.add_column("Description")
+
+    for p in all_panels:
+        table.add_row(p["id"], p["name"], p["category"], str(p["variant_count"]), p["description"])
+
+    console.print(table)
+
+
+@main.command()
+@click.argument("panel_id")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+def analyze(panel_id: str, subject: str | None):
+    """Run a panel analysis against a subject's genome."""
+    from dna.analysis.panels import analyze_panel
+
+    try:
+        result = analyze_panel(panel_id, subject)
+    except FileNotFoundError as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    table = Table(title=f"{result['panel_name']} — {result['subject']} ({result['found_in_genome']}/{result['total_variants']} found)")
+    table.add_column("Gene", style="bold")
+    table.add_column("rsid")
+    table.add_column("Trait")
+    table.add_column("Genotype", justify="center")
+    table.add_column("Effect")
+    table.add_column("Description")
+
+    for r in result["results"]:
+        if not r["found"]:
+            table.add_row(r["gene"], r["rsid"], r["trait"], "[dim]—[/]", "[dim]not in chip[/]", "")
+        else:
+            effect = r["effect"] or ""
+            style = ""
+            if effect in ("normal", "lower_risk", "no_e4", "no_e2"):
+                style = "green"
+            elif "reduced" in effect or "risk" in effect or "altered" in effect:
+                style = "yellow"
+            elif "significantly" in effect or "higher" in effect or "poor" in effect or "at_risk" in effect:
+                style = "red"
+
+            table.add_row(
+                r["gene"], r["rsid"], r["trait"],
+                f"[bold]{r['genotype']}[/]",
+                f"[{style}]{effect}[/]" if style else effect,
+                r["description"] or "",
+            )
+
+    console.print(table)
+
+
+@main.command()
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+def report(subject: str | None):
+    """Show notable findings across all panels."""
+    from dna.analysis.panels import get_risk_summary
+
+    findings = get_risk_summary(subject)
+
+    if not findings:
+        console.print("[green]No notable findings across all panels.[/]")
+        return
+
+    table = Table(title=f"Notable Findings ({len(findings)} variants)")
+    table.add_column("Panel")
+    table.add_column("Gene", style="bold")
+    table.add_column("Trait")
+    table.add_column("Genotype", justify="center")
+    table.add_column("Effect")
+    table.add_column("Description")
+
+    for f in findings:
+        effect = f["effect"] or ""
+        style = "yellow"
+        if "significantly" in effect or "higher" in effect or "poor" in effect or "at_risk" in effect:
+            style = "red"
+
+        table.add_row(
+            f["panel"], f["gene"], f["trait"],
+            f"[bold]{f['genotype']}[/]",
+            f"[{style}]{effect}[/]",
+            f["description"] or "",
+        )
+
+    console.print(table)
+
+
 if __name__ == "__main__":
     main()

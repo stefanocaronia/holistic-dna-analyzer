@@ -1,0 +1,94 @@
+name: Wellness & Fitness
+description: Genetic variants related to sleep, exercise response, and general wellness
+category: wellness
+
+variants:
+  - rsid: rs9939609
+    gene: FTO
+    trait: Exercise response for weight management
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal weight regulation. Standard exercise benefit.
+      TA:
+        effect: benefits_more
+        description: One FTO risk allele. Exercise is especially effective for weight control.
+      AA:
+        effect: benefits_most
+        description: Two FTO risk alleles. Exercise provides the greatest relative benefit for weight management.
+    aliases:
+      AT: TA
+
+  - rsid: rs1815739
+    gene: ACTN3
+    trait: Muscle fiber type (sprint vs endurance)
+    genotypes:
+      CC:
+        effect: sprint
+        description: Full alpha-actinin-3 in fast-twitch muscle fibers. Suited for power/sprint sports.
+      CT:
+        effect: mixed
+        description: Mixed muscle fiber profile. Versatile athletic capability.
+      TT:
+        effect: endurance
+        description: No alpha-actinin-3. Better suited for endurance activities (running, cycling, swimming).
+
+  - rsid: rs6265
+    gene: BDNF
+    trait: Brain-derived neurotrophic factor (neuroplasticity)
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal BDNF secretion. Standard neuroplasticity and memory function.
+      CT:
+        effect: reduced
+        description: Reduced BDNF secretion. Exercise is particularly beneficial for brain health.
+      TT:
+        effect: significantly_reduced
+        description: Significantly reduced BDNF. Regular exercise strongly recommended for cognitive health.
+
+  - rsid: rs1800497
+    gene: DRD2/ANKK1
+    trait: Reward sensitivity and motivation
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal dopamine D2 receptor density. Standard reward signaling.
+      CT:
+        effect: reduced
+        description: Reduced D2 receptor density. May need more stimulation for motivation.
+      TT:
+        effect: significantly_reduced
+        description: Significantly reduced D2 receptors. Higher novelty-seeking, consider structured exercise routines.
+    aliases:
+      AG: CT
+      AA: TT
+      GG: CC
+
+  - rsid: rs4753426
+    gene: MTNR1B
+    trait: Melatonin receptor — sleep and circadian rhythm
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal melatonin signaling. Standard sleep-wake cycle.
+      CT:
+        effect: altered
+        description: Altered melatonin receptor. May be more sensitive to light exposure at night.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered melatonin signaling. Consistent sleep schedule important.
+
+  - rsid: rs1800795
+    gene: IL6
+    trait: Inflammatory response and recovery
+    genotypes:
+      GG:
+        effect: higher_inflammation
+        description: Higher baseline IL-6. May recover slower from intense exercise. Anti-inflammatory diet helps.
+      GC:
+        effect: moderate
+        description: Moderate IL-6 production. Balanced inflammatory response.
+      CC:
+        effect: lower_inflammation
+        description: Lower IL-6 production. Generally faster recovery from exercise.

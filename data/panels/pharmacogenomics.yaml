@@ -1,0 +1,96 @@
+name: Pharmacogenomics
+description: How your genes affect drug metabolism, caffeine sensitivity, and substance response
+category: health
+
+variants:
+  - rsid: rs1800497
+    gene: DRD2/ANKK1
+    trait: Dopamine receptor density
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal dopamine receptor density
+      CT:
+        effect: reduced
+        description: Slightly reduced dopamine receptor density. May have altered reward sensitivity.
+      TT:
+        effect: significantly_reduced
+        description: Significantly reduced dopamine receptor density. Associated with addictive behavior susceptibility.
+    aliases:
+      AG: CT
+      AA: TT
+      GG: CC
+
+  - rsid: rs4244285
+    gene: CYP2C19
+    trait: CYP2C19 drug metabolism
+    genotypes:
+      GG:
+        effect: normal_metabolizer
+        description: Normal CYP2C19 metabolism. Standard drug processing for clopidogrel, omeprazole, etc.
+      GA:
+        effect: intermediate_metabolizer
+        description: Intermediate metabolizer. May need dose adjustments for CYP2C19 substrates.
+      AA:
+        effect: poor_metabolizer
+        description: Poor metabolizer. Significantly reduced processing of clopidogrel, some antidepressants, PPIs.
+
+  - rsid: rs762551
+    gene: CYP1A2
+    trait: Caffeine metabolism
+    genotypes:
+      AA:
+        effect: fast_metabolizer
+        description: Fast caffeine metabolizer. Coffee is likely well-tolerated and may be cardioprotective.
+      AC:
+        effect: slow_metabolizer
+        description: Slow caffeine metabolizer. Higher cardiovascular risk from heavy coffee consumption.
+      CC:
+        effect: slow_metabolizer
+        description: Slow caffeine metabolizer. Consider limiting coffee intake.
+
+  - rsid: rs1799971
+    gene: OPRM1
+    trait: Opioid receptor sensitivity
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal opioid receptor function. Standard pain medication response.
+      AG:
+        effect: altered
+        description: Altered opioid receptor. May need higher doses of morphine-type pain medications.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered opioid receptor binding. Reduced response to opioid analgesics.
+
+  - rsid: rs4680
+    gene: COMT
+    trait: COMT enzyme activity (dopamine/norepinephrine breakdown)
+    genotypes:
+      GG:
+        effect: high_activity
+        description: "Warrior type: fast dopamine breakdown. Better stress resilience, lower pain sensitivity."
+      GA:
+        effect: intermediate
+        description: Intermediate COMT activity. Balanced dopamine levels.
+      AA:
+        effect: low_activity
+        description: "Worrier type: slow dopamine breakdown. Higher cognitive performance but more stress sensitivity."
+    aliases:
+      AG: GA
+
+  - rsid: rs1805124
+    gene: SCN5A
+    trait: Cardiac sodium channel sensitivity
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal cardiac sodium channel function.
+      GA:
+        effect: variant
+        description: Carrier of SCN5A variant. Discuss with cardiologist before certain antiarrhythmic drugs.
+      AA:
+        effect: variant
+        description: Homozygous SCN5A variant. Important for antiarrhythmic drug selection.
+    aliases:
+      CT: GA

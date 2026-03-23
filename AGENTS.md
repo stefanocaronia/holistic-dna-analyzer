@@ -45,6 +45,10 @@ Import and call from `dna.tools.agent_tools`:
 | `compare(subject_a, subject_b, only_different?, chromosome?, limit?)` | Bulk compare SNPs between subjects |
 | `annotate(rsid, subject?, sources?, force_refresh?)` | Fetch annotations from online DBs (SNPedia, ClinVar, Ensembl). Cached locally |
 | `annotate_my_snp(rsid, sources?)` | Look up genotype + annotate in one call — the go-to tool for "what does this SNP mean for me?" |
+| `available_panels()` | List all analysis panels (pharmacogenomics, cardiovascular, etc.) |
+| `run_panel(panel_id, subject?)` | Run a curated panel — returns per-variant genotype, effect, interpretation |
+| `run_all_panels(subject?)` | Run all panels at once |
+| `notable_findings(subject?)` | Get only non-normal findings across all panels — the quick health overview |
 
 ## CLI Commands
 
@@ -55,6 +59,9 @@ dna import [name]     # Import source CSV into SQLite
 dna snp <rsid>        # Look up a SNP
 dna stats             # Chromosome summary
 dna annotate <rsid>   # Fetch online annotations (SNPedia, ClinVar, Ensembl)
+dna panels            # List available analysis panels
+dna analyze <panel>   # Run a panel (e.g. pharmacogenomics, cardiovascular)
+dna report            # Notable findings across all panels
 ```
 
 ## Data Format

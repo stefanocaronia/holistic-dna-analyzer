@@ -5,6 +5,12 @@ dicts/lists that are easy to serialize. The active subject from config.yaml
 is used as default when no subject is specified.
 """
 
+from dna.analysis.panels import (
+    analyze_all_panels,
+    analyze_panel,
+    get_risk_summary,
+    list_panels,
+)
 from dna.api.annotator import annotate_snp_sync
 from dna.config import get_active_subject, get_subject_profile, list_subjects
 from dna.db.query import (
@@ -191,3 +197,55 @@ def annotate_my_snp(rsid: str, sources: list[str] | None = None) -> dict:
         "found_in_genome": genotype_data is not None,
         "annotation": annotation_data,
     }
+
+
+def available_panels() -> list[dict]:
+    """List all available analysis panels.
+
+    Returns:
+        List of panels with id, name, description, category, and variant count.
+    """
+    return list_panels()
+
+
+def run_panel(panel_id: str, subject: str | None = None) -> dict:
+    """Run a curated SNP panel against a subject's genome.
+
+    Panels are predefined sets of well-studied variants grouped by theme
+    (e.g. pharmacogenomics, cardiovascular, nutrigenomics, traits, wellness).
+
+    Args:
+        panel_id: Panel identifier. Use available_panels() to see options.
+        subject: Subject key. Uses active subject if not specified.
+
+    Returns:
+        Dict with per-variant genotype, effect, and interpretation.
+    """
+    return analyze_panel(panel_id, subject)
+
+
+def run_all_panels(subject: str | None = None) -> list[dict]:
+    """Run all available panels against a subject's genome.
+
+    Args:
+        subject: Subject key. Uses active subject if not specified.
+
+    Returns:
+        List of panel results.
+    """
+    return analyze_all_panels(subject)
+
+
+def notable_findings(subject: str | None = None) -> list[dict]:
+    """Get a summary of non-normal findings across all panels.
+
+    Scans all panels and returns only variants where the subject carries
+    a noteworthy genotype (not 'normal' or 'lower_risk').
+
+    Args:
+        subject: Subject key. Uses active subject if not specified.
+
+    Returns:
+        List of notable variants with panel, gene, trait, genotype, effect, description.
+    """
+    return get_risk_summary(subject)
