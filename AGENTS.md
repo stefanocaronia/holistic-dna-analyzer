@@ -49,6 +49,47 @@ data/context/
 - **health_actions.md** — Consolidated, prioritized recommendations. Not a dump of per-panel advice, but an integrated action plan. Example: "HIGH PRIORITY: B12 + methylfolate supplementation (impaired MTRR + reduced MTHFR compound to restrict neurotransmitter precursors)."
 - **session_notes.md** — Things the user mentioned, concerns they raised, follow-ups promised. Example: "2026-03-24: User asked about nicotine dependence — has personal relevance. Follow up on dopamine support strategies."
 
+## How to Use the Tools
+
+**Always use the `hda` CLI commands and the project's API functions to query data.** Do not bypass them by writing raw SQL, importing modules with sys.path hacks, or any other workaround. The tools are designed to handle all data access correctly.
+
+### Preferred: CLI commands via shell
+For quick lookups and panel runs, use the `hda` CLI directly:
+```bash
+hda snp rs53576              # Look up a single SNP
+hda annotate rs53576         # Fetch online annotations
+hda analyze cardiovascular   # Run a panel
+hda report                   # Notable findings across all panels
+hda panels                   # List available panels
+hda stats                    # Chromosome summary
+hda switch stefano           # Switch active subject
+```
+
+### Programmatic: import from the project's Python API
+When you need to do more complex queries (e.g., bulk lookups, searches with filters, comparisons), use the Python API. **Always run via the project's Python with PYTHONPATH=src**:
+```bash
+PYTHONPATH=src .venv/Scripts/python.exe -c "from dna.tools.agent_tools import lookup_snp; print(lookup_snp('rs53576'))"
+```
+
+Or for multi-line scripts:
+```bash
+PYTHONPATH=src .venv/Scripts/python.exe -c "
+from dna.tools.agent_tools import run_panel, notable_findings, annotate_my_snp
+results = run_panel('autism_spectrum')
+for r in results['results']:
+    if r['effect'] != 'normal':
+        print(f\"{r['rsid']} ({r['gene']}): {r['genotype']} -> {r['effect']}\")
+"
+```
+
+**Important:** The source code lives in `src/dna/`. Always set `PYTHONPATH=src` when running scripts. Do not use `sys.path.insert()` hacks.
+
+### Key rules
+- **Panels first.** Always start with `run_panel()` or `hda analyze` for structured questions. Panels are curated and cover the most important variants per domain.
+- **Annotate for depth.** Use `annotate_my_snp()` or `hda annotate` when you need online database context for a specific SNP.
+- **Search for exploration.** Use `search()` when you need to scan a genomic region or find variants by pattern.
+- **Don't reinvent panels.** If a relevant panel exists, use it. Don't manually look up 30 SNPs one by one when a panel covers them.
+
 ## How to Handle a Question
 
 When the user asks something (e.g. "How is my mental health profile?", "Should I worry about my heart?", "Why do I crave stimulation?"), follow an **iterative investigation loop** — not a linear pipeline. You gather data, analyze it, and that analysis raises new questions that send you back to gather more data. Only when the picture is complete do you answer.
@@ -131,6 +172,7 @@ The `data/panels/` directory contains curated YAML panels, each covering a speci
 - **inflammation** — IL-6, TNF-alpha, autoimmune risk, gut inflammation
 - **mental_health** — depression, anxiety, serotonin, cortisol, PTSD vulnerability
 - **adhd_neurodivergence** — dopamine transport, attention, autism spectrum traits, executive function
+- **autism_spectrum** — synaptic adhesion, social cognition, neurodevelopment, neurotransmitter balance, immune-neural interactions, methylation
 - **cognitive** — memory, learning, processing speed, cognitive aging
 
 ## Tool Functions Reference

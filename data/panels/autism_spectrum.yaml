@@ -1,0 +1,1277 @@
+name: Autism Spectrum
+description: Comprehensive genetic panel for autism spectrum traits — synaptic function, social cognition, neurodevelopment, neurotransmitter balance, immune-neural interactions, and metabolic factors
+category: health
+
+variants:
+
+  # ============================================================================
+  # SYNAPTIC ADHESION & SCAFFOLDING
+  # Genes that build and maintain the physical connections between neurons.
+  # Disruptions here affect how efficiently neurons communicate.
+  # ============================================================================
+
+  - rsid: rs2303298
+    gene: NRXN1
+    trait: Neurexin-1 — synaptic adhesion and formation
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal neurexin-1 expression. Synaptic contacts form and mature at typical rates, supporting standard information processing.
+      GA:
+        effect: altered
+        description: Altered neurexin-1 function. Neurexin helps neurons form and maintain connections. This variant changes how efficiently new synaptic contacts are built, potentially affecting sensory integration and information processing speed.
+      AA:
+        effect: significantly_altered
+        description: Significantly altered neurexin-1. Synaptic adhesion is less efficient, which can affect how sensory information is filtered and integrated. Associated with autism spectrum traits and differences in perceptual processing.
+
+  - rsid: rs1045881
+    gene: NRXN1
+    trait: Neurexin-1 splice regulation — synaptic diversity
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal neurexin-1 splicing. The gene produces the standard range of protein variants needed for diverse synaptic connections.
+      CT:
+        effect: altered
+        description: Altered splicing pattern. Neurexin-1 normally produces many different protein forms to match different synapse types. This variant shifts that balance, potentially affecting the diversity of synaptic connections.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered splicing regulation. Reduced diversity of neurexin protein forms may affect the specificity of neural circuits, particularly those involved in social and sensory processing.
+
+  - rsid: rs12467557
+    gene: NRXN1
+    trait: Neurexin-1 regulatory region — expression level
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal neurexin-1 expression levels. Standard synaptic density and connectivity.
+      GA:
+        effect: variant
+        description: One variant allele affecting neurexin-1 expression. Subtle shifts in synaptic formation capacity. May contribute to differences in connectivity patterns when combined with other synaptic variants.
+      AA:
+        effect: significantly_altered
+        description: Significantly altered neurexin-1 expression. Lower synaptic adhesion molecule availability can reshape neural circuit architecture. Associated with ASD traits in genome-wide studies.
+
+  - rsid: rs11795613
+    gene: NLGN3
+    trait: Neuroligin-3 — excitatory/inhibitory synapse balance
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal neuroligin-3. This protein sits on the receiving side of synapses and helps balance excitatory and inhibitory signaling — critical for preventing neural overload.
+      CT:
+        effect: altered
+        description: Altered neuroligin-3. The balance between excitation and inhibition in neural circuits may be shifted, potentially contributing to sensory sensitivity and differences in information filtering.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered neuroligin-3 function. Disrupted excitatory/inhibitory balance is one of the most consistent findings in autism neuroscience. May manifest as sensory hypersensitivity or difficulty filtering background stimulation.
+
+  - rsid: rs1488545
+    gene: NLGN4X
+    trait: Neuroligin-4X — social brain synapse formation
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal neuroligin-4X. Synapses in social cognition circuits develop and function typically.
+      TC:
+        effect: altered
+        description: Altered neuroligin-4X. This protein is concentrated in brain regions involved in social processing. Variants can shift how social information is processed — often toward a more analytical, less intuitive style.
+      CC:
+        effect: significantly_altered
+        description: Significantly altered neuroligin-4X. Strongly associated with autism spectrum traits. Social processing circuits may develop differently, often favoring systematic over intuitive social reasoning.
+
+  - rsid: rs35687961
+    gene: SHANK2
+    trait: SHANK2 — postsynaptic scaffolding density
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal SHANK2 scaffolding. The postsynaptic density — the receiving platform of synapses — is structured normally, allowing standard receptor clustering and signaling.
+      CT:
+        effect: altered
+        description: Altered SHANK2 scaffolding. The structural platform that organizes receptors at the synapse is slightly different. This can change how strong or flexible synaptic connections are, affecting learning and adaptation.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered SHANK2. Disrupted postsynaptic scaffolding is a well-established pathway in autism. The receiving end of synapses may be less organized, affecting signal strength and plasticity. Zinc supplementation has been explored as a potential support.
+
+  - rsid: rs9616915
+    gene: SHANK3
+    trait: SHANK3 — glutamate synapse organization
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal SHANK3 expression. Glutamate synapses are well-organized with proper receptor clustering and signaling efficiency.
+      CT:
+        effect: altered
+        description: Altered SHANK3 function. This gene organizes the key scaffolding of excitatory synapses. Variants can affect how glutamate signals are received and processed, potentially influencing cognitive flexibility.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered SHANK3. One of the strongest single-gene associations with autism. Disrupted glutamate synapse organization can affect learning, communication, and behavioral flexibility. SHANK3 mutations cause Phelan-McDermid syndrome in severe cases.
+
+  - rsid: rs7794745
+    gene: CNTNAP2
+    trait: Contactin-associated protein — language and social cognition
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal CNTNAP2 function. Standard language development and social cognitive processing.
+      AT:
+        effect: variant
+        description: One variant allele. CNTNAP2 guides neuron migration and helps organize language circuits during development. This variant is associated with subtle differences in language processing and social communication style.
+      AA:
+        effect: significantly_altered
+        description: Two variant alleles. Strongly associated with autism spectrum traits, particularly affecting language development and social processing. Different — not deficient — communication patterns. Often accompanied by strengths in systemizing and pattern detection.
+
+  - rsid: rs2710102
+    gene: CNTNAP2
+    trait: CNTNAP2 — neural connectivity between brain regions
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal long-range neural connectivity patterns. Brain regions communicate at standard efficiency.
+      CT:
+        effect: variant
+        description: Altered connectivity. CNTNAP2 helps establish connections between distant brain regions. This variant may shift the balance toward more local processing, which can be a strength in pattern recognition and detail-oriented tasks.
+      TT:
+        effect: significantly_altered
+        description: Significantly different connectivity architecture. Associated with ASD traits and a different cognitive style emphasizing local over global processing. Often comes with strengths in detail-oriented and systematic thinking.
+
+  - rsid: rs4675690
+    gene: CNTNAP2
+    trait: CNTNAP2 — frontal lobe connectivity
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal frontal lobe connectivity. Standard executive function and social decision-making circuits.
+      CT:
+        effect: variant
+        description: Altered frontal connectivity pattern. May affect how the frontal lobes coordinate with other brain areas during social interaction and executive function tasks.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered frontal connectivity. Associated with differences in executive function and social cognition. May show up as difficulty with cognitive flexibility or preference for routine and predictability.
+
+  - rsid: rs1445442
+    gene: CNTNAP2
+    trait: CNTNAP2 — cortical neuron and interneuron migration
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal cortical neuron migration. Brain layers form with standard architecture, and inhibitory interneurons settle into their correct positions throughout the cortex.
+      AG:
+        effect: variant
+        description: One variant allele affecting cortical development. CNTNAP2 guides both excitatory neurons and inhibitory interneurons to their correct positions. Altered migration can leave some cortical areas with improper excitation/inhibition balance, affecting information processing.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered cortical migration guidance. Both principal neurons and inhibitory interneurons may settle in atypical patterns, reshaping circuit architecture and excitation/inhibition balance. This variant has been associated with ASD and specific language impairment.
+
+  - rsid: rs4307059
+    gene: CDH9/CDH10
+    trait: Cadherin — neuronal adhesion (top GWAS signal)
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal cadherin expression in the CDH9/CDH10 region. Standard neuronal adhesion in frontal and temporal lobes.
+      CT:
+        effect: variant
+        description: One risk allele at the strongest GWAS hit for autism (Wang et al. 2009). Cadherins are molecular "glue" that helps specific neurons stick together during brain development. Altered expression may affect circuit formation in social brain regions.
+      TT:
+        effect: significantly_altered
+        description: Two risk alleles at the top autism GWAS signal. CDH10 is highly expressed in the frontal cortex during fetal development. Altered cadherin adhesion can change how neural circuits self-organize, particularly in areas processing faces, voices, and social meaning.
+    aliases:
+      AA: TT
+      AG: CT
+      GG: CC
+
+  - rsid: rs4327572
+    gene: CDH9
+    trait: Cadherin-9 — hippocampal circuit adhesion
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal cadherin-9 expression. Standard hippocampal circuit formation and memory consolidation.
+      TC:
+        effect: variant
+        description: Altered cadherin-9. This adhesion molecule is concentrated in the hippocampus and contributes to memory circuit organization. Variant may affect how memories are formed and retrieved, particularly episodic and social memories.
+      CC:
+        effect: significantly_altered
+        description: Significantly altered cadherin-9. Hippocampal circuit differences may contribute to the distinctive memory profile often seen in ASD — strong factual recall with different episodic memory patterns.
+
+  # ============================================================================
+  # NEUROTRANSMITTER SYSTEMS
+  # How the brain produces, releases, receives, and recycles its chemical
+  # messengers. Affects mood, arousal, social reward, and sensory processing.
+  # ============================================================================
+
+  - rsid: rs1048169
+    gene: SLC6A4
+    trait: Serotonin transporter — serotonin recycling in social circuits
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal serotonin transporter coding. Standard serotonin recycling efficiency in brain circuits involved in mood and social processing.
+      CT:
+        effect: altered
+        description: Altered serotonin transporter. Serotonin is the brain's key mood and social signal molecule. Changes in how quickly it is recycled from synapses can shift emotional sensitivity and social reward processing.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered serotonin transporter function. Associated with ASD traits, particularly differences in emotional processing and social reward sensitivity. Elevated blood serotonin (hyperserotonemia) is one of the most consistent biomarkers in autism.
+
+  - rsid: rs2020933
+    gene: SLC6A4
+    trait: Serotonin transporter — expression regulation
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal serotonin transporter expression level. Standard serotonin availability in synapses.
+      GA:
+        effect: altered
+        description: Altered transporter expression. This regulatory variant shifts how much serotonin transporter protein is produced, which changes how long serotonin stays active at the synapse. Can affect anxiety levels and sensory sensitivity.
+      AA:
+        effect: significantly_altered
+        description: Significantly altered serotonin transporter expression. The brain's serotonin balance is shifted, which can affect mood regulation, sensory processing, and GI function (most serotonin is made in the gut). Associated with ASD and anxiety traits.
+
+  - rsid: rs6311
+    gene: HTR2A
+    trait: Serotonin 2A receptor — sensory gating and perception
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal serotonin 2A receptor density. Standard sensory gating and perceptual processing.
+      CT:
+        effect: altered
+        description: Altered 5-HT2A receptor density. This receptor is central to how the brain filters and interprets sensory information. Changes in density can affect sensory perception and the way the brain constructs its model of the world.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered 5-HT2A expression. Associated with differences in sensory processing, perceptual style, and ASD traits. May contribute to sensory hypersensitivity or unusual perceptual experiences. Also affects SSRI medication response.
+
+  - rsid: rs6313
+    gene: HTR2A
+    trait: Serotonin 2A receptor — T102C coding variant
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal 5-HT2A receptor (102C allele). Standard receptor function in cortical circuits.
+      CT:
+        effect: altered
+        description: Altered receptor function (heterozygous T102C). This coding variant changes the receptor protein itself, affecting serotonin signaling in the cortex. Associated with differences in social cognition and repetitive behavior patterns.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered 5-HT2A (102T allele). Higher receptor density alters cortical serotonin signaling. Associated with ASD traits, particularly sensory processing differences and repetitive behaviors. Relevant for medication selection.
+
+  - rsid: rs3212863
+    gene: GABRB3
+    trait: GABA-B3 receptor — inhibitory tone in the brain
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal GABA-B3 receptor expression. Standard inhibitory neurotransmission in the brain. Proper excitation/inhibition balance.
+      GA:
+        effect: altered
+        description: Altered GABA-B3 receptor. GABA is the brain's main "brake pedal" — it calms neural activity. Reduced GABA receptor function shifts the brain toward excitation, which can manifest as sensory overload, anxiety, or difficulty filtering stimuli.
+      AA:
+        effect: significantly_altered
+        description: Significantly altered GABA-B3. Located in the chromosome 15q11-13 region repeatedly implicated in autism. Disrupted inhibitory tone is a core finding in ASD neuroscience. May contribute to seizure susceptibility, sensory hypersensitivity, and sleep difficulties.
+
+  - rsid: rs1912960
+    gene: GABRA4
+    trait: GABA-A alpha-4 receptor — tonic inhibition
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal GABA-A alpha-4 subunit. Standard tonic (background) inhibition that keeps neural circuits stable and prevents over-excitation.
+      CT:
+        effect: altered
+        description: Altered tonic inhibition. This receptor subunit provides a constant low-level "calming background" to neural circuits. Reduced function can make the brain more reactive to stimuli and less able to maintain a calm baseline state.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered tonic inhibition. GABRA4 variants have been associated with autism, particularly in combination with GABRB1 variants (epistatic interaction). The brain may run in a higher-excitation default state.
+    aliases:
+      GG: CC
+      GA: CT
+      AA: TT
+
+  - rsid: rs7685553
+    gene: GABRG1
+    trait: GABA-G1 receptor — synaptic inhibition specificity
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal GABA-G1 subunit. Standard synaptic inhibition at specific connections where precise signal timing matters.
+      AG:
+        effect: altered
+        description: Altered GABA-G1. This subunit affects the precision of inhibitory signaling at specific synapses. Changes can affect how accurately the brain times its inhibitory signals, potentially impacting sensory processing precision.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered GABA-G1. Imprecise inhibitory timing can contribute to the "noisy brain" hypothesis of autism — where neural signals are less cleanly separated, affecting information processing fidelity.
+
+  - rsid: rs265981
+    gene: DRD1
+    trait: Dopamine D1 receptor — reward and motivation circuits (haplotype variant 1)
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal D1 receptor regulation. Standard dopamine signaling in reward and motivation circuits.
+      AG:
+        effect: altered
+        description: Altered D1 receptor expression. Part of the DRD1 haplotype associated with ASD in male-predominant families. Dopamine D1 receptors drive motivation and reward learning. Changes may affect what feels rewarding, particularly social reward.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered D1 receptor. When part of the risk haplotype (with rs4532 and rs686), this variant is associated with autism traits, especially reduced social reward sensitivity. Social interactions may not produce the same dopamine "reward hit" as for typical individuals.
+
+  - rsid: rs4532
+    gene: DRD1
+    trait: Dopamine D1 receptor — social reward sensitivity (haplotype variant 2)
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal D1 receptor function at this position. Standard social reward processing.
+      TC:
+        effect: altered
+        description: Altered D1 receptor. Part of the DRD1 risk haplotype for ASD. May reduce the reward value the brain assigns to social interactions, potentially shifting motivation toward non-social interests and activities.
+      CC:
+        effect: significantly_altered
+        description: Significantly altered D1 receptor. Combined with other DRD1 haplotype variants, associated with ASD traits in multiple studies. Reduced social motivation may reflect genuinely lower dopamine release during social contact rather than social skill deficit.
+    aliases:
+      AA: TT
+      AG: TC
+      GG: CC
+
+  - rsid: rs686
+    gene: DRD1
+    trait: Dopamine D1 receptor — prefrontal function (haplotype variant 3)
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal D1 receptor expression in prefrontal cortex. Standard executive function support from dopamine signaling.
+      CT:
+        effect: altered
+        description: Altered prefrontal D1 signaling. Completes the DRD1 haplotype linked to ASD. Prefrontal dopamine affects cognitive flexibility, planning, and impulse control — functions that can differ in autism.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered prefrontal D1 function. When all three DRD1 haplotype variants are present, the combined effect on dopamine signaling in frontal circuits is substantial. May affect both social motivation and cognitive flexibility.
+
+  - rsid: rs4570625
+    gene: TPH2
+    trait: Brain serotonin production — tryptophan hydroxylase 2
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal TPH2 activity. Standard serotonin production capacity in the brain.
+      GT:
+        effect: reduced
+        description: Reduced brain serotonin synthesis. TPH2 is the rate-limiting enzyme for making serotonin in the brain. Lower activity means less serotonin is available for mood regulation, social bonding, and sensory gating. Tryptophan-rich diet may help.
+      TT:
+        effect: significantly_reduced
+        description: Significantly reduced brain serotonin production. Associated with ASD, anxiety, and emotional reactivity. Since serotonin regulates both mood and sensory processing, low production can contribute to both anxiety and sensory sensitivity. Nutritional support (tryptophan, B6, magnesium) may partially compensate.
+
+  - rsid: rs7305115
+    gene: TPH2
+    trait: TPH2 — serotonin synthesis regulation
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal TPH2 regulation. Standard serotonin production dynamics.
+      AG:
+        effect: altered
+        description: Altered TPH2 regulation. This variant affects how the serotonin synthesis enzyme is controlled, potentially making serotonin production less responsive to demand. Can compound the effect of other serotonin-related variants.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered TPH2 regulation. Combined with rs4570625, creates a stronger serotonin deficit signal. The brain may not ramp up serotonin production effectively when it is needed most — during stress, social interaction, or sensory challenge.
+
+  - rsid: rs27072
+    gene: SLC6A3 (DAT1)
+    trait: Dopamine transporter — dopamine availability in synapses
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal dopamine reuptake speed. Dopamine stays in the synapse for a standard duration before being recycled.
+      CT:
+        effect: faster_reuptake
+        description: Faster dopamine clearance from synapses. Dopamine signals are shorter, meaning reward experiences and motivation bursts are briefer. Often co-occurs with ADHD-like attention patterns in ASD.
+      TT:
+        effect: significantly_faster
+        description: Significantly faster dopamine clearance. The dopamine signal is cut short before it can fully activate downstream pathways. This affects reward processing, attention, and motivation. In ASD, may contribute to the common ADHD-ASD overlap.
+
+  # ============================================================================
+  # SOCIAL COGNITION & BONDING
+  # The oxytocin and vasopressin systems govern social motivation, bonding,
+  # trust, and the brain's reward response to social interaction.
+  # ============================================================================
+
+  - rsid: rs53576
+    gene: OXTR
+    trait: Oxytocin receptor — empathy and social bonding
+    genotypes:
+      GG:
+        effect: higher_sensitivity
+        description: Higher oxytocin receptor expression. Stronger empathy, more attuned to social cues, deeper social bonding. The social brain circuits are well-supplied with oxytocin receptors.
+      AG:
+        effect: intermediate
+        description: Intermediate oxytocin sensitivity. Moderate social-emotional processing. Balanced between social attunement and independence.
+      AA:
+        effect: lower_sensitivity
+        description: Lower oxytocin receptor expression. More self-reliant emotional processing style. Social cues may be less automatically salient. Associated with ASD traits — not a deficit, but a different default orientation toward social versus non-social information.
+
+  - rsid: rs2254298
+    gene: OXTR
+    trait: Oxytocin receptor — social anxiety and amygdala reactivity
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal oxytocin receptor density in the amygdala. Standard emotional reactivity to social stimuli.
+      GA:
+        effect: altered
+        description: Altered amygdala oxytocin signaling. The amygdala processes emotional significance of social cues. With lower oxytocin receptor density there, social situations may trigger more anxiety or less social reward. Associated with ASD traits.
+      AA:
+        effect: significantly_altered
+        description: Significantly altered amygdala oxytocin function. Social situations may feel more threatening or less rewarding at a neurobiological level. Strongly associated with ASD and social anxiety. The brain's threat-detection system may be more reactive to social unpredictability.
+
+  - rsid: rs1042778
+    gene: OXTR
+    trait: Oxytocin receptor — prosocial behavior and trust
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal oxytocin receptor function in trust circuits. Standard baseline for prosocial behavior and social trust.
+      GT:
+        effect: altered
+        description: Altered oxytocin signaling in trust and cooperation circuits. May affect how readily trust is extended to others and how rewarding cooperative interactions feel. Associated with ASD traits and lower prosocial behavior scores in research.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered oxytocin-mediated trust. The brain's system for evaluating social trustworthiness works differently. Not necessarily less trusting — may instead rely more on systematic rules rather than gut-feeling social intuition.
+
+  - rsid: rs237887
+    gene: OXTR
+    trait: Oxytocin receptor — social cognition and face processing
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal oxytocin receptor in social cognition areas. Standard face processing and social information integration.
+      AG:
+        effect: altered
+        description: Altered oxytocin signaling in face processing regions. Faces are the richest source of social information, and oxytocin enhances the brain's attention to them. This variant may shift attention away from faces toward other environmental features.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered social cognition circuit. Face processing and emotional expression reading may be less automatic. Associated with ASD traits. May compensate through learned, analytical social processing rather than intuitive reading of expressions.
+
+  - rsid: rs3796863
+    gene: CD38
+    trait: CD38 — oxytocin release and social behavior
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal CD38 function. Standard oxytocin release from neurons. CD38 is essential for secreting oxytocin — without it, the brain makes oxytocin but cannot release it effectively.
+      CA:
+        effect: altered
+        description: Altered CD38 activity. Less efficient oxytocin secretion means less oxytocin reaches target neurons during social interactions, even if production is normal. Associated with ASD and reduced social approach behavior in studies.
+      AA:
+        effect: significantly_altered
+        description: Significantly reduced CD38-mediated oxytocin release. One of the more compelling ASD-associated variants because the mechanism is so direct — oxytocin is made but not properly released. Intranasal oxytocin research has specifically targeted this pathway.
+
+  - rsid: rs10877969
+    gene: AVPR1A
+    trait: Vasopressin receptor 1A — social recognition and pair bonding
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal vasopressin receptor expression. Standard social recognition and bonding behavior. Vasopressin complements oxytocin in regulating social behavior, particularly in males.
+      CT:
+        effect: altered
+        description: Altered vasopressin receptor. AVPR1A is involved in recognizing familiar individuals and modulating social approach behavior. Variants affect the promoter region, changing how much receptor is made. Associated with ASD traits in multiple studies.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered vasopressin signaling. Lower receptor expression can affect social recognition, bonding behavior, and territorial/social motivation. The vasopressin system is particularly relevant to the male-biased prevalence of ASD.
+
+  - rsid: rs1042615
+    gene: AVPR1A
+    trait: Vasopressin receptor 1A — social memory and aggression regulation
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal AVPR1A coding. Standard vasopressin-mediated social memory and behavioral regulation.
+      CT:
+        effect: altered
+        description: Altered vasopressin receptor function. May affect social memory formation and the regulation of approach/avoidance behavior in social contexts. The vasopressin system modulates both social engagement and defensive behavior.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered vasopressin receptor. Social memory and the ability to modulate behavior based on social context may work differently. Associated with ASD traits and differences in social behavioral flexibility.
+
+  # ============================================================================
+  # NEURODEVELOPMENT & NEURONAL MIGRATION
+  # Genes that guide brain construction during fetal and early development.
+  # Variants here shaped the brain's architecture before birth.
+  # ============================================================================
+
+  - rsid: rs736707
+    gene: RELN
+    trait: Reelin — cortical layering and synaptic plasticity
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal reelin expression. Standard cortical layer organization and synaptic plasticity. Reelin is one of the most important molecules for building the brain's layered cortical structure.
+      CT:
+        effect: altered
+        description: Altered reelin levels. Reelin guides neurons to their correct cortical layer during development and maintains synaptic plasticity in adulthood. Lower levels can affect both brain architecture and ongoing learning capacity. Associated with ASD and schizophrenia.
+      TT:
+        effect: significantly_altered
+        description: Significantly reduced reelin. Cortical layers may be less precisely organized, and synaptic plasticity is reduced. Reelin deficiency is one of the best-replicated findings in autism postmortem studies. Affects both brain development and adult cognitive flexibility.
+
+  - rsid: rs6807362
+    gene: RELN
+    trait: Reelin — cerebellar and hippocampal development
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal reelin function in cerebellum and hippocampus. Standard motor coordination learning and memory formation.
+      AG:
+        effect: altered
+        description: Altered reelin in cerebellum and hippocampus. The cerebellum is consistently affected in autism. Reelin variants can affect both motor coordination (often atypical in ASD) and the hippocampal memory circuits.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered reelin in cerebellum and hippocampus. May contribute to the motor coordination differences, unusual gait patterns, and distinctive memory profiles commonly observed in ASD.
+
+  - rsid: rs1858830
+    gene: MET
+    trait: MET receptor — brain development and gut-brain axis
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal MET signaling. Standard brain development and gastrointestinal function. MET is expressed in both developing brain and the gut, linking these two systems.
+      CG:
+        effect: variant
+        description: Altered MET expression. The "C" promoter variant reduces MET transcription by about 50%. MET affects cerebral cortex development, immune function, and gut repair. This connects three hallmarks of ASD — brain differences, immune activation, and GI problems.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered MET. The most-replicated ASD candidate gene variant. Reduced MET signaling simultaneously affects brain circuit formation in the temporal cortex, immune system regulation, and gut barrier integrity. Gut health optimization may genuinely help overall wellbeing.
+
+  - rsid: rs7785246
+    gene: EN2
+    trait: Engrailed-2 — cerebellar development
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal engrailed-2. Standard cerebellar development and patterning. The cerebellum handles motor coordination but also contributes to cognitive and social processing.
+      TC:
+        effect: altered
+        description: Altered EN2 expression. This transcription factor controls cerebellar development. The cerebellum is one of the most consistently affected brain regions in autism. Variants can affect both motor skills and the cerebellum's contribution to social cognition.
+      CC:
+        effect: significantly_altered
+        description: Significantly altered cerebellar development. EN2 is one of the earliest-identified ASD candidate genes. Altered cerebellar patterning can affect motor coordination, procedural learning, timing, and the cerebellum's role in predicting social outcomes.
+
+  - rsid: rs1861972
+    gene: EN2
+    trait: Engrailed-2 — hindbrain patterning
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal EN2 hindbrain patterning. Standard brainstem and cerebellar architecture.
+      CT:
+        effect: altered
+        description: Altered hindbrain development. This EN2 variant affects how the hindbrain — which controls basic arousal, sensory relay, and autonomic function — is organized. May contribute to the autonomic differences (unusual heart rate patterns, temperature regulation) sometimes seen in ASD.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered hindbrain patterning. EN2 haplotype with rs7785246. Hindbrain differences can affect arousal regulation, sensory processing at the earliest relay points, and autonomic nervous system function. These are foundational systems that affect everything built on top of them.
+
+  - rsid: rs10513025
+    gene: SEMA5A
+    trait: Semaphorin 5A — axon guidance and neural circuit wiring
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal semaphorin 5A. Standard axon guidance during brain development. Axons find their correct targets, forming the brain's long-distance wiring.
+      TC:
+        effect: altered
+        description: Altered semaphorin 5A. Semaphorins are molecular road signs that guide growing axons to their correct destinations. Changes can cause miswiring — some connections may be too strong, others too weak, altering the brain's connectivity map.
+      CC:
+        effect: significantly_altered
+        description: Significantly altered axon guidance. SEMA5A was identified in a large-scale gene expression study as one of the most consistently downregulated genes in ASD brains. Altered guidance signals can reshape the brain's connectivity architecture from the earliest stages of development.
+
+  - rsid: rs7700518
+    gene: PTEN
+    trait: PTEN — brain growth regulation
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal PTEN function. Standard regulation of brain growth and neuronal size. PTEN acts as a brake on the PI3K/mTOR growth pathway.
+      AG:
+        effect: altered
+        description: Altered PTEN activity. With less growth suppression, neurons may grow larger and form more connections than typical. This can lead to macrocephaly (large head) — a well-documented feature in a subset of individuals with ASD.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered PTEN growth regulation. Strong association with macrocephalic autism. Neurons that grow too large and make too many connections create a "hyperconnected" brain that may be overloaded with unfiltered information. The mTOR pathway is a target for emerging ASD therapies.
+
+  # ============================================================================
+  # BRAIN CONNECTIVITY & SIGNALING
+  # Genes affecting how different brain regions communicate and coordinate,
+  # including calcium signaling, language circuits, and long-range connections.
+  # ============================================================================
+
+  - rsid: rs4141463
+    gene: MACROD2
+    trait: MACROD2 — genome maintenance and neural signaling
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal MACROD2 function. Standard DNA repair and signal transduction in neural tissue.
+      TC:
+        effect: variant
+        description: One variant allele. MACROD2 is involved in removing ADP-ribosylation marks from proteins, affecting both DNA repair and cellular signaling. This SNP reached genome-wide significance in the Autism Genome Project study.
+      CC:
+        effect: significantly_altered
+        description: Significantly altered MACROD2. One of the top GWAS hits for autism (Autism Genome Project). Although the precise mechanism linking this gene to ASD is still being clarified, the statistical association is robust across large study populations.
+
+  - rsid: rs11212733
+    gene: MACROD2
+    trait: MACROD2 — secondary association signal
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal MACROD2 at this position. Standard cellular maintenance in neural tissue.
+      AG:
+        effect: variant
+        description: One variant allele at a secondary MACROD2 association signal. Independently associated with ASD, suggesting this gene region contains multiple functional variants affecting autism risk.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered MACROD2 at secondary locus. Combined with rs4141463, may indicate broader disruption of MACROD2 function. The convergence of multiple independent signals in this gene strengthens the ASD association.
+
+  - rsid: rs1006737
+    gene: CACNA1C
+    trait: Calcium channel — neuronal excitability and plasticity
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal L-type calcium channel. Standard neuronal excitability and activity-dependent plasticity. Calcium influx through these channels triggers gene expression changes needed for learning.
+      GA:
+        effect: altered
+        description: Altered calcium channel function. CACNA1C is a voltage-gated calcium channel that converts electrical activity into biochemical signals in neurons. Variants affect how neurons respond to stimulation and modify their connections. Cross-disorder risk gene for ASD, bipolar, and schizophrenia.
+      AA:
+        effect: significantly_altered
+        description: Significantly altered calcium signaling. The "psychiatric super-gene" — CACNA1C variants are associated with ASD, bipolar disorder, schizophrenia, and major depression. Altered calcium dynamics affect neuronal excitability, plasticity, and the fundamental ability of neurons to adapt their connections to experience.
+
+  - rsid: rs12704290
+    gene: FOXP2
+    trait: FOXP2 — language circuit development
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal FOXP2 function. Standard language circuit development. FOXP2 is the most famous "language gene" — it orchestrates the development of circuits for speech and language production.
+      GA:
+        effect: altered
+        description: Altered FOXP2 regulation. While severe FOXP2 mutations cause speech apraxia, common variants can subtly affect language development timing and the organization of speech motor circuits. Relevant to the language delays and differences common in ASD.
+      AA:
+        effect: significantly_altered
+        description: Significantly altered FOXP2. May affect the precision and fluency of language production circuits. In the context of ASD, this can compound other language-related variants (like CNTNAP2, which FOXP2 directly regulates) to produce more pronounced language differences.
+
+  - rsid: rs11014762
+    gene: CADPS2
+    trait: CADPS2 — BDNF and neurotrophin secretion
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal CADPS2. Standard secretion of BDNF and other neurotrophins that support neuron survival and growth. Properly functioning neurotrophin release is critical for brain development.
+      CT:
+        effect: altered
+        description: Altered CADPS2 function. This gene controls the release of BDNF and NT-3 — growth factors that neurons need to survive, grow, and form connections. Reduced secretion can affect brain development, particularly in the cerebellum and hippocampus.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered neurotrophin secretion. CADPS2 knockout mice show autistic-like behaviors. In humans, altered CADPS2 can reduce the availability of the growth factors that developing neurons depend on, affecting circuit formation during critical developmental windows.
+
+  - rsid: rs2056202
+    gene: SLC25A12
+    trait: Mitochondrial aspartate/glutamate carrier — neural energy
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal mitochondrial energy transport in neurons. Standard metabolic support for neural activity.
+      TC:
+        effect: altered
+        description: Altered mitochondrial carrier function. Neurons are the most energy-hungry cells in the body. SLC25A12 moves key metabolites across the mitochondrial membrane. Reduced efficiency means neurons may not get enough energy during high-demand processing.
+      CC:
+        effect: significantly_altered
+        description: Significantly altered mitochondrial energy transport. Mitochondrial dysfunction is increasingly recognized in ASD. When neurons cannot sustain their energy supply, complex processing tasks — like social cognition — may be the first to degrade, as they are the most metabolically expensive.
+
+  - rsid: rs2292813
+    gene: SLC25A12
+    trait: Mitochondrial carrier — brain metabolism regulation
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal SLC25A12 regulation. Standard mitochondrial function in brain tissue.
+      CT:
+        effect: altered
+        description: Altered mitochondrial carrier expression. This second SLC25A12 variant further modifies mitochondrial efficiency in the brain. Combined with rs2056202, provides a picture of overall neural energy metabolism capacity.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered brain mitochondrial function. Multiple SLC25A12 variants compound to create more pronounced energy deficits in neurons. May contribute to fatigue, cognitive variability, and difficulty sustaining complex processing under demanding conditions.
+
+  # ============================================================================
+  # IMMUNE & NEUROINFLAMMATORY
+  # The immune system and brain development are intimately connected.
+  # Maternal immune activation and ongoing neuroinflammation are increasingly
+  # recognized factors in autism.
+  # ============================================================================
+
+  - rsid: rs1800795
+    gene: IL6
+    trait: Interleukin-6 — neuroinflammation and brain development
+    genotypes:
+      GG:
+        effect: higher_neuroinflammation
+        description: Higher baseline IL-6 production. In the autism context, elevated IL-6 can cross the blood-brain barrier and affect neural development. Chronic neuroinflammation can alter synaptic pruning, microglial function, and circuit maturation. Anti-inflammatory diet especially important.
+      GC:
+        effect: intermediate
+        description: Intermediate IL-6 levels. Moderate neuroinflammatory tendency. The immune-brain connection is bidirectional — brain differences can activate immune responses, and immune activation can alter brain function.
+      CC:
+        effect: lower_neuroinflammation
+        description: Lower IL-6 production. Less neuroinflammatory burden. This is protective in the ASD context, as it means less immune interference with neural circuit function and development.
+
+  - rsid: rs2070874
+    gene: IL4
+    trait: Interleukin-4 — immune polarization and microglial state
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal IL-4 production. Standard Th2 immune response and microglial polarization. Microglia — the brain's immune cells — are kept in a balanced surveillance state.
+      CT:
+        effect: altered
+        description: Altered IL-4 levels. Shifts in IL-4 affect how microglia behave in the brain. These immune cells prune synapses during development, and altered IL-4 can change the pruning process, potentially leaving too many or too few connections. Associated with ASD in some studies.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered IL-4 and microglial regulation. Abnormal synaptic pruning by microglia is an emerging theory in autism — too little pruning leaves excess connections that create "noisy" circuits, while too much pruning removes important ones.
+
+  - rsid: rs2430561
+    gene: IFNG
+    trait: Interferon-gamma — immune activation and neurodevelopment
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal interferon-gamma production. Standard immune surveillance and cytokine balance.
+      TA:
+        effect: elevated
+        description: Elevated interferon-gamma. IFN-gamma is a potent immune activator. Higher levels during pregnancy (maternal immune activation) and in postnatal development can affect brain maturation. Associated with altered social behavior in animal models of ASD.
+      AA:
+        effect: significantly_elevated
+        description: Significantly elevated interferon-gamma. Strong pro-inflammatory drive. In the ASD context, this creates a more immunologically "hot" environment that can affect ongoing brain function, potentially contributing to the neuroinflammation observed in ASD postmortem studies.
+
+  - rsid: rs755622
+    gene: MIF
+    trait: Macrophage migration inhibitory factor — immune-brain signaling
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal MIF levels. Standard macrophage regulation and immune-brain communication.
+      GC:
+        effect: elevated
+        description: Elevated MIF production. MIF is a pro-inflammatory cytokine that also acts in the brain, where it influences dopamine and glucocorticoid signaling. Elevated levels link immune activation directly to neurotransmitter and stress hormone function.
+      CC:
+        effect: significantly_elevated
+        description: Significantly elevated MIF. This cytokine sits at the intersection of the immune system, stress response, and dopamine signaling — three systems implicated in ASD. Higher MIF can sustain chronic neuroinflammation and alter the brain's stress-response circuits.
+
+  - rsid: rs6457620
+    gene: HLA region
+    trait: HLA — immune recognition and autoimmune neuroinflammation
+    genotypes:
+      CC:
+        effect: lower_risk
+        description: Lower HLA-associated autoimmune risk. Standard immune recognition of self versus non-self.
+      CT:
+        effect: moderate_risk
+        description: One risk allele. The HLA region controls immune recognition. Variants that increase autoimmune risk may also predispose to maternal-fetal immune interactions during pregnancy that affect fetal brain development. Families with autoimmune conditions have elevated ASD rates.
+      TT:
+        effect: higher_risk
+        description: Two risk alleles. Higher autoimmune susceptibility. The link between autoimmune conditions and ASD runs in families — mothers with autoimmune thyroid disease, rheumatoid arthritis, or celiac disease have statistically higher rates of children with ASD.
+    aliases:
+      AA: TT
+      AG: CT
+      GG: CC
+
+  # ============================================================================
+  # METHYLATION, FOLATE, & METABOLIC
+  # One-carbon metabolism, methylation, and metabolic cofactors affect
+  # neurotransmitter synthesis, gene regulation, and detoxification — all
+  # relevant to autism biology.
+  # ============================================================================
+
+  - rsid: rs1801133
+    gene: MTHFR
+    trait: Methylation — folate metabolism and neurotransmitter precursors
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal MTHFR enzyme activity. Standard folate metabolism and methylation capacity. Adequate supply of methyl groups for neurotransmitter synthesis, DNA methylation, and detoxification.
+      CT:
+        effect: reduced
+        description: Reduced MTHFR activity (about 65% of normal). Less efficient folate conversion means fewer methyl groups available. In the ASD context, this affects serotonin, dopamine, and norepinephrine synthesis — all neurotransmitters implicated in autism. Methylfolate supplementation can bypass the bottleneck.
+      TT:
+        effect: significantly_reduced
+        description: Significantly reduced MTHFR (about 30% of normal). Major methylation bottleneck. Affects neurotransmitter production, DNA methylation (epigenetic regulation), and glutathione synthesis (detoxification). MTHFR C677T is one of the most-studied metabolic variants in ASD. Active folate (methylfolate) rather than folic acid is recommended.
+    aliases:
+      GG: CC
+      GA: CT
+      AA: TT
+
+  - rsid: rs2228570
+    gene: VDR
+    trait: Vitamin D receptor — FokI variant, brain development
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal VDR function (FokI FF). Full-length vitamin D receptor with standard activity. Vitamin D acts as a neurosteroid in the brain, influencing over 900 genes involved in brain development.
+      CT:
+        effect: altered
+        description: Altered VDR function (FokI Ff). Reduced vitamin D signaling efficiency. Vitamin D deficiency during pregnancy is a risk factor for ASD, and this variant makes the receptor itself less responsive. Ensuring adequate vitamin D status is especially important.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered VDR (FokI ff). The receptor that mediates vitamin D's effects on brain development works less efficiently. Combined with vitamin D deficiency (common in many populations), this creates a double hit on a neuroprotective pathway. Vitamin D supplementation is especially advisable.
+    aliases:
+      AA: TT
+      AG: CT
+      GG: CC
+
+  - rsid: rs731236
+    gene: VDR
+    trait: Vitamin D receptor — TaqI variant, immune-brain regulation
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal VDR at TaqI site. Standard vitamin D-mediated immune regulation in the brain.
+      TC:
+        effect: altered
+        description: Altered VDR immune function. Vitamin D's role in regulating the immune system is critical for preventing the neuroinflammation associated with ASD. This variant reduces that immune-regulatory capacity.
+      CC:
+        effect: significantly_altered
+        description: Significantly altered VDR immune regulation. The anti-inflammatory and immune-balancing effects of vitamin D are substantially reduced. In the ASD context, this means less natural protection against the neuroinflammation that can disrupt brain function.
+    aliases:
+      AA: TT
+      AG: TC
+      GG: CC
+
+  - rsid: rs2238136
+    gene: VDR
+    trait: Vitamin D receptor — brain expression level
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal VDR expression in the brain. Standard density of vitamin D receptors in neural tissue.
+      CT:
+        effect: altered
+        description: Altered VDR expression level. Fewer vitamin D receptors in the brain mean less vitamin D signaling, even when blood vitamin D levels are adequate. The brain may effectively be vitamin D-deficient even with normal supplementation.
+      TT:
+        effect: significantly_altered
+        description: Significantly reduced brain VDR expression. The brain cannot fully respond to vitamin D regardless of intake. Higher-dose supplementation may partially compensate, but the ceiling is lower. This variant is especially relevant given vitamin D's neuroprotective role in ASD.
+
+  - rsid: rs11568820
+    gene: VDR
+    trait: Vitamin D receptor — Cdx2 promoter, intestinal absorption
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal VDR promoter. Standard vitamin D-driven calcium absorption and immune regulation in the gut.
+      GA:
+        effect: altered
+        description: Altered VDR promoter activity. Affects both gut calcium absorption and the gut immune environment. Given the high prevalence of GI issues in ASD and the gut-brain axis, altered VDR in the gut can compound neurological effects.
+      AA:
+        effect: significantly_altered
+        description: Significantly altered VDR promoter. Reduced vitamin D signaling in the gut affects the microbiome, immune tolerance, and calcium homeostasis. The gut-brain axis is a significant modulator of ASD symptoms — GI problems are reported in 30-70% of individuals with ASD.
+
+  - rsid: rs165599
+    gene: COMT
+    trait: COMT 3'UTR — catecholamine metabolism stability
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal COMT mRNA stability. Standard catecholamine (dopamine, norepinephrine, epinephrine) breakdown rate.
+      AG:
+        effect: altered
+        description: Altered COMT mRNA stability. This 3'UTR variant affects how stable the COMT messenger RNA is, which changes how much enzyme is produced over time. Less stable mRNA means less COMT and slower catecholamine breakdown — affecting prefrontal dopamine and stress hormone levels.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered COMT regulation. Combined with the well-known Val158Met (rs4680) variant, this provides a more complete picture of catecholamine metabolism. In ASD, altered prefrontal dopamine dynamics affect executive function, cognitive flexibility, and sensory processing.
+
+  - rsid: rs1799836
+    gene: MAOB
+    trait: MAO-B — dopamine and phenylethylamine breakdown
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal MAO-B activity. Standard breakdown of dopamine, phenylethylamine, and trace amines. MAO-B handles the later stages of dopamine metabolism.
+      TC:
+        effect: altered
+        description: Altered MAO-B activity. Changes in dopamine breakdown speed affect how long dopamine signals persist. In ASD, this interacts with other dopamine variants to shape the overall reward and motivation profile.
+      CC:
+        effect: significantly_altered
+        description: Significantly altered MAO-B. Dopamine and trace amine metabolism is substantially different. Phenylethylamine (PEA) — a natural stimulant and mood-lifter — may accumulate. Altered trace amine levels have been reported in ASD and may affect arousal and attention regulation.
+    aliases:
+      GG: TT
+      GA: TC
+      AA: CC
+
+  - rsid: rs1611115
+    gene: DBH
+    trait: Dopamine beta-hydroxylase — norepinephrine production
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal DBH activity. Standard conversion of dopamine to norepinephrine. Proper balance between these two catecholamines supports both attention and emotional regulation.
+      CT:
+        effect: reduced
+        description: Reduced DBH activity. Less dopamine is converted to norepinephrine, shifting the catecholamine balance. Higher dopamine-to-norepinephrine ratio can affect attention regulation, sensory sensitivity, and autonomic nervous system function — all areas affected in ASD.
+      TT:
+        effect: significantly_reduced
+        description: Significantly reduced DBH. The dopamine-norepinephrine balance is substantially shifted. In ASD, this can contribute to autonomic dysregulation (temperature sensitivity, unusual heart rate patterns), altered sensory processing, and differences in attentional focus.
+
+  # ============================================================================
+  # ADDITIONAL GWAS HITS & REPLICATED FINDINGS
+  # Top signals from large-scale autism genetic studies including the Autism
+  # Genome Project, SPARK, iPSYCH, and published meta-analyses.
+  # ============================================================================
+
+  - rsid: rs4717806
+    gene: TRIM33
+    trait: Transcriptional regulation — brain development timing
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal TRIM33 expression. Standard transcriptional regulation during brain development.
+      TC:
+        effect: variant
+        description: One variant allele. TRIM33 regulates transcription factor activity during development. Identified in large-scale ASD GWAS meta-analyses. May affect the timing of developmental gene expression programs in the brain.
+      CC:
+        effect: significantly_altered
+        description: Significantly altered TRIM33. Transcriptional timing during brain development is shifted. Even small changes in when genes turn on and off during critical developmental windows can alter circuit architecture.
+
+  - rsid: rs10038113
+    gene: KCNN2
+    trait: Calcium-activated potassium channel — neural oscillation
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal KCNN2 function. Standard neural oscillation patterns, particularly in the theta and alpha frequency bands that govern attention and sensory processing.
+      CT:
+        effect: altered
+        description: Altered potassium channel function. KCNN2 channels regulate the rhythmic oscillations that coordinate neural activity across brain regions. Atypical oscillation patterns are one of the most consistent EEG findings in autism.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered neural oscillation regulation. Potassium channels shape the brain's electrical rhythms. Disrupted oscillations can impair the timing-dependent coordination between brain regions needed for complex processing like language and social cognition.
+
+  - rsid: rs1718101
+    gene: MSNP1AS
+    trait: Antisense RNA — moesin regulation in neurons
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal MSNP1AS expression. Standard moesin pseudogene antisense regulation. Moesin organizes the cytoskeleton in growing neurons.
+      TC:
+        effect: variant
+        description: One variant allele. MSNP1AS is a non-coding RNA overexpressed in ASD postmortem brains. It regulates moesin, which shapes growing neuron structure. Altered expression can affect how neurons extend their processes and form connections.
+      CC:
+        effect: significantly_altered
+        description: Significantly altered MSNP1AS. This non-coding RNA was found dramatically overexpressed (12-fold) in ASD brains. When overactive, it disrupts moesin-mediated cytoskeletal organization, affecting neurite growth and neuronal morphology.
+
+  - rsid: rs4609329
+    gene: ASMT
+    trait: Melatonin synthesis — sleep and circadian regulation
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal ASMT enzyme activity. Standard melatonin production from serotonin. Proper circadian rhythm regulation and sleep initiation.
+      GA:
+        effect: reduced
+        description: Reduced melatonin synthesis. ASMT converts serotonin to melatonin — so this variant simultaneously reduces melatonin (disrupting sleep) and may back up serotonin metabolism. Sleep problems affect up to 80% of children with ASD, and ASMT variants are a key genetic contributor.
+      AA:
+        effect: significantly_reduced
+        description: Significantly reduced melatonin synthesis. Both sleep initiation and circadian rhythm are substantially affected. Sleep disruption worsens virtually all ASD-associated challenges — sensory sensitivity, emotional regulation, cognitive function. Melatonin supplementation may be particularly beneficial with this genotype.
+
+  - rsid: rs6716901
+    gene: ASMT
+    trait: ASMT — melatonin pathway efficiency
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal ASMT at this position. Standard melatonin pathway function.
+      GA:
+        effect: altered
+        description: Altered ASMT efficiency. Combined with rs4609329, provides a fuller picture of the melatonin synthesis capacity. Both variants together can substantially impair sleep quality, which has cascading effects on daytime function.
+      AA:
+        effect: significantly_altered
+        description: Significantly altered melatonin pathway. Compound ASMT variants create a pronounced melatonin deficit. The relationship between ASD and sleep is bidirectional — poor sleep worsens ASD symptoms, and ASD-related differences in arousal regulation disrupt sleep.
+
+  - rsid: rs2421826
+    gene: SRPK2
+    trait: Serine/arginine protein kinase — RNA splicing in neurons
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal SRPK2 activity. Standard RNA splicing regulation in neural tissue. Proper alternative splicing is essential for producing the right protein variants at the right time in developing and mature neurons.
+      AG:
+        effect: altered
+        description: Altered SRPK2 kinase activity. This enzyme regulates RNA splicing patterns in neurons. Abnormal splicing produces incorrect protein variants, potentially affecting hundreds of downstream genes critical for synapse function and neural development.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered RNA splicing regulation. Widespread splicing changes in the brain can affect many synaptic and developmental genes simultaneously. Identified in ASD GWAS and supported by transcriptomic studies showing widespread splicing differences in ASD brains.
+
+  - rsid: rs1409313
+    gene: TAS2R1
+    trait: Bitter taste receptor — sensory processing sensitivity
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal bitter taste receptor. Standard taste sensitivity and oral sensory processing.
+      TC:
+        effect: altered
+        description: Altered taste receptor sensitivity. Taste receptor variants are overrepresented in ASD GWAS studies. Altered oral sensory processing contributes to the food selectivity and restricted eating patterns common in ASD. The underlying mechanism reflects broader sensory processing differences.
+      CC:
+        effect: significantly_altered
+        description: Significantly altered taste sensitivity. Strong sensory input from taste can contribute to food aversions and restricted diet. In ASD, heightened or unusual taste perception is part of the broader sensory processing profile. May benefit from gradual sensory exposure approaches.
+
+  - rsid: rs11876456
+    gene: KAT2B
+    trait: Histone acetyltransferase — epigenetic brain regulation
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal KAT2B activity. Standard histone acetylation allowing proper gene activation during brain development and memory formation.
+      GA:
+        effect: altered
+        description: Altered histone acetylation. KAT2B opens up DNA for gene expression by modifying histones. In the brain, this process is essential for activity-dependent gene expression — how neurons change their gene activity in response to experience and learning.
+      AA:
+        effect: significantly_altered
+        description: Significantly altered epigenetic regulation. Disrupted histone acetylation can affect the brain's ability to modify gene expression in response to experience. This is a fundamental mechanism for learning and neural circuit refinement, both of which develop differently in ASD.
+
+  - rsid: rs6150410
+    gene: NOS1
+    trait: Neuronal nitric oxide synthase — neurovascular coupling
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal neuronal nitric oxide production. Standard neurovascular coupling — the mechanism that delivers blood flow to active brain regions.
+      CT:
+        effect: altered
+        description: Altered nitric oxide signaling. Nitric oxide in the brain serves as both a retrograde neurotransmitter (signaling backwards across synapses) and a vasodilator. Reduced levels can impair synaptic plasticity and blood flow to active brain areas.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered neuronal nitric oxide. Affects both synaptic plasticity (how connections are strengthened by experience) and neurovascular coupling (blood supply to active neurons). NOS1 variants have been associated with ASD and ADHD in multiple studies.
+
+  - rsid: rs3743205
+    gene: MECP2
+    trait: Methyl-CpG binding — epigenetic gene silencing
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal MeCP2 function. Standard epigenetic silencing of genes that should be inactive. MeCP2 reads methylation marks on DNA and recruits silencing machinery.
+      CT:
+        effect: altered
+        description: Altered MeCP2 function. This protein is the master reader of DNA methylation — it determines which genes stay silent. Severe MeCP2 mutations cause Rett syndrome (which shares features with ASD), while common variants can subtly shift the epigenetic landscape.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered epigenetic reading. MeCP2 dysfunction affects thousands of target genes. The overlap between Rett syndrome and autism highlights how central epigenetic regulation is to social brain development. Even subtle MeCP2 changes can shift gene expression patterns.
+
+  - rsid: rs2217262
+    gene: UBE3A
+    trait: Ubiquitin ligase — synaptic protein turnover
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal UBE3A function. Standard ubiquitin-mediated protein degradation at synapses. Proper protein turnover keeps synapses healthy and responsive.
+      AG:
+        effect: altered
+        description: Altered UBE3A function. This gene tags synaptic proteins for destruction when they are damaged or no longer needed. Abnormal UBE3A dosage causes Angelman syndrome (too little) or contributes to ASD (too much, as in 15q11-13 duplications).
+      GG:
+        effect: significantly_altered
+        description: Significantly altered synaptic protein turnover. UBE3A dosage is critical — both too much and too little cause neurodevelopmental problems. Located in the 15q11-13 region, one of the most frequently implicated chromosomal regions in autism.
+
+  - rsid: rs1570360
+    gene: VEGFA
+    trait: Vascular endothelial growth factor — neurovascular development
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal VEGF production. Standard blood vessel development in the brain and neurovascular signaling.
+      GA:
+        effect: altered
+        description: Altered VEGF levels. Beyond building blood vessels, VEGF directly affects neurons — promoting survival, growth, and plasticity. Altered VEGF can affect both the brain's blood supply and neuronal health. Associated with neurodevelopmental differences.
+      AA:
+        effect: significantly_altered
+        description: Significantly altered VEGF. Both neurovascular development and direct neuronal signaling are affected. Some studies have found altered VEGF levels in ASD blood samples, suggesting this pathway is systemically different in a subset of individuals with autism.
+
+  - rsid: rs2710126
+    gene: CNTNAP2
+    trait: CNTNAP2 — 3' regulatory region
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal CNTNAP2 regulation at the 3' end. Standard post-transcriptional control of CNTNAP2 expression.
+      CT:
+        effect: variant
+        description: One variant allele in the CNTNAP2 3' regulatory region. May affect mRNA stability or microRNA binding, altering how much CNTNAP2 protein is ultimately produced. Part of the broader CNTNAP2 risk haplotype for ASD.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered CNTNAP2 3' regulation. Combined with other CNTNAP2 variants (rs7794745, rs2710102, rs4675690), builds a comprehensive picture of how this critical autism gene functions in the individual.
+
+  - rsid: rs6446552
+    gene: AUTS2
+    trait: AUTS2 — autism susceptibility candidate 2
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal AUTS2 expression. Standard neurodevelopmental regulation. AUTS2 is named "autism susceptibility candidate 2" for its recurrent identification in ASD studies.
+      TC:
+        effect: variant
+        description: One variant allele. AUTS2 regulates transcription in the developing brain and is involved in neuronal migration and neurite outgrowth. Disruptions at this locus have been repeatedly identified in ASD, intellectual disability, and developmental delay.
+      CC:
+        effect: significantly_altered
+        description: Significantly altered AUTS2. This gene affects multiple neurodevelopmental processes — transcriptional regulation, neuronal migration, and neurite extension. Deletions and variants in AUTS2 are among the most recurrent structural findings in autism genetics.
+
+  - rsid: rs1325065
+    gene: DYRK1A
+    trait: Dual-specificity kinase — synapse development and cognitive function
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal DYRK1A activity. Standard kinase function supporting synapse maturation and cognitive development.
+      CT:
+        effect: altered
+        description: Altered DYRK1A function. This kinase regulates multiple pathways involved in brain development — it phosphorylates synaptic proteins, transcription factors, and splicing regulators. Haploinsufficiency causes a recognized ASD-associated syndrome.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered DYRK1A. Both too much (as in Down syndrome, where the gene is triplicated) and too little DYRK1A activity cause neurodevelopmental problems. Variants that reduce its activity are associated with autism, intellectual disability, and microcephaly.
+
+  - rsid: rs7501331
+    gene: BCMO1/BCO1
+    trait: Beta-carotene conversion — vitamin A for brain retinoic acid
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal beta-carotene conversion to vitamin A. Standard retinoic acid production for brain development and maintenance.
+      CT:
+        effect: reduced
+        description: Reduced beta-carotene conversion. Retinoic acid (from vitamin A) is essential for brain development and ongoing neural function. Poor converters may not get enough brain retinoic acid from plant sources alone. Preformed vitamin A (retinol from animal sources) may be needed.
+      TT:
+        effect: significantly_reduced
+        description: Significantly reduced beta-carotene to retinol conversion. Brain retinoic acid deficiency can affect neuronal differentiation, synaptic plasticity, and the development of GABAergic interneurons. Relevant to ASD given the importance of retinoic acid signaling in social brain development.
+
+  - rsid: rs2274305
+    gene: GRIK2
+    trait: Glutamate kainate receptor — excitatory neurotransmission
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal kainate receptor function. Standard glutamate-mediated excitatory signaling.
+      CT:
+        effect: altered
+        description: Altered kainate receptor. Glutamate kainate receptors modulate excitatory neurotransmission and synaptic plasticity. Variants can shift the excitatory/inhibitory balance toward excitation — a core theoretical framework in autism neuroscience.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered kainate receptor function. GRIK2 variants have been identified in ASD linkage studies and candidate gene analyses. Excessive glutamate signaling through altered receptors can overwhelm neural circuits, contributing to sensory hypersensitivity and seizure risk.
+
+  - rsid: rs1128503
+    gene: ABCB1 (MDR1)
+    trait: Blood-brain barrier transporter — drug and toxin efflux
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal P-glycoprotein function. Standard blood-brain barrier efflux pump activity. Toxins and drugs are efficiently pumped out of the brain.
+      CT:
+        effect: altered
+        description: Altered blood-brain barrier transport. P-glycoprotein is the brain's main bouncer — it pumps unwanted molecules back out. Reduced function means the brain is more exposed to environmental toxins and medications. Relevant to ASD given environmental exposure hypotheses.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered blood-brain barrier protection. The brain is substantially more permeable to environmental toxins and drugs. This variant also affects medication dosing — drugs may reach the brain more easily, requiring dose adjustments. Environmental exposure reduction is especially important.
+
+  - rsid: rs1256049
+    gene: ESR2
+    trait: Estrogen receptor beta — neuroprotection and social behavior
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal estrogen receptor beta. Standard estrogen-mediated neuroprotection and modulation of social behavior circuits.
+      GA:
+        effect: altered
+        description: Altered estrogen receptor beta. Estrogen is neuroprotective and modulates social behavior through ER-beta. Variants may contribute to the sex-differential prevalence of ASD — females may be partially protected by stronger estrogen signaling, requiring a higher genetic burden to manifest ASD.
+      AA:
+        effect: significantly_altered
+        description: Significantly altered estrogen neuroprotection. Reduced ER-beta function removes some of estrogen's protective effects on brain development and social circuit function. This is relevant to understanding the "female protective effect" in autism — why females need more risk variants to reach the ASD threshold.
+
+  - rsid: rs2805768
+    gene: ITGB3
+    trait: Integrin beta-3 — serotonin uptake in platelets and brain
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal integrin beta-3. Standard platelet serotonin uptake and integrin-mediated signaling in the brain.
+      CT:
+        effect: altered
+        description: Altered integrin beta-3. ITGB3 modulates serotonin transporter function and was identified through platelet serotonin studies in autism. It bridges the whole-blood hyperserotonemia finding (elevated serotonin in blood) with brain serotonin signaling differences.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered ITGB3. Strong modifier of serotonin transporter function. In ASD, this variant helps explain why blood serotonin levels are elevated — a biomarker found in roughly one-third of autistic individuals. Also affects synaptogenesis through integrin-dependent cell adhesion.
+
+  - rsid: rs4314513
+    gene: PTCHD1-AS
+    trait: Patched domain antisense RNA — synaptic development (X-linked)
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal PTCHD1-AS expression. Standard hedgehog pathway regulation and synaptic development.
+      CT:
+        effect: altered
+        description: Altered PTCHD1-AS. Located on the X chromosome, this non-coding RNA affects hedgehog signaling and GABAergic synapse development. X-linkage means males (with one X) are more affected, contributing to the male bias in ASD.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered PTCHD1-AS function. Deletions and variants in this X-linked region are among the most recurrently identified in male-predominant ASD. Affects GABAergic interneuron development and inhibitory synapse function.
+
+  - rsid: rs1513272
+    gene: LRRC4C (NGL-1)
+    trait: Leucine-rich repeat — synapse specificity
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal NGL-1 function. Standard synapse-specific adhesion and glutamate receptor clustering.
+      GA:
+        effect: variant
+        description: One variant allele. NGL-1 works with netrin-G proteins to specify which neurons connect to each other. Altered function can make synaptic connections less specific — the wrong neurons may connect, or correct connections may be weaker.
+      AA:
+        effect: significantly_altered
+        description: Significantly altered synapse specificity. When the molecular code that determines which neurons connect is disrupted, neural circuits can be miswired. Identified in ASD GWAS studies as part of the broader synaptic adhesion pathway implicated in autism.
+
+  - rsid: rs12518194
+    gene: SLC6A4
+    trait: Serotonin transporter — regulatory region for brain expression
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal serotonin transporter expression in the brain. Standard serotonin signaling dynamics.
+      CT:
+        effect: altered
+        description: Altered serotonin transporter brain expression. This regulatory variant specifically affects how much transporter is produced in the brain (as opposed to the gut or platelets). Changes brain serotonin dynamics with implications for mood, social reward, and sensory processing.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered brain serotonin transporter levels. Combined with other SLC6A4 variants, provides a comprehensive picture of how the serotonin system functions. The serotonin transporter is the primary target of SSRI medications — this information is pharmacogenomically relevant.
+
+  - rsid: rs1042173
+    gene: SLC6A4
+    trait: Serotonin transporter — 3'UTR stability
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal serotonin transporter mRNA stability. Standard protein production from the SLC6A4 gene.
+      TG:
+        effect: altered
+        description: Altered mRNA stability. Less stable messenger RNA means less serotonin transporter protein is made overall. This is another layer of regulation that fine-tunes the serotonin system. Associated with ASD and anxiety traits.
+      GG:
+        effect: significantly_altered
+        description: Significantly reduced serotonin transporter production from mRNA instability. Combined with promoter variants and coding variants, this creates a comprehensive serotonin transporter profile. Highly relevant for both ASD trait assessment and SSRI medication response.
+
+  - rsid: rs4446909
+    gene: TSGA14/CEP41
+    trait: Centrosomal protein — cilia and brain development
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal centrosomal protein function. Standard cilia development and cellular signaling.
+      AG:
+        effect: variant
+        description: One variant allele. CEP41 is a centrosomal protein involved in primary cilia formation. Primary cilia are cellular antennae that receive developmental signals. Defective cilia cause a spectrum of developmental disorders with neurological features.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered cilia development protein. Primary cilia dysfunction (ciliopathies) can affect brain development through disrupted hedgehog and Wnt signaling. Identified in ASD GWAS, connecting autism to the broader biology of developmental signaling pathways.
