@@ -1,0 +1,148 @@
+name: Advanced Nutrition & Vitamins
+description: Detailed nutrient metabolism — vitamins, minerals, sensitivities, and dietary needs
+category: nutrition
+
+variants:
+  - rsid: rs12934922
+    gene: BCMO1
+    trait: Beta-carotene to vitamin A conversion
+    genotypes:
+      AA:
+        effect: normal
+        description: Efficient conversion of beta-carotene (carrots, sweet potato) to active vitamin A.
+      AT:
+        effect: reduced
+        description: ~30% reduced conversion. May benefit from preformed vitamin A sources (eggs, liver, dairy).
+      TT:
+        effect: significantly_reduced
+        description: ~60% reduced conversion. Plant-based beta-carotene is poorly converted. Preformed vitamin A recommended.
+
+  - rsid: rs2282679
+    gene: GC (vitamin D binding protein)
+    trait: Vitamin D levels
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal vitamin D transport and levels.
+      TG:
+        effect: reduced
+        description: Lower vitamin D levels. Supplementation may be beneficial, especially in winter.
+      GG:
+        effect: significantly_reduced
+        description: Significantly lower circulating vitamin D. Regular supplementation and sun exposure recommended.
+    aliases:
+      AC: TG
+      CC: GG
+      AA: TT
+
+  - rsid: rs602662
+    gene: FUT2
+    trait: Vitamin B12 absorption
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal B12 absorption through intestinal secretor status.
+      GA:
+        effect: slightly_reduced
+        description: Slightly reduced B12 absorption. Monitor levels if vegetarian/vegan.
+      AA:
+        effect: reduced
+        description: Non-secretor. Reduced B12 absorption. Supplementation advisable especially on plant-based diets.
+
+  - rsid: rs4654748
+    gene: NBPF3/ALPL
+    trait: Vitamin B6 levels
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal vitamin B6 metabolism and levels.
+      CT:
+        effect: reduced
+        description: Lower B6 levels. Ensure adequate intake from poultry, fish, potatoes, bananas.
+      TT:
+        effect: significantly_reduced
+        description: Significantly lower B6. Supplementation may be needed. Important for nervous system function.
+
+  - rsid: rs174546
+    gene: FADS1
+    trait: Omega-3/Omega-6 fatty acid conversion
+    genotypes:
+      CC:
+        effect: efficient
+        description: Efficient conversion of plant omega-3 (ALA) to active forms (EPA/DHA).
+      CT:
+        effect: intermediate
+        description: Intermediate conversion. Fish or algae-based omega-3 beneficial.
+      TT:
+        effect: poor
+        description: Poor conversion from plant sources. Direct EPA/DHA from fish or supplements strongly recommended.
+
+  - rsid: rs1801394
+    gene: MTRR
+    trait: Methionine synthase reductase — B12 recycling
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal B12 recycling and methionine metabolism.
+      AG:
+        effect: reduced
+        description: Reduced enzyme efficiency. Adequate B12 and folate intake important.
+      GG:
+        effect: significantly_reduced
+        description: Significantly reduced B12 recycling. Higher homocysteine risk. B12 + folate supplementation advisable.
+
+  - rsid: rs7501331
+    gene: BCMO1
+    trait: Beta-carotene conversion (second variant)
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal beta-carotene conversion at this position.
+      CT:
+        effect: reduced
+        description: Additional reduction in beta-carotene conversion. Compounds with rs12934922.
+      TT:
+        effect: significantly_reduced
+        description: Further impaired conversion. Strong preference for preformed vitamin A sources.
+
+  - rsid: rs1800795
+    gene: IL6
+    trait: Inflammatory response to diet
+    genotypes:
+      GG:
+        effect: higher_inflammation
+        description: Higher baseline inflammation. Anti-inflammatory diet (omega-3, turmeric, vegetables) especially beneficial.
+      GC:
+        effect: intermediate
+        description: Intermediate inflammatory response. Balanced anti-inflammatory diet helpful.
+      CC:
+        effect: lower_inflammation
+        description: Lower baseline inflammation. Standard healthy diet sufficient.
+
+  - rsid: rs9536314
+    gene: KL (Klotho)
+    trait: Klotho longevity variant — mineral metabolism
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal Klotho protein. Standard calcium and phosphate regulation.
+      TG:
+        effect: favorable
+        description: One Klotho variant allele. Associated with better cognitive aging and mineral balance.
+      GG:
+        effect: unclear
+        description: Homozygous variant. Effects less clear — some studies show reduced benefit compared to heterozygous.
+
+  - rsid: rs4588
+    gene: GC
+    trait: Vitamin D binding protein variant
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal vitamin D binding and transport.
+      CA:
+        effect: reduced
+        description: Reduced vitamin D binding efficiency. May need higher supplementation doses.
+      AA:
+        effect: significantly_reduced
+        description: Significantly reduced binding. Higher doses needed to maintain adequate vitamin D levels.

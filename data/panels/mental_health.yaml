@@ -1,0 +1,150 @@
+name: Mental Health & Mood
+description: Genetic variants related to depression risk, anxiety, stress response, and emotional regulation
+category: health
+
+variants:
+  - rsid: rs6265
+    gene: BDNF
+    trait: Brain plasticity — BDNF Val66Met
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal BDNF secretion. Good neuroplasticity, learning, and stress recovery.
+      CT:
+        effect: reduced
+        description: Reduced BDNF release. Slightly lower neuroplasticity. Exercise strongly boosts BDNF and compensates.
+      TT:
+        effect: significantly_reduced
+        description: Significantly reduced BDNF. Higher vulnerability to depression and anxiety. Exercise, meditation, and social connection are especially protective.
+    aliases:
+      GG: CC
+      GA: CT
+      AA: TT
+
+  - rsid: rs25531
+    gene: SLC6A4
+    trait: Serotonin transporter — emotional sensitivity
+    genotypes:
+      AA:
+        effect: lower_expression
+        description: Lower serotonin reuptake (short allele equivalent). Higher emotional sensitivity, deeper processing of experiences. More responsive to environment — both positive and negative.
+      AG:
+        effect: intermediate
+        description: Intermediate serotonin transporter expression. Moderate emotional sensitivity.
+      GG:
+        effect: higher_expression
+        description: Higher serotonin reuptake. More emotionally resilient but possibly less responsive to psychotherapy nuances.
+
+  - rsid: rs4570625
+    gene: TPH2
+    trait: Serotonin production in the brain
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal tryptophan hydroxylase-2 activity. Standard brain serotonin production.
+      GT:
+        effect: reduced
+        description: Reduced serotonin synthesis. May increase anxiety and emotional reactivity. Tryptophan-rich diet helpful.
+      TT:
+        effect: significantly_reduced
+        description: Significantly reduced brain serotonin production. Higher depression and anxiety vulnerability. Consider 5-HTP or tryptophan support.
+
+  - rsid: rs4680
+    gene: COMT
+    trait: Stress response — dopamine/norepinephrine clearance
+    genotypes:
+      GG:
+        effect: warrior
+        description: Fast catecholamine breakdown. Better acute stress tolerance but may struggle with sustained focus tasks.
+      GA:
+        effect: balanced
+        description: Balanced COMT activity. Good mix of stress resilience and cognitive performance.
+      AA:
+        effect: worrier
+        description: Slow catecholamine breakdown. Higher cognitive performance under calm conditions but more vulnerable to stress and anxiety.
+    aliases:
+      AG: GA
+
+  - rsid: rs6311
+    gene: HTR2A
+    trait: Serotonin 2A receptor — depression and SSRI response
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal serotonin 2A receptor density. Standard SSRI antidepressant response expected.
+      CT:
+        effect: altered
+        description: Altered receptor density. May respond differently to SSRIs. Useful info for psychiatrist if starting medication.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered 5-HT2A expression. Associated with higher depression risk and variable SSRI response. Dose adjustments may be needed.
+
+  - rsid: rs1800532
+    gene: TPH1
+    trait: Peripheral serotonin — gut-brain axis
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal peripheral serotonin production. Standard gut-brain signaling.
+      CA:
+        effect: altered
+        description: Altered peripheral serotonin. May influence gut motility and mood via gut-brain axis.
+      AA:
+        effect: significantly_altered
+        description: Significantly altered peripheral serotonin. Links between digestive issues and mood may be stronger.
+
+  - rsid: rs53576
+    gene: OXTR
+    trait: Oxytocin receptor — empathy and social bonding
+    genotypes:
+      GG:
+        effect: higher_empathy
+        description: Higher oxytocin receptor expression. Stronger empathy, social bonding, and sensitivity to social cues.
+      AG:
+        effect: intermediate
+        description: Intermediate oxytocin sensitivity. Balanced social-emotional processing.
+      AA:
+        effect: lower_empathy
+        description: Lower oxytocin receptor expression. More self-reliant emotional processing. Less affected by social rejection.
+
+  - rsid: rs1360780
+    gene: FKBP5
+    trait: Cortisol regulation — PTSD and trauma response
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal cortisol feedback loop. Standard stress recovery.
+      CT:
+        effect: altered
+        description: Altered cortisol regulation. Slower stress recovery. Higher risk for prolonged stress effects after trauma.
+      TT:
+        effect: significantly_altered
+        description: Significantly impaired cortisol regulation. High vulnerability to PTSD and chronic stress effects. Stress management practices critical.
+
+  - rsid: rs10997875
+    gene: NTRK2
+    trait: BDNF receptor — antidepressant response
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal BDNF receptor (TrkB). Standard neurotrophin signaling and expected antidepressant response.
+      AG:
+        effect: variant
+        description: Altered BDNF receptor. May affect antidepressant response timing and efficacy.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered TrkB receptor. Potentially slower antidepressant response. Exercise as adjunct especially valuable.
+
+  - rsid: rs6295
+    gene: HTR1A
+    trait: Serotonin 1A receptor — anxiety and depression baseline
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal 5-HT1A autoreceptor. Standard serotonin feedback regulation.
+      CG:
+        effect: altered
+        description: Altered autoreceptor density. May have higher baseline anxiety. Responsive to mindfulness practices.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered serotonin 1A. Higher depression and anxiety risk. Lower initial response to some SSRIs.

@@ -1,0 +1,158 @@
+name: Addiction & Dependencies
+description: Genetic predisposition to substance dependencies — nicotine, alcohol, opioids, and reward-seeking behavior
+category: health
+
+variants:
+  - rsid: rs1051730
+    gene: CHRNA3
+    trait: Nicotine dependence — receptor binding
+    genotypes:
+      CC:
+        effect: lower_risk
+        description: Normal nicotinic receptor. Lower genetic risk for nicotine dependence.
+      CT:
+        effect: moderate_risk
+        description: One risk allele. Moderately increased risk of nicotine dependence and heavier smoking.
+      TT:
+        effect: higher_risk
+        description: Two risk alleles. Significantly increased susceptibility to nicotine addiction and difficulty quitting.
+    aliases:
+      GG: CC
+      GA: CT
+      AA: TT
+
+  - rsid: rs16969968
+    gene: CHRNA5
+    trait: Nicotine dependence — heavy smoking
+    genotypes:
+      GG:
+        effect: lower_risk
+        description: Normal nicotinic receptor subunit. Lower risk of heavy smoking behavior.
+      GA:
+        effect: moderate_risk
+        description: One risk allele. Increased likelihood of smoking more cigarettes per day.
+      AA:
+        effect: higher_risk
+        description: Two risk alleles. Strongly associated with heavy smoking and difficulty reducing consumption.
+
+  - rsid: rs1800497
+    gene: DRD2/ANKK1
+    trait: Dopamine reward sensitivity
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal dopamine receptor density. Standard reward response.
+      CT:
+        effect: reduced
+        description: Slightly reduced dopamine receptor density. May seek more stimulation for satisfaction.
+      TT:
+        effect: significantly_reduced
+        description: Significantly reduced dopamine receptors. Higher susceptibility to addictive behaviors across substances.
+    aliases:
+      GG: CC
+      AG: CT
+      AA: TT
+
+  - rsid: rs4680
+    gene: COMT
+    trait: Dopamine breakdown speed
+    genotypes:
+      GG:
+        effect: fast_breakdown
+        description: Fast dopamine breakdown (warrior type). More stress-resilient but may seek more reward stimulation.
+      GA:
+        effect: intermediate
+        description: Intermediate dopamine levels. Balanced between stress tolerance and reward sensitivity.
+      AA:
+        effect: slow_breakdown
+        description: Slow dopamine breakdown (worrier type). Higher baseline dopamine, more sensitive to substances.
+    aliases:
+      AG: GA
+
+  - rsid: rs1799971
+    gene: OPRM1
+    trait: Opioid receptor sensitivity
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal opioid receptor binding. Standard response to endorphins and opioid substances.
+      AG:
+        effect: altered
+        description: Altered opioid receptor. May need higher doses for pain relief. Altered alcohol reward response.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered opioid binding. Reduced natural endorphin response, altered addiction risk.
+
+  - rsid: rs279858
+    gene: GABRA2
+    trait: Alcohol dependence — GABA receptor
+    genotypes:
+      CC:
+        effect: lower_risk
+        description: Normal GABA receptor function. Lower genetic risk for alcohol dependence.
+      CT:
+        effect: moderate_risk
+        description: One risk allele. Moderately increased risk of alcohol use disorder.
+      TT:
+        effect: higher_risk
+        description: Two risk alleles. Higher genetic predisposition to alcohol dependence.
+    aliases:
+      GG: CC
+      AG: CT
+      AA: TT
+
+  - rsid: rs1229984
+    gene: ADH1B
+    trait: Alcohol metabolism speed
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal alcohol metabolism. Standard rate of ethanol to acetaldehyde conversion.
+      CT:
+        effect: fast_metabolizer
+        description: Fast alcohol metabolism. Quick buildup of acetaldehyde causes unpleasant flushing — protective against alcoholism.
+      TT:
+        effect: very_fast
+        description: Very fast alcohol metabolism. Strong protective effect against alcohol dependence due to unpleasant reaction.
+
+  - rsid: rs671
+    gene: ALDH2
+    trait: Alcohol flush reaction (acetaldehyde clearance)
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal acetaldehyde clearance. No alcohol flush.
+      GA:
+        effect: reduced
+        description: Reduced clearance. Moderate alcohol flush, increased cancer risk from drinking.
+      AA:
+        effect: severely_reduced
+        description: Severely impaired clearance. Strong flush, nausea from alcohol. Very high esophageal cancer risk if drinking.
+
+  - rsid: rs2023239
+    gene: CNR1
+    trait: Cannabis receptor sensitivity
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal cannabinoid receptor expression.
+      CT:
+        effect: altered
+        description: Altered CB1 receptor. May experience stronger effects from cannabis and higher dependence risk.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered CB1 receptor expression. Higher susceptibility to cannabis dependence.
+
+  - rsid: rs6277
+    gene: DRD2
+    trait: Dopamine D2 receptor expression
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal D2 receptor expression. Standard dopamine signaling.
+      CT:
+        effect: reduced
+        description: Reduced D2 receptor expression. May contribute to reward deficiency and substance seeking.
+      TT:
+        effect: significantly_reduced
+        description: Significantly reduced D2 expression. Associated with impulsivity and higher addiction vulnerability.

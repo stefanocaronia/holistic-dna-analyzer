@@ -1,0 +1,132 @@
+name: Inflammation & Immunity
+description: Genetic variants affecting inflammatory response, autoimmune risk, and immune system function
+category: health
+
+variants:
+  - rsid: rs1800795
+    gene: IL6
+    trait: Interleukin-6 — baseline inflammation
+    genotypes:
+      GG:
+        effect: higher_inflammation
+        description: Higher baseline IL-6 production. Chronic low-grade inflammation. Anti-inflammatory diet and exercise especially important.
+      GC:
+        effect: intermediate
+        description: Intermediate IL-6 levels. Moderate inflammatory tendency.
+      CC:
+        effect: lower_inflammation
+        description: Lower IL-6 production. Generally lower inflammatory burden.
+
+  - rsid: rs1800629
+    gene: TNF
+    trait: TNF-alpha — acute inflammatory response
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal TNF-alpha production. Standard inflammatory and immune response.
+      GA:
+        effect: elevated
+        description: Elevated TNF-alpha. More vigorous immune response but higher risk of chronic inflammation.
+      AA:
+        effect: significantly_elevated
+        description: Significantly elevated TNF-alpha. Strong immune activation but higher autoimmune and inflammatory disease risk.
+
+  - rsid: rs1800896
+    gene: IL10
+    trait: Interleukin-10 — anti-inflammatory capacity
+    genotypes:
+      TT:
+        effect: lower_antiinflammatory
+        description: Lower IL-10 production. Reduced ability to dampen inflammation. May need more anti-inflammatory support.
+      TC:
+        effect: intermediate
+        description: Intermediate IL-10 levels. Moderate anti-inflammatory capacity.
+      CC:
+        effect: higher_antiinflammatory
+        description: Higher IL-10 production. Better natural inflammation control.
+    aliases:
+      AA: TT
+      AG: TC
+      GG: CC
+
+  - rsid: rs3024505
+    gene: IL10 region
+    trait: IL-10 regulatory region — autoimmune risk
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal IL-10 regulation. Standard autoimmune risk.
+      CT:
+        effect: moderate_risk
+        description: One risk allele. Slightly increased risk for inflammatory bowel disease and autoimmune conditions.
+      TT:
+        effect: higher_risk
+        description: Two risk alleles. Higher susceptibility to Crohn's disease and ulcerative colitis.
+
+  - rsid: rs2476601
+    gene: PTPN22
+    trait: Autoimmune susceptibility — master switch
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal T-cell regulation. Standard autoimmune risk.
+      GA:
+        effect: increased_risk
+        description: One risk allele. Increased risk for multiple autoimmune conditions (thyroid, rheumatoid arthritis, type 1 diabetes).
+      AA:
+        effect: higher_risk
+        description: Two risk alleles. Significantly elevated autoimmune susceptibility. Regular thyroid and autoantibody screening advisable.
+
+  - rsid: rs1800470
+    gene: TGFB1
+    trait: TGF-beta — tissue repair and fibrosis
+    genotypes:
+      TT:
+        effect: higher_production
+        description: Higher TGF-beta. Better wound healing but increased fibrosis risk with age.
+      TC:
+        effect: intermediate
+        description: Intermediate TGF-beta production. Balanced repair response.
+      CC:
+        effect: lower_production
+        description: Lower TGF-beta. Less fibrosis tendency but potentially slower tissue repair.
+    aliases:
+      AA: TT
+      AG: TC
+      GG: CC
+
+  - rsid: rs1800871
+    gene: IL10
+    trait: IL-10 promoter — inflammatory bowel protection
+    genotypes:
+      TT:
+        effect: lower_protection
+        description: Lower IL-10 from this promoter variant. Reduced gut anti-inflammatory protection.
+      TC:
+        effect: intermediate
+        description: Intermediate protection. Standard gut inflammatory control.
+      CC:
+        effect: higher_protection
+        description: Higher IL-10 expression. Better protection against inflammatory bowel conditions.
+    aliases:
+      AA: TT
+      AG: TC
+      GG: CC
+
+  - rsid: rs6457620
+    gene: HLA region
+    trait: HLA autoimmune risk — rheumatoid arthritis
+    genotypes:
+      CC:
+        effect: lower_risk
+        description: Lower HLA-associated risk for rheumatoid arthritis.
+      CT:
+        effect: moderate_risk
+        description: One risk allele. Moderately elevated rheumatoid arthritis risk, especially with smoking.
+      TT:
+        effect: higher_risk
+        description: Two risk alleles. Higher RA susceptibility. Avoid smoking, which dramatically increases risk with this genotype.
+    aliases:
+      AA: TT
+      AG: CT
+      GG: CC

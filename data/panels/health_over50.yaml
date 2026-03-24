@@ -1,0 +1,176 @@
+name: Health After 50
+description: Key genetic variants to monitor for cancer risk, bone health, prostate, cognitive decline, and age-related conditions
+category: health
+
+variants:
+  - rsid: rs1042522
+    gene: TP53
+    trait: p53 tumor suppressor efficiency
+    genotypes:
+      GG:
+        effect: normal
+        description: Pro/Pro variant. Standard p53 tumor suppressor function.
+      GC:
+        effect: variant
+        description: Pro/Arg variant. Altered p53 apoptosis efficiency. Some studies link to modified cancer risk.
+      CC:
+        effect: variant
+        description: Arg/Arg variant. Different apoptosis balance. Associated with altered risk for several cancers.
+
+  - rsid: rs1800566
+    gene: NQO1
+    trait: Quinone detoxification — cancer protection
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal NQO1 enzyme. Good detoxification of environmental carcinogens.
+      CT:
+        effect: reduced
+        description: Reduced detox capacity. Increase cruciferous vegetables and antioxidant intake.
+      TT:
+        effect: absent
+        description: No NQO1 enzyme activity. Significantly reduced carcinogen detoxification. Avoid smoking and chemical exposure.
+
+  - rsid: rs4986850
+    gene: BRCA1 region
+    trait: BRCA1 region variant
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal BRCA1 region. Standard DNA repair function.
+      CT:
+        effect: variant
+        description: Carrier of a BRCA1 region variant. Does not mean BRCA1 pathogenic mutation — further testing recommended if family history exists.
+      TT:
+        effect: variant
+        description: Homozygous variant in BRCA1 region. Discuss with a genetic counselor if cancer family history present.
+
+  - rsid: rs1447295
+    gene: 8q24 region
+    trait: Prostate cancer risk (men)
+    genotypes:
+      CC:
+        effect: lower_risk
+        description: Lower genetic risk at this locus for prostate cancer.
+      CA:
+        effect: moderate_risk
+        description: One risk allele. Moderately increased prostate cancer risk. Regular PSA screening after 50 recommended.
+      AA:
+        effect: higher_risk
+        description: Two risk alleles. Higher prostate cancer susceptibility. Discuss early screening with urologist.
+    note: Relevant for males only
+
+  - rsid: rs16901979
+    gene: 8q24 region
+    trait: Prostate cancer risk (second locus)
+    genotypes:
+      CC:
+        effect: lower_risk
+        description: Lower risk at this second 8q24 locus.
+      CA:
+        effect: moderate_risk
+        description: One risk allele. Additional prostate cancer risk factor. Compounds with rs1447295.
+      AA:
+        effect: higher_risk
+        description: Two risk alleles. Significant additional risk. Combined with other 8q24 variants, warrants proactive screening.
+    note: Relevant for males only
+
+  - rsid: rs2234693
+    gene: ESR1
+    trait: Estrogen receptor — bone density and cardiovascular (women)
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal estrogen receptor signaling. Standard bone density maintenance.
+      TC:
+        effect: variant
+        description: Altered estrogen receptor. May affect bone density response post-menopause. DEXA screening recommended.
+      CC:
+        effect: variant
+        description: Homozygous variant. Potentially reduced bone density protection. Monitor with DEXA scan and ensure calcium/vitamin D.
+    note: Most relevant for females, but men carry the variant too
+
+  - rsid: rs9305614
+    gene: COL1A1 region
+    trait: Osteoporosis risk — collagen formation
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal collagen type I formation. Standard bone strength.
+      AG:
+        effect: moderate_risk
+        description: One risk allele. Slightly increased osteoporosis risk. Weight-bearing exercise and calcium important.
+      GG:
+        effect: higher_risk
+        description: Two risk alleles. Higher osteoporosis susceptibility. DEXA screening and proactive bone health measures.
+
+  - rsid: rs429358
+    gene: APOE
+    trait: Alzheimer's disease risk (APOE4)
+    genotypes:
+      TT:
+        effect: lower_risk
+        description: No APOE4 allele. Lower genetic risk for late-onset Alzheimer's.
+      TC:
+        effect: moderate_risk
+        description: One APOE4 allele. ~3x increased Alzheimer's risk. Cognitive exercise, cardiovascular health, and omega-3 are protective.
+      CC:
+        effect: higher_risk
+        description: Two APOE4 alleles. ~12x increased risk. Mediterranean diet, exercise, sleep, and mental stimulation are especially important.
+
+  - rsid: rs7412
+    gene: APOE
+    trait: Alzheimer's protection (APOE2)
+    genotypes:
+      CC:
+        effect: no_protection
+        description: No APOE2 protective allele. Risk determined by other APOE variants.
+      CT:
+        effect: protective
+        description: One APOE2 allele. Associated with lower Alzheimer's risk and better lipid profile.
+      TT:
+        effect: strongly_protective
+        description: Two APOE2 alleles. Strong protection against Alzheimer's. Rare type III hyperlipidemia possible.
+
+  - rsid: rs1800629
+    gene: TNF
+    trait: TNF-alpha inflammation — chronic disease risk
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal TNF-alpha production. Standard inflammatory response.
+      GA:
+        effect: elevated
+        description: Higher TNF-alpha production. Increased chronic inflammation. Anti-inflammatory lifestyle especially important after 50.
+      AA:
+        effect: significantly_elevated
+        description: Significantly elevated TNF-alpha. High chronic inflammation risk. Mediterranean diet, omega-3, and regular exercise critical.
+
+  - rsid: rs10757278
+    gene: 9p21 region
+    trait: Heart attack risk (age-dependent, increases after 50)
+    genotypes:
+      AA:
+        effect: lower_risk
+        description: Lower genetic risk for myocardial infarction at this locus.
+      AG:
+        effect: moderate_risk
+        description: One risk allele. Moderate heart attack risk. Regular cardiovascular checkups after 50.
+      GG:
+        effect: higher_risk
+        description: Two risk alleles. Higher heart attack susceptibility. Lipid panel, blood pressure, and cardiac screening important.
+
+  - rsid: rs2735839
+    gene: KLK3 (PSA)
+    trait: Baseline PSA levels (prostate screening relevance)
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal baseline PSA levels. Standard screening thresholds apply.
+      GA:
+        effect: lower_psa
+        description: Naturally lower PSA. Important for screening — a "normal" PSA might be relatively high for you.
+      AA:
+        effect: significantly_lower_psa
+        description: Significantly lower baseline PSA. Discuss adjusted screening thresholds with urologist.
+    note: Relevant for males only

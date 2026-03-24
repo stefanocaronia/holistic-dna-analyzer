@@ -1,0 +1,126 @@
+name: Cognitive Performance
+description: Genetic variants affecting memory, learning, intelligence-related traits, and neuroprotection
+category: wellness
+
+variants:
+  - rsid: rs17070145
+    gene: KIBRA
+    trait: Episodic memory performance
+    genotypes:
+      TT:
+        effect: better_memory
+        description: Better episodic memory. Stronger ability to remember personal experiences and events in detail.
+      TC:
+        effect: better_memory
+        description: One memory-enhancing allele. Above-average episodic memory recall.
+      CC:
+        effect: normal
+        description: Normal memory performance. No genetic advantage at this locus — training and lifestyle can compensate.
+
+  - rsid: rs6265
+    gene: BDNF
+    trait: Learning and memory consolidation
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal BDNF. Efficient long-term memory formation and learning.
+      CT:
+        effect: reduced
+        description: Reduced BDNF activity. May need more repetition for memory consolidation. Aerobic exercise strongly compensates.
+      TT:
+        effect: significantly_reduced
+        description: Significantly reduced BDNF. Slower learning curve but not lower ceiling. Exercise is the single best intervention.
+    aliases:
+      GG: CC
+      GA: CT
+      AA: TT
+
+  - rsid: rs4680
+    gene: COMT
+    trait: Working memory and cognitive flexibility
+    genotypes:
+      GG:
+        effect: flexible
+        description: Fast dopamine clearance. Better cognitive flexibility and multitasking. Slightly lower working memory capacity.
+      GA:
+        effect: balanced
+        description: Balanced. Good working memory with decent flexibility.
+      AA:
+        effect: focused
+        description: Slow dopamine clearance. Superior working memory and sustained focus. May struggle with task switching under pressure.
+    aliases:
+      AG: GA
+
+  - rsid: rs429358
+    gene: APOE
+    trait: Cognitive aging trajectory
+    genotypes:
+      TT:
+        effect: favorable
+        description: No APOE4. Better preserved cognitive function with aging. Lower neuroinflammation.
+      TC:
+        effect: moderate_risk
+        description: One APOE4 allele. Faster cognitive aging possible. Cardiovascular exercise, omega-3, and sleep quality are strongly neuroprotective.
+      CC:
+        effect: higher_risk
+        description: Two APOE4 alleles. Accelerated cognitive aging risk. Aggressive neuroprotective lifestyle essential — exercise, diet, sleep, social engagement.
+
+  - rsid: rs9536314
+    gene: KL (Klotho)
+    trait: Cognitive longevity
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal Klotho levels. Standard cognitive aging trajectory.
+      TG:
+        effect: favorable
+        description: One Klotho variant. Associated with larger prefrontal cortex volume and better cognitive aging. A longevity advantage.
+      GG:
+        effect: unclear
+        description: Homozygous Klotho variant. Mixed evidence — some studies suggest reduced benefit compared to one copy.
+
+  - rsid: rs1800497
+    gene: DRD2/ANKK1
+    trait: Dopamine-driven learning
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal D2 receptors. Standard reward-based learning.
+      CT:
+        effect: altered
+        description: Reduced D2 receptors. May learn differently from feedback — needs stronger positive reinforcement.
+      TT:
+        effect: significantly_altered
+        description: Significantly reduced D2. Learns best from positive rewards rather than negative feedback. Consider gamified learning approaches.
+    aliases:
+      GG: CC
+      AG: CT
+      AA: TT
+
+  - rsid: rs363050
+    gene: SNAP25
+    trait: Processing speed and IQ association
+    genotypes:
+      AA:
+        effect: normal
+        description: Normal synaptic efficiency. Standard processing speed.
+      AG:
+        effect: variant
+        description: Altered synaptic protein. Associated with variable processing speed — can be very fast on good days, slower under fatigue.
+      GG:
+        effect: significantly_altered
+        description: Significantly altered SNAP-25. More variable cognitive performance. Rest and sleep regularity especially impact function.
+
+  - rsid: rs7639618
+    gene: NRXN1
+    trait: Synaptic formation — neural network efficiency
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal neurexin-1. Standard synaptic density and neural connectivity.
+      CT:
+        effect: variant
+        description: Altered synaptic formation. May have different neural network topology — potential strengths in creative or divergent thinking.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered synaptic architecture. Different cognitive profile with potential neurodevelopmental implications.

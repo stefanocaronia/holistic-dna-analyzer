@@ -11,6 +11,7 @@ config.yaml
 data/sources/*.csv
 !data/sources/dna-example.csv
 data/db/*.db
+data/context/*/
 
 # IDE
 .vscode/

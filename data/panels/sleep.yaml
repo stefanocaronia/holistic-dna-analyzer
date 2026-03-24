@@ -1,0 +1,120 @@
+name: Sleep & Circadian Rhythm
+description: Genetic variants affecting sleep quality, chronotype, insomnia risk, and melatonin metabolism
+category: wellness
+
+variants:
+  - rsid: rs57875989
+    gene: DEC2 (BHLHE41)
+    trait: Short sleeper gene
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal sleep duration needs. Most people need 7-9 hours.
+      CT:
+        effect: short_sleeper
+        description: Carrier of short sleeper variant. May function well on less sleep than average.
+      TT:
+        effect: short_sleeper
+        description: Rare short sleeper. Can function on 4-6 hours. Extremely rare genotype.
+
+  - rsid: rs12927162
+    gene: ADA
+    trait: Deep sleep quality — adenosine metabolism
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal adenosine deaminase. Standard sleep pressure and deep sleep.
+      CT:
+        effect: deeper_sleep
+        description: Slower adenosine breakdown. Tends to have deeper, more restorative slow-wave sleep.
+      TT:
+        effect: deeper_sleep
+        description: Significantly slower adenosine metabolism. Very deep sleeper, but may feel more sleep pressure.
+
+  - rsid: rs73598374
+    gene: ADA
+    trait: Adenosine deaminase activity (second variant)
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal ADA activity and sleep homeostasis.
+      CT:
+        effect: variant
+        description: Altered ADA activity. May experience different sleep depth and caffeine sensitivity.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered adenosine metabolism. Unusual sleep patterns possible.
+
+  - rsid: rs4753426
+    gene: MTNR1B
+    trait: Melatonin receptor — sleep onset
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal melatonin receptor. Standard sleep onset timing.
+      CT:
+        effect: variant
+        description: Altered melatonin signaling. May have slightly delayed sleep onset. Also linked to glucose metabolism.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered melatonin receptor. Likely delayed sleep onset. Melatonin supplementation may help.
+
+  - rsid: rs1801260
+    gene: CLOCK
+    trait: Chronotype — morning vs evening person
+    genotypes:
+      TT:
+        effect: morning_type
+        description: Tends toward morning chronotype. Naturally wakes and performs best earlier in the day.
+      TC:
+        effect: intermediate
+        description: Intermediate chronotype. Adaptable sleep schedule.
+      CC:
+        effect: evening_type
+        description: Tends toward evening chronotype. Naturally prefers staying up late and waking later.
+    aliases:
+      AA: CC
+      AG: TC
+      GG: TT
+
+  - rsid: rs2287161
+    gene: CRY1
+    trait: Circadian rhythm length
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal circadian period close to 24 hours.
+      CG:
+        effect: variant
+        description: Slightly altered circadian period. May drift from 24-hour schedule without light cues.
+      GG:
+        effect: longer_period
+        description: Longer circadian period. Natural tendency toward delayed sleep phase. Consistent light exposure helps.
+
+  - rsid: rs28532731
+    gene: PER2
+    trait: Familial advanced sleep phase
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal PER2 clock gene. Standard circadian timing.
+      CT:
+        effect: early_phase
+        description: Carrier of advanced sleep phase variant. Tends to feel sleepy very early (7-8 PM) and wake very early.
+      TT:
+        effect: strongly_early
+        description: Strong advanced sleep phase. Falls asleep by early evening, wakes at 3-4 AM. Rare but well-documented.
+
+  - rsid: rs1800888
+    gene: HTR1B
+    trait: Serotonin receptor — sleep quality
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal serotonin 1B receptor. Standard sleep regulation.
+      CT:
+        effect: variant
+        description: Altered serotonin receptor. May experience different sleep quality and mood regulation.
+      TT:
+        effect: significantly_altered
+        description: Significantly altered serotonin receptor. May benefit from sleep hygiene optimization and tryptophan-rich diet.
