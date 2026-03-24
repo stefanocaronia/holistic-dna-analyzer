@@ -23,7 +23,7 @@ def effect_emoji(effect: str) -> str:
 
 
 def render():
-    st.title("📋 Panel Reports")
+    st.title("📋 HDA — Panel Reports")
 
     subjects = list_subjects()
     active = get_active_subject()

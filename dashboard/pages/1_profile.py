@@ -10,7 +10,7 @@ from dna.analysis.panels import get_risk_summary
 
 
 def render():
-    st.title("👤 Profile & Overview")
+    st.title("👤 HDA — Profile & Overview")
 
     # Subject selector
     subjects = list_subjects()
@@ -46,7 +46,7 @@ def render():
             total = count_snps(selected)
             st.metric("Total SNPs", f"{total:,}")
         except FileNotFoundError:
-            st.warning(f"Database not found for '{selected}'. Run `dna import {selected}` first.")
+            st.warning(f"Database not found for '{selected}'. Run `hda import {selected}` first.")
             return
 
     # Quick badges from notable findings

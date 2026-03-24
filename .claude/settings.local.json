@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv pip:*)",
+      "Bash(.venv/Scripts/dna annotate:*)",
+      "Bash(.venv/Scripts/dna panels:*)",
+      "Bash(.venv/Scripts/dna analyze:*)",
+      "Bash(.venv/Scripts/dna report:*)",
+      "Bash(.venv/Scripts/python -c \":*)",
+      "Bash(timeout 8 .venv/Scripts/streamlit run dashboard/app.py --server.headless true --server.port 8501)",
+      "Bash(timeout 10 .venv/Scripts/streamlit run dashboard/app.py --server.headless true --server.port 8510)",
+      "Bash(timeout 10 .venv/Scripts/streamlit run dashboard/app.py --server.headless true --server.port 9999)",
+      "Bash(.venv/Scripts/hda subjects:*)"
+    ]
+  }
+}

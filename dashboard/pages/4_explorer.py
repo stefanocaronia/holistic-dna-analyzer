@@ -10,7 +10,7 @@ from dna.db.query import get_snp, search_snps, count_snps
 
 
 def render():
-    st.title("🔍 SNP Explorer")
+    st.title("🔍 HDA — SNP Explorer")
 
     subjects = list_subjects()
     active = get_active_subject()

@@ -1,9 +1,9 @@
-"""DNA Analysis Dashboard — Streamlit multi-page app."""
+"""HDA — Holistic DNA Analyzer Dashboard."""
 
 import streamlit as st
 
 st.set_page_config(
-    page_title="DNA Analysis",
+    page_title="HDA — Holistic DNA Analyzer",
     page_icon="🧬",
     layout="wide",
     initial_sidebar_state="expanded",

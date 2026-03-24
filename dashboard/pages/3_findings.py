@@ -26,7 +26,7 @@ ACTIONABLE_ADVICE = {
 
 
 def render():
-    st.title("⚠️ Notable Findings")
+    st.title("⚠️ HDA — Notable Findings")
 
     subjects = list_subjects()
     active = get_active_subject()
@@ -42,7 +42,7 @@ def render():
     try:
         findings = get_risk_summary(selected)
     except FileNotFoundError:
-        st.error(f"Database not found for '{selected}'. Run `dna import {selected}` first.")
+        st.error(f"Database not found for '{selected}'. Run `hda import {selected}` first.")
         return
 
     if not findings:

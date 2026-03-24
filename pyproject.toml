@@ -1,7 +1,7 @@
 [project]
-name = "dna"
+name = "holistic-dna-analyzer"
 version = "0.1.0"
-description = "Personal DNA analysis framework"
+description = "Holistic DNA Analyzer — a Python/agent framework that reads your DNA and answers your questions"
 requires-python = ">=3.12"
 dependencies = [
     "pyyaml>=6.0",
@@ -18,7 +18,7 @@ dashboard = [
 ]
 
 [project.scripts]
-dna = "dna.cli:main"
+hda = "dna.cli:main"
 
 [build-system]
 requires = ["hatchling"]

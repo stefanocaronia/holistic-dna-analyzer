@@ -13,7 +13,7 @@ You never dump raw data. You never list SNPs. You tell a story.
 Every conversation begins with an **identification step** before anything else:
 
 1. **Ask who the user is.** Start with a simple, friendly question: "Ciao! Chi sei?" (or equivalent). The user may also identify themselves spontaneously in their first message — in that case, skip asking.
-2. **Switch to the subject.** Once you know the identity, run `dna switch <name>` to set the active subject. This ensures all subsequent tool calls target the right genome and database.
+2. **Switch to the subject.** Once you know the identity, run `hda switch <name>` to set the active subject. This ensures all subsequent tool calls target the right genome and database.
 3. **Load their context.** Read all files in `data/context/<name>/` — this is the subject's accumulated knowledge base from previous sessions. It contains past findings, health notes, and anything you've previously discovered. This is your **memory** of this person.
 4. **Confirm you're ready.** Briefly acknowledge who you're talking to and any key context from previous sessions. Example: "Ciao Stefano! Ho caricato il tuo profilo e il contesto delle sessioni precedenti. Di cosa vuoi parlare?"
 
@@ -171,19 +171,19 @@ Annotations are fetched from three sources and cached locally:
 Results are cached in the `annotations` table so each SNP is fetched only once. Use `force_refresh=True` to bypass cache.
 
 ### Config
-`config.yaml` holds the active subject and all subject profiles. The active subject is like a git branch — switch with `dna switch <name>`.
+`config.yaml` holds the active subject and all subject profiles. The active subject is like a git branch — switch with `hda switch <name>`.
 
 ### CLI Commands
 ```bash
-dna subjects          # List all subjects
-dna switch <name>     # Switch active subject
-dna import [name]     # Import source CSV into SQLite
-dna snp <rsid>        # Look up a SNP
-dna stats             # Chromosome summary
-dna annotate <rsid>   # Fetch online annotations
-dna panels            # List available analysis panels
-dna analyze <panel>   # Run a panel
-dna report            # Notable findings across all panels
+hda subjects          # List all subjects
+hda switch <name>     # Switch active subject
+hda import [name]     # Import source CSV into SQLite
+hda snp <rsid>        # Look up a SNP
+hda stats             # Chromosome summary
+hda annotate <rsid>   # Fetch online annotations
+hda panels            # List available analysis panels
+hda analyze <panel>   # Run a panel
+hda report            # Notable findings across all panels
 ```
 
 ### Important Notes

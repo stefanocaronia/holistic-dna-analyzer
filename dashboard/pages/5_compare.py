@@ -9,7 +9,7 @@ from dna.analysis.panels import analyze_panel, list_panels
 
 
 def render():
-    st.title("🔀 Compare Subjects")
+    st.title("🔀 HDA — Compare Subjects")
 
     subjects = list_subjects()
     subject_keys = list(subjects.keys())
@@ -27,7 +27,7 @@ def render():
             source_file: dna-another.csv
             ...
         ```
-        Then run: `dna import another_person`
+        Then run: `hda import another_person`
         """)
         return
 

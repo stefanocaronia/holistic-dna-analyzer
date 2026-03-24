@@ -1,41 +1,100 @@
-# DNA Analysis Framework
+# Holistic DNA Analyzer
 
-Personal DNA analysis toolkit: import raw genotyping data into SQLite, query SNPs, compare subjects, and use AI agents to cross-reference with online genomics databases.
+A Python/agent framework that can read your DNA data and answer your questions about it.
 
-## Quick Start
+You bring your raw genotyping file (MyHeritage, 23andMe, etc.), the framework imports it, and then any AI agent (Claude, GPT, local LLMs) can have a fluent, informed conversation about your genome — not as a lookup tool, but as an integrative analyst that cross-references multiple biological systems and gives you a coherent picture.
+
+## What It Does
+
+- Imports raw DNA data into a personal SQLite database
+- Runs **13 curated analysis panels**: pharmacogenomics, cardiovascular, nutrition, mental health, ADHD/neurodivergence, cognitive performance, addiction, inflammation, sleep, traits, and more (78+ well-studied variants)
+- Annotates your SNPs from **SNPedia, ClinVar, and Ensembl** (free, no API keys needed)
+- Maintains a **persistent context** per person — the agent remembers what it found in previous sessions
+- Supports **multiple subjects** — each person gets their own database, like git branches
+- Includes a **Streamlit dashboard** for visual exploration
+
+## Talking to the Agent
+
+This is the primary way to use the framework. Open a conversation with any AI agent that has access to this project (e.g. Claude Code, Cursor, Copilot, or any agent that can read files and run Python). The agent reads [AGENTS.md](AGENTS.md) and knows how to use all the tools.
+
+**First time:**
+```
+You: Hi, I'm Stefano
+Agent: [switches to your profile, loads your context] Hey Stefano! I've loaded your
+       profile. What would you like to talk about?
+
+You: How's my heart doing?
+Agent: [runs cardiovascular, inflammation, nutrition panels; cross-references findings;
+       checks your age and profile]
+       Your genetic cardiovascular risk is moderate, and it comes from two directions
+       that reinforce each other...
+```
+
+**The agent doesn't just look up SNPs — it reasons.** A question about depression triggers checks on serotonin, dopamine, cortisol, inflammation, folate metabolism, and sleep. It iterates through the tools until it has a complete picture, then gives you a conversational answer with practical advice.
+
+**What you can ask:**
+- "Am I lactose intolerant?"
+- "How do I metabolize caffeine?"
+- "Do I have a predisposition to depression?"
+- "What are the most important things to know for my health after 50?"
+- "Compare my dopamine profile with Marco's"
+- "What should I add to my diet?"
+- "Am I prone to nicotine addiction?"
+
+The agent saves its findings in `data/context/<name>/` so that next session it already knows your profile and can build on previous analyses.
+
+## Setup
 
 ```bash
 # Clone and install
-git clone https://github.com/YOUR_USER/dna.git
-cd dna
+git clone https://github.com/YOUR_USER/holistic-dna-analyzer.git
+cd holistic-dna-analyzer
 uv venv && uv pip install -e "."
 
-# Set up your config
+# Configure your profile
 cp config.yaml.example config.yaml
-# Edit config.yaml with your details
+# Edit config.yaml with your name, sex, date of birth
 
 # Place your raw DNA file in data/sources/
-# (MyHeritage CSV exports supported out of the box)
-
-# Import into SQLite
-dna import
-
-# Explore
-dna stats
-dna snp rs3131972
-dna subjects
+# Import it
+hda import
 ```
 
-## Multi-Subject Support
+## CLI
 
-Each subject gets their own SQLite database (`data/db/{name}.db`). Switch between subjects like git branches:
+Besides talking to the agent, you can use the CLI directly:
 
 ```bash
-dna switch marco
-dna stats            # now shows Marco's data
+hda subjects          # List all subjects
+hda switch <name>     # Switch active subject (like git switch)
+hda import [name]     # Import DNA source file into SQLite
+hda snp <rsid>        # Look up a single SNP
+hda stats             # Chromosome summary
+hda annotate <rsid>   # Fetch online annotations (SNPedia, ClinVar, Ensembl)
+hda panels            # List analysis panels
+hda analyze <panel>   # Run a panel (e.g. pharmacogenomics, cardiovascular)
+hda report            # All notable findings across panels
 ```
 
-Add subjects by editing `config.yaml`:
+## Dashboard
+
+```bash
+uv pip install -e ".[dashboard]"
+streamlit run dashboard/app.py
+```
+
+Five pages: Profile & Overview, Panel Reports, Notable Findings, SNP Explorer, and Compare (multi-subject).
+
+## Multi-Subject
+
+Each person gets their own database and context folder. Switch like branches:
+
+```bash
+hda switch marco
+# Now all queries, panels, and agent conversations target Marco
+```
+
+Add subjects in `config.yaml`:
 
 ```yaml
 active_subject: stefano
@@ -44,62 +103,27 @@ subjects:
   stefano:
     name: Stefano
     sex: male
-    date_of_birth: 1990-01-15
+    date_of_birth: 1985-03-15
     source_file: dna-stefano.csv
     source_format: MyHeritage
     chip: GSA
     reference: build37
-    notes: ""
   marco:
     name: Marco
+    sex: male
+    date_of_birth: 1990-07-22
+    source_file: dna-marco.csv
     # ...
 ```
 
-## AI Agent Integration
+## Privacy
 
-The framework exposes tool functions in `src/dna/tools/agent_tools.py` that any AI agent can call:
-
-```python
-from dna.tools.agent_tools import lookup_snp, search, get_stats, who_am_i
-
-who_am_i()                    # active subject's profile
-lookup_snp("rs3131972")       # look up a specific SNP
-search(chromosome="7")        # search with filters
-get_stats()                   # chromosome summary
-```
-
-See [AGENTS.md](AGENTS.md) for full details on available tools and how to query the data.
-
-## Project Structure
-
-```
-├── config.yaml.example    # Template config (copy to config.yaml)
-├── AGENTS.md              # Instructions for AI agents
-├── data/
-│   ├── sources/           # Raw DNA CSV files (gitignored, except example)
-│   └── db/                # SQLite databases (gitignored)
-├── src/dna/
-│   ├── config.py          # Config management
-│   ├── cli.py             # CLI commands
-│   ├── db/
-│   │   ├── schema.py      # SQLite schema
-│   │   ├── importer.py    # CSV → SQLite
-│   │   └── query.py       # Query helpers
-│   ├── api/               # Online database clients (SNPedia, ClinVar, Ensembl)
-│   ├── analysis/          # Analysis modules
-│   └── tools/
-│       └── agent_tools.py # Functions for AI agents
-└── dashboard/             # Streamlit dashboard (future)
-```
+Your DNA data stays local. Raw files, databases, and context folders are all gitignored. The example file contains synthetic data only.
 
 ## Supported Formats
 
 - **MyHeritage** (CSV export)
 - 23andMe, AncestryDNA — planned
-
-## Privacy
-
-Your DNA data stays local. Raw files and databases are gitignored by default. The example file (`dna-example.csv`) contains synthetic data only.
 
 ## License
 

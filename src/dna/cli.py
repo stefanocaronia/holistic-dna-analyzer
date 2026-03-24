@@ -1,4 +1,4 @@
-"""CLI entry point for the dna framework."""
+"""CLI entry point for Holistic DNA Analyzer (hda)."""
 
 import click
 from rich.console import Console
@@ -9,7 +9,7 @@ console = Console()
 
 @click.group()
 def main():
-    """Personal DNA analysis framework."""
+    """Holistic DNA Analyzer — read your DNA, answer your questions."""
     pass
 
 
