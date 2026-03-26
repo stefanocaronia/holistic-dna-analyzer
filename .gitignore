@@ -17,3 +17,6 @@ data/context/*/
 .vscode/
 .idea/
 *.swp
+
+# Local experiments / prototypes
+dashboard/come-funziona-la-dopamina.html
