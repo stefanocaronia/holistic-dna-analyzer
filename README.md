@@ -13,6 +13,8 @@ You bring your raw genotyping file (MyHeritage, 23andMe, AncestryDNA, etc.), the
 - Supports **multiple subjects** — each person gets their own database, like git branches
 - Includes a **Streamlit dashboard** for visual exploration
 
+HDA provides the local data layer, navigation tools, curated panels, and agent-facing functions. When you use an LLM on top of HDA, the model is still generating an interpretation. That interpretation can be useful, but it can also overstate evidence, miss context, or hallucinate. Use it for exploration, not diagnosis.
+
 ## Talking to the Agent
 
 This is the primary way to use the framework. Open a conversation with any AI agent that has access to this project (e.g. Claude Code, Cursor, Copilot, or any agent that can read files and run Python). The agent reads [AGENTS.md](AGENTS.md) and knows how to use all the tools.
@@ -42,6 +44,13 @@ Agent: [runs cardiovascular, inflammation, nutrition panels; cross-references fi
 - "Am I prone to nicotine addiction?"
 
 The agent saves its findings in `data/context/<name>/` so that next session it already knows your profile and can build on previous analyses.
+
+## Interpretation Safety
+
+- HDA gives you structured access to genotype data, curated panels, and external annotations
+- Any narrative explanation produced by an LLM is still an LLM output, not a medical conclusion
+- Genetic predispositions are probabilistic and incomplete; environment, labs, symptoms, and clinical history matter
+- Important health decisions should be reviewed with a physician, genetic counselor, or other qualified professional
 
 ## Setup
 
@@ -111,6 +120,15 @@ hda analyze <panel>   # Run a panel (e.g. pharmacogenomics, cardiovascular)
 hda report            # All notable findings across panels
 ```
 
+## Testing
+
+Run the current automated checks from the project root:
+
+```powershell
+$env:PYTHONPATH='src'
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
 ## Dashboard
 
 ```bash
@@ -160,6 +178,12 @@ Your DNA data stays local. Raw files, databases, and context folders are all git
 - **MyHeritage** (CSV export)
 - **23andMe** (`.txt` or `.zip` raw data export)
 - **AncestryDNA** (`.txt` or `.zip` raw data export)
+
+## Import Troubleshooting
+
+- If `hda import` says the source file is missing, check `config.yaml` and place the raw export in `data/sources/`
+- If `source_format` does not match the file, fix `config.yaml` or replace the file with the correct provider export
+- If the format is not detected, set `source_format` explicitly to `MyHeritage`, `23andMe`, or `AncestryDNA`
 
 ## License
 

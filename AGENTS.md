@@ -88,6 +88,17 @@ for r in results['results']:
 
 **Important:** The source code lives in `src/hda/`. Always set `PYTHONPATH=src` when running scripts. Do not use `sys.path.insert()` hacks.
 
+### Panel Editing Rules
+
+If you create or review analysis panels, follow [docs/PANEL_SCHEMA.md](docs/PANEL_SCHEMA.md) and [docs/PANEL_LLM_WORKFLOWS.md](docs/PANEL_LLM_WORKFLOWS.md).
+
+- Do not mark a panel as core/verified just because an LLM drafted it
+- Do not invent provenance or citations
+- Prefer conservative language, especially for neuropsychiatric or behavioral panels
+- If evidence is weak or mixed, keep the panel local/unverified instead of promoting it to the repository
+- If a panel's `review_status` is not `verified`, any user-facing interpretation must include an explicit disclaimer that the panel is exploratory / not part of the verified core set
+- Agent tool responses for panels may include `requires_disclaimer` and `interpretation_warning`; treat them as mandatory guidance, not optional hints
+
 ### Key rules
 - **Panels first.** Always start with `run_panel()` or `hda analyze` for structured questions. Panels are curated and cover the most important variants per domain.
 - **Annotate for depth.** Use `annotate_my_snp()` or `hda annotate` when you need online database context for a specific SNP.
@@ -164,20 +175,20 @@ The most impactful things for your specific profile: regular aerobic exercise (i
 
 The `data/panels/` directory contains curated YAML panels, each covering a specific health or trait domain. Panels are regularly updated. Use `available_panels()` to see the current list. Current panels include:
 
-- **pharmacogenomics** — drug metabolism, caffeine, medication response
-- **cardiovascular** — heart disease, cholesterol, blood pressure, APOE
-- **nutrigenomics** — lactose, obesity risk, iron, diabetes
-- **nutrition_advanced** — vitamins (D, B6, B12, A), omega-3, inflammation and diet
-- **traits** — eye color, hair, earwax, physical characteristics
-- **wellness** — exercise response, recovery, motivation
-- **addiction** — nicotine, alcohol, opioids, cannabis, reward seeking
-- **health_over50** — cancer screening, prostate, bone density, cognitive decline, PSA
-- **sleep** — chronotype, melatonin, circadian rhythm, deep sleep
-- **inflammation** — IL-6, TNF-alpha, autoimmune risk, gut inflammation
-- **mental_health** — depression, anxiety, serotonin, cortisol, PTSD vulnerability
-- **adhd_neurodivergence** — dopamine transport, attention, autism spectrum traits, executive function
-- **autism_spectrum** — synaptic adhesion, social cognition, neurodevelopment, neurotransmitter balance, immune-neural interactions, methylation
-- **cognitive** — memory, learning, processing speed, cognitive aging
+- **pharmacogenomics** — verified core; conservative medication and caffeine response markers
+- **inflammation** — verified core; immune susceptibility and gut-inflammation loci with stronger support
+- **nutrition_metabolism** — verified core; lactose, obesity risk, iron, diabetes, food-response metabolism
+- **nutrition_micronutrients** — verified core; vitamin D/A/B6/B12 and omega-3 conversion/absorption tendencies
+- **traits** — verified core; strongly associated visible physical traits
+- **cardiovascular** — exploratory; includes loci that need more curation or composite interpretation
+- **wellness** — exploratory; exercise response, recovery, motivation
+- **addiction** — exploratory; nicotine, alcohol, opioids, cannabis, reward seeking
+- **health_over50** — exploratory; age-related screening themes still need pruning
+- **sleep** — exploratory; chronotype, melatonin, circadian rhythm, deep sleep
+- **mental_health** — exploratory; depression, anxiety, serotonin, cortisol, PTSD vulnerability
+- **adhd_neurodivergence** — exploratory; dopamine transport, attention, autism spectrum traits, executive function
+- **autism_spectrum** — exploratory; synaptic adhesion, social cognition, neurodevelopment, neurotransmitter balance, immune-neural interactions, methylation
+- **cognitive** — exploratory; memory, learning, processing speed, cognitive aging
 
 ## Tool Functions Reference
 

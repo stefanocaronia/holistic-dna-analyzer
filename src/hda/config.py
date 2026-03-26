@@ -10,6 +10,7 @@ CONFIG_PATH = ROOT_DIR / "config.yaml"
 DATA_DIR = ROOT_DIR / "data"
 SOURCES_DIR = DATA_DIR / "sources"
 DB_DIR = DATA_DIR / "db"
+CONTEXT_DIR = DATA_DIR / "context"
 
 
 def load_config() -> dict[str, Any]:
@@ -29,19 +30,32 @@ def get_active_subject() -> str:
     return config["active_subject"]
 
 
-def get_subject_profile(name: str | None = None) -> dict[str, Any]:
-    config = load_config()
-    name = name or config["active_subject"]
-    subjects = config.get("subjects", {})
+def validate_subject_key(name: str) -> str:
+    """Ensure the subject exists in config before accessing its data."""
+    subjects = list_subjects()
     if name not in subjects:
         raise KeyError(f"Subject '{name}' not found in config.yaml")
+    return name
+
+
+def get_subject_profile(name: str | None = None) -> dict[str, Any]:
+    config = load_config()
+    name = validate_subject_key(name or config["active_subject"])
+    subjects = config.get("subjects", {})
     return subjects[name]
 
 
 def get_db_path(name: str | None = None) -> Path:
     config = load_config()
-    name = name or config["active_subject"]
+    name = validate_subject_key(name or config["active_subject"])
     return DB_DIR / f"{name}.db"
+
+
+def get_context_path(name: str | None = None) -> Path:
+    """Return the context folder for a configured subject."""
+    config = load_config()
+    name = validate_subject_key(name or config["active_subject"])
+    return CONTEXT_DIR / name
 
 
 def list_subjects() -> dict[str, dict[str, Any]]:
@@ -51,7 +65,5 @@ def list_subjects() -> dict[str, dict[str, Any]]:
 
 def switch_subject(name: str) -> None:
     config = load_config()
-    if name not in config.get("subjects", {}):
-        raise KeyError(f"Subject '{name}' not found in config.yaml")
-    config["active_subject"] = name
+    config["active_subject"] = validate_subject_key(name)
     save_config(config)

@@ -1,0 +1,181 @@
+name: "Nutrition: Micronutrients"
+description: Genetic variants affecting micronutrient conversion, transport, and absorption tendencies
+category: nutrition
+status: core
+review_status: verified
+version: 1
+last_reviewed: 2026-03-26
+summary: >
+  Curated micronutrient-focused panel covering vitamin A conversion, vitamin D transport,
+  B12-related absorption tendencies, vitamin B6 level associations, and omega-3 fatty acid
+  conversion. This panel is narrower than the broader nutrition-metabolism panel and excludes broader
+  metabolic or inflammatory claims better handled elsewhere.
+sources:
+  - type: pubmed
+    citation: "BCMO1 variants and beta-carotene metabolism"
+    url: "https://pubmed.ncbi.nlm.nih.gov/19103647/"
+  - type: pubmed
+    citation: "GC variants and circulating vitamin D levels"
+    url: "https://pubmed.ncbi.nlm.nih.gov/20418485/"
+  - type: review
+    citation: "Vitamin metabolism and common genetic variation review"
+    url: "https://www.mdpi.com/2072-6643/17/2/242"
+  - type: pubmed
+    citation: "FUT2 and vitamin B12 levels"
+    url: "https://pubmed.ncbi.nlm.nih.gov/18776911/"
+  - type: pmc
+    citation: "GWAS of vitamin B6, B12, folate and homocysteine concentrations"
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2667971/"
+  - type: pubmed
+    citation: "FADS1 variants and PUFA concentrations"
+    url: "https://pubmed.ncbi.nlm.nih.gov/31991592/"
+limitations:
+  - Associations are probabilistic and not diagnostic.
+  - Nutrient biomarkers remain strongly influenced by diet, sun exposure, supplements, and clinical context.
+  - This panel focuses on micronutrient handling and excludes more speculative longevity or broad inflammatory claims from the core set.
+
+variants:
+  - rsid: rs12934922
+    gene: BCMO1
+    trait: Beta-carotene to vitamin A conversion
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "BCMO1 variants and beta-carotene metabolism"
+        url: "https://pubmed.ncbi.nlm.nih.gov/19103647/"
+    genotypes:
+      AA:
+        effect: normal
+        description: Efficient conversion of beta-carotene (carrots, sweet potato) to active vitamin A.
+      AT:
+        effect: reduced
+        description: Associated with reduced beta-carotene conversion efficiency. Preformed vitamin A sources may matter more if intake is otherwise marginal.
+      TT:
+        effect: significantly_reduced
+        description: Associated with substantially lower beta-carotene conversion efficiency, especially when combined with other BCMO1 variants.
+
+  - rsid: rs2282679
+    gene: GC (vitamin D binding protein)
+    trait: Vitamin D levels
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "GC variants and circulating vitamin D levels"
+        url: "https://pubmed.ncbi.nlm.nih.gov/20418485/"
+    genotypes:
+      TT:
+        effect: normal
+        description: Normal vitamin D transport and levels.
+      TG:
+        effect: reduced
+        description: Associated with lower circulating vitamin D levels on average. Lab monitoring is more informative than genotype alone.
+      GG:
+        effect: significantly_reduced
+        description: Associated with clearly lower circulating vitamin D levels on average, especially when environmental exposure is limited.
+    aliases:
+      AC: TG
+      CC: GG
+      AA: TT
+
+  - rsid: rs602662
+    gene: FUT2
+    trait: Vitamin B12 absorption
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "FUT2 common variants and plasma vitamin B12"
+        url: "https://pubmed.ncbi.nlm.nih.gov/18776911/"
+      - type: pmc
+        citation: "Review update on vitamin B12-related polymorphisms"
+        url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC5801754/"
+    genotypes:
+      GG:
+        effect: normal
+        description: Typical FUT2-related handling of vitamin B12.
+      GA:
+        effect: slightly_reduced
+        description: Associated with modestly less favorable B12 status in some cohorts. Diet and measured levels remain more important than genotype alone.
+      AA:
+        effect: reduced
+        description: Associated with a higher chance of lower B12 status in some studies, especially when intake is already marginal.
+
+  - rsid: rs4654748
+    gene: NBPF3/ALPL
+    trait: Vitamin B6 levels
+    evidence_level: medium
+    sources:
+      - type: pmc
+        citation: "GWAS of vitamin B6, B12, folate and homocysteine concentrations"
+        url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2667971/"
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal vitamin B6 metabolism and levels.
+      CT:
+        effect: reduced
+        description: Associated with lower vitamin B6 levels on average. Intake and measured PLP remain more informative than genotype alone.
+      TT:
+        effect: significantly_reduced
+        description: Associated with clearly lower vitamin B6 levels on average. If symptoms or labs suggest deficiency, this variant strengthens the case to check status.
+
+  - rsid: rs174546
+    gene: FADS1
+    trait: Omega-3/Omega-6 fatty acid conversion
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "FADS1 variants and PUFA concentrations"
+        url: "https://pubmed.ncbi.nlm.nih.gov/31991592/"
+    genotypes:
+      CC:
+        effect: efficient
+        description: Efficient conversion of plant omega-3 (ALA) to active forms (EPA/DHA).
+      CT:
+        effect: intermediate
+        description: Intermediate conversion from plant omega-3 precursors. Direct EPA/DHA intake may still be useful depending on diet.
+      TT:
+        effect: poor
+        description: Less efficient conversion from plant omega-3 precursors. Direct EPA/DHA intake becomes more important if oily fish intake is low.
+
+  - rsid: rs7501331
+    gene: BCMO1
+    trait: Beta-carotene conversion (second variant)
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "BCMO1 variants and beta-carotene metabolism"
+        url: "https://pubmed.ncbi.nlm.nih.gov/19103647/"
+    genotypes:
+      CC:
+        effect: normal
+        description: Normal beta-carotene conversion at this position.
+      CT:
+        effect: reduced
+        description: Additional reduction in beta-carotene conversion. Interpretation is stronger when considered together with rs12934922.
+      TT:
+        effect: significantly_reduced
+        description: Further reduction in beta-carotene conversion. This variant matters most when paired with the other BCMO1 conversion variant.
+
+  - rsid: rs4588
+    gene: GC
+    trait: Vitamin D binding protein variant
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "GC variants and circulating vitamin D levels"
+        url: "https://pubmed.ncbi.nlm.nih.gov/24200978/"
+      - type: review
+        citation: "Vitamin metabolism and common genetic variation review"
+        url: "https://www.mdpi.com/2072-6643/17/2/242"
+    genotypes:
+      GG:
+        effect: normal
+        description: Typical vitamin D binding protein profile at this locus.
+      GT:
+        effect: reduced
+        description: Associated with lower vitamin D binding / circulating levels in several cohorts. Actual serum 25(OH)D remains the main decision point.
+      TT:
+        effect: significantly_reduced
+        description: Associated with clearly lower vitamin D binding / circulating levels on average, but dosing decisions should still be guided by labs.
+    aliases:
+      TG: GT

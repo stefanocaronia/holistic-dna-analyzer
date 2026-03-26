@@ -1,0 +1,130 @@
+name: "Nutrition: Metabolism & Food Response"
+description: Genetic variants affecting food response, metabolic risk, and a few stable nutrition-related traits
+category: nutrition
+status: core
+review_status: verified
+version: 1
+last_reviewed: 2026-03-26
+summary: >
+  Curated nutrition-metabolism panel focused on relatively stable, commonly used associations
+  for lactose persistence, iron overload risk, type 2 diabetes susceptibility,
+  obesity predisposition, and insulin-sensitivity-related metabolism.
+sources:
+  - type: medlineplus
+    citation: "Lactose intolerance / lactase persistence genetics"
+    url: "https://medlineplus.gov/genetics/condition/lactose-intolerance/"
+  - type: medlineplus
+    citation: "HFE gene and hereditary hemochromatosis"
+    url: "https://medlineplus.gov/genetics/gene/hfe/"
+  - type: pubmed
+    citation: "TCF7L2 polymorphisms and diabetes risk"
+    url: "https://pubmed.ncbi.nlm.nih.gov/16855264/"
+  - type: pubmed
+    citation: "PPARG Pro12Ala review / meta-analysis"
+    url: "https://pubmed.ncbi.nlm.nih.gov/32728045/"
+limitations:
+  - Associations are probabilistic and not diagnostic.
+  - Effect sizes vary by ancestry, environment, and lifestyle.
+  - This panel excludes more speculative nutrigenomic claims from the core set.
+
+variants:
+  - rsid: rs4988235
+    gene: MCM6/LCT
+    trait: Lactose tolerance
+    evidence_level: high
+    sources:
+      - type: medlineplus
+        citation: "Lactose intolerance / lactase persistence genetics"
+        url: "https://medlineplus.gov/genetics/condition/lactose-intolerance/"
+    genotypes:
+      GG:
+        effect: lactose_intolerant
+        description: Lactose intolerant (European-type). Lactase production declines after childhood.
+      GA:
+        effect: lactose_tolerant
+        description: Lactose tolerant. One persistence allele maintains lactase production.
+      AA:
+        effect: lactose_tolerant
+        description: Lactose tolerant. Full lactase persistence into adulthood.
+    aliases:
+      CT: GA
+      CC: AA
+      TT: GG
+
+  - rsid: rs1801282
+    gene: PPARG
+    trait: Fat metabolism — PPARG Pro12Ala
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "PPARG Pro12Ala review / meta-analysis"
+        url: "https://pubmed.ncbi.nlm.nih.gov/32728045/"
+    genotypes:
+      CC:
+        effect: normal
+        description: Standard fat storage and insulin sensitivity.
+      CG:
+        effect: protective
+        description: Ala variant carrier. Often associated with somewhat better insulin sensitivity and slightly lower type 2 diabetes risk.
+      GG:
+        effect: protective
+        description: Homozygous Ala. Directionally favorable in many studies, but effect size is still modest and context-dependent.
+
+  - rsid: rs9939609
+    gene: FTO
+    trait: Obesity risk (FTO gene)
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "FTO obesity association studies and follow-up literature"
+        url: "https://pubmed.ncbi.nlm.nih.gov/17434869/"
+    genotypes:
+      TT:
+        effect: lower_risk
+        description: Lower genetic predisposition to obesity at this locus.
+      TA:
+        effect: moderate_risk
+        description: One risk allele. Associated with moderately higher obesity risk on average. Physical activity remains highly relevant.
+      AA:
+        effect: higher_risk
+        description: Two risk alleles. Associated with higher obesity risk on average, but lifestyle still strongly modifies the outcome.
+    aliases:
+      AT: TA
+
+  - rsid: rs1800562
+    gene: HFE
+    trait: Hereditary hemochromatosis (C282Y)
+    evidence_level: high
+    sources:
+      - type: medlineplus
+        citation: "HFE gene and hereditary hemochromatosis"
+        url: "https://medlineplus.gov/genetics/gene/hfe/"
+    genotypes:
+      GG:
+        effect: normal
+        description: Normal iron metabolism.
+      GA:
+        effect: carrier
+        description: Carrier of C282Y. Usually no iron overload by itself, but iron studies may be worth checking if clinically indicated.
+      AA:
+        effect: at_risk
+        description: Homozygous C282Y. High risk of iron overload. Regular ferritin monitoring recommended.
+
+  - rsid: rs7903146
+    gene: TCF7L2
+    trait: Type 2 diabetes risk
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "TCF7L2 polymorphisms and progression to diabetes"
+        url: "https://pubmed.ncbi.nlm.nih.gov/16855264/"
+    genotypes:
+      CC:
+        effect: lower_risk
+        description: Lower genetic risk for type 2 diabetes.
+      CT:
+        effect: moderate_risk
+        description: One risk allele. Associated with moderately increased type 2 diabetes risk. Glycemic control and body composition remain important modifiers.
+      TT:
+        effect: higher_risk
+        description: Two risk alleles. Associated with clearly higher type 2 diabetes risk, but not determinative on its own.

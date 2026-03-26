@@ -32,7 +32,7 @@ def switch(name: str):
 def import_cmd(name: str | None):
     """Import a subject's source file into SQLite. Defaults to active subject."""
     from hda.config import get_active_subject
-    from hda.db.importer import import_subject
+    from hda.db.importer import SUPPORTED_FORMATS_LABEL, import_subject
 
     name = name or get_active_subject()
     console.print(f"Importing [bold]{name}[/]...")
@@ -40,7 +40,16 @@ def import_cmd(name: str | None):
     try:
         count = import_subject(name)
         console.print(f"[green]Done.[/] {count:,} SNPs imported into data/db/{name}.db")
-    except (FileNotFoundError, ValueError, KeyError) as e:
+    except FileNotFoundError as e:
+        console.print(f"[red]{e}[/]")
+        console.print("[yellow]Tip:[/] check `config.yaml`, `source_file`, and that the raw export is inside `data/sources/`.")
+        raise SystemExit(1)
+    except ValueError as e:
+        console.print(f"[red]{e}[/]")
+        console.print(f"[yellow]Tip:[/] supported import formats are: {SUPPORTED_FORMATS_LABEL}.")
+        console.print("[yellow]Tip:[/] if needed, set `source_format` explicitly in `config.yaml`.")
+        raise SystemExit(1)
+    except KeyError as e:
         console.print(f"[red]{e}[/]")
         raise SystemExit(1)
 
@@ -158,11 +167,19 @@ def panels():
     table.add_column("ID", style="bold")
     table.add_column("Name")
     table.add_column("Category")
+    table.add_column("Review")
     table.add_column("Variants", justify="right")
     table.add_column("Description")
 
     for p in all_panels:
-        table.add_row(p["id"], p["name"], p["category"], str(p["variant_count"]), p["description"])
+        table.add_row(
+            p["id"],
+            p["name"],
+            p["category"],
+            p.get("review_status", "unknown"),
+            str(p["variant_count"]),
+            p["description"],
+        )
 
     console.print(table)
 
@@ -180,13 +197,24 @@ def analyze(panel_id: str, subject: str | None):
         console.print(f"[red]{e}[/]")
         raise SystemExit(1)
 
-    table = Table(title=f"{result['panel_name']} — {result['subject']} ({result['found_in_genome']}/{result['total_variants']} found)")
+    review_status = result.get("review_status", "unknown")
+    title = (
+        f"{result['panel_name']} [{review_status}] — "
+        f"{result['subject']} ({result['found_in_genome']}/{result['total_variants']} found)"
+    )
+    table = Table(title=title)
     table.add_column("Gene", style="bold")
     table.add_column("rsid")
     table.add_column("Trait")
     table.add_column("Genotype", justify="center")
     table.add_column("Effect")
     table.add_column("Description")
+
+    if review_status != "verified":
+        console.print(
+            f"[yellow]Note:[/] panel review status is '{review_status}'. "
+            "Treat interpretations as exploratory unless independently reviewed."
+        )
 
     for r in result["results"]:
         if not r["found"]:

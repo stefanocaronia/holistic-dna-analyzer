@@ -1,132 +1,92 @@
-name: Inflammation & Immunity
-description: Genetic variants affecting inflammatory response, autoimmune risk, and immune system function
+name: Inflammation & Immune Susceptibility
+description: Conservative inflammation panel focused on a few more defensible immune-regulation associations
 category: health
+status: core
+review_status: verified
+version: 1
+last_reviewed: 2026-03-26
+summary: >
+  Curated inflammation panel narrowed to a small set of immune-regulation variants with
+  comparatively stronger support than many popular cytokine SNP claims. It focuses on
+  autoimmune susceptibility and inflammatory bowel disease tendency, not on diagnosis or
+  direct prediction of cytokine lab values.
+sources:
+  - type: pmc
+    citation: "Meta-analysis of rheumatoid arthritis-related SNPs highlighting PTPN22 rs2476601"
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC3519690/"
+  - type: pubmed
+    citation: "IL-10 rs3024505 and inflammatory bowel disease susceptibility meta-analysis"
+    url: "https://pubmed.ncbi.nlm.nih.gov/34628128/"
+  - type: pubmed
+    citation: "IL-10 promoter polymorphisms and inflammatory bowel disease meta-analysis"
+    url: "https://pubmed.ncbi.nlm.nih.gov/24128120/"
+limitations:
+  - Associations are probabilistic and not diagnostic.
+  - Autoimmune and inflammatory disease risk is strongly modified by ancestry, environment, smoking, infections, and other loci.
+  - Several widely cited cytokine SNPs were intentionally excluded from the core set because direction or effect size is too context-dependent for a trusted default panel.
 
 variants:
-  - rsid: rs1800795
-    gene: IL6
-    trait: Interleukin-6 — baseline inflammation
-    genotypes:
-      GG:
-        effect: higher_inflammation
-        description: Higher baseline IL-6 production. Chronic low-grade inflammation. Anti-inflammatory diet and exercise especially important.
-      GC:
-        effect: intermediate
-        description: Intermediate IL-6 levels. Moderate inflammatory tendency.
-      CC:
-        effect: lower_inflammation
-        description: Lower IL-6 production. Generally lower inflammatory burden.
-
-  - rsid: rs1800629
-    gene: TNF
-    trait: TNF-alpha — acute inflammatory response
-    genotypes:
-      GG:
-        effect: normal
-        description: Normal TNF-alpha production. Standard inflammatory and immune response.
-      GA:
-        effect: elevated
-        description: Elevated TNF-alpha. More vigorous immune response but higher risk of chronic inflammation.
-      AA:
-        effect: significantly_elevated
-        description: Significantly elevated TNF-alpha. Strong immune activation but higher autoimmune and inflammatory disease risk.
-
-  - rsid: rs1800896
-    gene: IL10
-    trait: Interleukin-10 — anti-inflammatory capacity
-    genotypes:
-      TT:
-        effect: lower_antiinflammatory
-        description: Lower IL-10 production. Reduced ability to dampen inflammation. May need more anti-inflammatory support.
-      TC:
-        effect: intermediate
-        description: Intermediate IL-10 levels. Moderate anti-inflammatory capacity.
-      CC:
-        effect: higher_antiinflammatory
-        description: Higher IL-10 production. Better natural inflammation control.
-    aliases:
-      AA: TT
-      AG: TC
-      GG: CC
-
   - rsid: rs3024505
     gene: IL10 region
-    trait: IL-10 regulatory region — autoimmune risk
+    trait: Inflammatory bowel disease susceptibility
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "IL-10 rs3024505 and inflammatory bowel disease susceptibility meta-analysis"
+        url: "https://pubmed.ncbi.nlm.nih.gov/34628128/"
     genotypes:
       CC:
         effect: normal
-        description: Normal IL-10 regulation. Standard autoimmune risk.
+        description: Lower known risk at this locus for inflammatory bowel disease.
       CT:
         effect: moderate_risk
-        description: One risk allele. Slightly increased risk for inflammatory bowel disease and autoimmune conditions.
+        description: One risk allele. Associated with modestly higher inflammatory bowel disease susceptibility in meta-analysis.
       TT:
         effect: higher_risk
-        description: Two risk alleles. Higher susceptibility to Crohn's disease and ulcerative colitis.
+        description: Two risk alleles. Associated with higher inflammatory bowel disease susceptibility, especially when other risk factors are present.
+    aliases:
+      GG: CC
+      AG: CT
+      AA: TT
 
   - rsid: rs2476601
     gene: PTPN22
     trait: Autoimmune susceptibility — master switch
+    evidence_level: high
+    sources:
+      - type: pmc
+        citation: "Meta-analysis of rheumatoid arthritis-related SNPs highlighting PTPN22 rs2476601"
+        url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC3519690/"
     genotypes:
       GG:
         effect: normal
-        description: Normal T-cell regulation. Standard autoimmune risk.
+        description: Typical PTPN22-related immune regulation at this locus.
       GA:
         effect: increased_risk
-        description: One risk allele. Increased risk for multiple autoimmune conditions (thyroid, rheumatoid arthritis, type 1 diabetes).
+        description: One risk allele. Associated with higher autoimmune susceptibility across several conditions, especially rheumatoid arthritis and some thyroid or type 1 diabetes contexts.
       AA:
         effect: higher_risk
-        description: Two risk alleles. Significantly elevated autoimmune susceptibility. Regular thyroid and autoantibody screening advisable.
-
-  - rsid: rs1800470
-    gene: TGFB1
-    trait: TGF-beta — tissue repair and fibrosis
-    genotypes:
-      TT:
-        effect: higher_production
-        description: Higher TGF-beta. Better wound healing but increased fibrosis risk with age.
-      TC:
-        effect: intermediate
-        description: Intermediate TGF-beta production. Balanced repair response.
-      CC:
-        effect: lower_production
-        description: Lower TGF-beta. Less fibrosis tendency but potentially slower tissue repair.
-    aliases:
-      AA: TT
-      AG: TC
-      GG: CC
+        description: Two risk alleles. Associated with clearly higher autoimmune susceptibility, though absolute risk still depends heavily on family history and environment.
 
   - rsid: rs1800871
     gene: IL10
-    trait: IL-10 promoter — inflammatory bowel protection
-    genotypes:
-      TT:
-        effect: lower_protection
-        description: Lower IL-10 from this promoter variant. Reduced gut anti-inflammatory protection.
-      TC:
-        effect: intermediate
-        description: Intermediate protection. Standard gut inflammatory control.
-      CC:
-        effect: higher_protection
-        description: Higher IL-10 expression. Better protection against inflammatory bowel conditions.
-    aliases:
-      AA: TT
-      AG: TC
-      GG: CC
-
-  - rsid: rs6457620
-    gene: HLA region
-    trait: HLA autoimmune risk — rheumatoid arthritis
+    trait: Ulcerative colitis susceptibility
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "IL-10 promoter polymorphisms and inflammatory bowel disease meta-analysis"
+        url: "https://pubmed.ncbi.nlm.nih.gov/24128120/"
     genotypes:
       CC:
         effect: lower_risk
-        description: Lower HLA-associated risk for rheumatoid arthritis.
-      CT:
+        description: Lower known ulcerative colitis susceptibility at this locus.
+      TC:
         effect: moderate_risk
-        description: One risk allele. Moderately elevated rheumatoid arthritis risk, especially with smoking.
+        description: One risk allele. Associated with modestly higher ulcerative colitis susceptibility in some meta-analytic datasets.
       TT:
         effect: higher_risk
-        description: Two risk alleles. Higher RA susceptibility. Avoid smoking, which dramatically increases risk with this genotype.
+        description: Two risk alleles. Associated with higher ulcerative colitis susceptibility, though effect size remains modest.
     aliases:
       AA: TT
-      AG: CT
+      AG: TC
       GG: CC

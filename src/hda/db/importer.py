@@ -15,6 +15,7 @@ from hda.db.schema import get_connection, init_db
 
 BATCH_SIZE = 50_000
 SUPPORTED_FORMATS = ("MyHeritage", "23andMe", "AncestryDNA")
+SUPPORTED_FORMATS_LABEL = "MyHeritage (.csv), 23andMe (.txt/.zip), AncestryDNA (.txt/.zip)"
 
 
 @contextmanager
@@ -90,6 +91,15 @@ def normalize_genotype(*alleles: str) -> str:
 def split_fields(line: str) -> list[str]:
     """Split a provider row using comma or tab delimiters."""
     return [field.strip() for field in re.split(r"[\t,]+", line.strip())]
+
+
+def format_detected_mismatch(source_file: Path, configured: str, detected: str) -> str:
+    """Build an explicit mismatch error for configured vs detected source format."""
+    return (
+        f"Configured source_format '{configured}' does not match the file '{source_file.name}', "
+        f"which looks like '{detected}'. Update config.yaml or use the correct raw data file. "
+        f"Supported formats: {SUPPORTED_FORMATS_LABEL}."
+    )
 
 
 def parse_myheritage(filepath: Path) -> list[tuple[str, str, int, str]]:
@@ -194,17 +204,41 @@ def import_subject(subject_key: str) -> int:
     source_file = SOURCES_DIR / subject["source_file"]
 
     if not source_file.exists():
-        raise FileNotFoundError(f"Source file not found: {source_file}")
+        raise FileNotFoundError(
+            f"Source file not found: {source_file}. Put the raw DNA export in data/sources/ "
+            f"and check the subject's source_file in config.yaml."
+        )
 
-    fmt = subject.get("source_format") or detect_format(source_file)
+    configured_format = subject.get("source_format")
+    detected_format = detect_format(source_file)
+    fmt = configured_format or detected_format
+
+    if configured_format and detected_format != "unknown" and configured_format != detected_format:
+        raise ValueError(format_detected_mismatch(source_file, configured_format, detected_format))
+
     parser = PARSERS.get(fmt)
     if parser is None:
-        raise ValueError(f"Unsupported format: {fmt}. Supported: {list(PARSERS.keys())}")
+        if detected_format == "unknown":
+            raise ValueError(
+                f"Could not detect the format of '{source_file.name}'. Supported formats: "
+                f"{SUPPORTED_FORMATS_LABEL}. If the file is valid, set source_format explicitly in config.yaml."
+            )
+        raise ValueError(
+            f"Unsupported format: {fmt}. Supported formats: {SUPPORTED_FORMATS_LABEL}."
+        )
 
     db_path = get_db_path(subject_key)
     init_db(db_path)
 
-    rows = parser(source_file)
+    try:
+        rows = parser(source_file)
+    except ValueError as e:
+        if configured_format and detected_format != "unknown" and configured_format != detected_format:
+            raise ValueError(format_detected_mismatch(source_file, configured_format, detected_format)) from e
+        raise ValueError(
+            f"Failed to parse '{source_file.name}' as {fmt}: {e} "
+            f"Supported formats: {SUPPORTED_FORMATS_LABEL}."
+        ) from e
 
     conn = get_connection(db_path)
     try:

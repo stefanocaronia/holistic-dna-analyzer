@@ -23,6 +23,22 @@ from hda.db.query import (
 )
 
 
+def _panel_disclaimer_fields(review_status: str | None) -> dict:
+    """Return explicit disclaimer metadata for agent-facing panel results."""
+    review_status = review_status or "unknown"
+    requires_disclaimer = review_status != "verified"
+    warning = None
+    if requires_disclaimer:
+        warning = (
+            f"This panel has review_status='{review_status}' and is not part of the verified core set. "
+            "Treat any interpretation as exploratory and recommend professional review for important decisions."
+        )
+    return {
+        "requires_disclaimer": requires_disclaimer,
+        "interpretation_warning": warning,
+    }
+
+
 def who_am_i() -> dict:
     """Return the active subject's profile (name, sex, date of birth, etc.)."""
     name = get_active_subject()
@@ -205,14 +221,17 @@ def available_panels() -> list[dict]:
     Returns:
         List of panels with id, name, description, category, and variant count.
     """
-    return list_panels()
+    panels = []
+    for panel in list_panels():
+        panels.append({**panel, **_panel_disclaimer_fields(panel.get("review_status"))})
+    return panels
 
 
 def run_panel(panel_id: str, subject: str | None = None) -> dict:
     """Run a curated SNP panel against a subject's genome.
 
     Panels are predefined sets of well-studied variants grouped by theme
-    (e.g. pharmacogenomics, cardiovascular, nutrigenomics, traits, wellness).
+    (e.g. pharmacogenomics, cardiovascular, nutrition_metabolism, traits, wellness).
 
     Args:
         panel_id: Panel identifier. Use available_panels() to see options.
@@ -221,7 +240,8 @@ def run_panel(panel_id: str, subject: str | None = None) -> dict:
     Returns:
         Dict with per-variant genotype, effect, and interpretation.
     """
-    return analyze_panel(panel_id, subject)
+    result = analyze_panel(panel_id, subject)
+    return {**result, **_panel_disclaimer_fields(result.get("review_status"))}
 
 
 def run_all_panels(subject: str | None = None) -> list[dict]:
@@ -233,7 +253,10 @@ def run_all_panels(subject: str | None = None) -> list[dict]:
     Returns:
         List of panel results.
     """
-    return analyze_all_panels(subject)
+    results = []
+    for panel in analyze_all_panels(subject):
+        results.append({**panel, **_panel_disclaimer_fields(panel.get("review_status"))})
+    return results
 
 
 def notable_findings(subject: str | None = None) -> list[dict]:

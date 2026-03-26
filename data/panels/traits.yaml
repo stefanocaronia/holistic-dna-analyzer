@@ -1,11 +1,37 @@
 name: Physical Traits
-description: Genetic variants associated with observable physical characteristics
+description: Conservative physical-trait panel limited to a few strongly associated visible characteristics
 category: traits
+status: core
+review_status: verified
+version: 1
+last_reviewed: 2026-03-26
+summary: >
+  Curated physical-trait panel focused on a small set of highly recognizable genotype-phenotype
+  associations for eye colour, red-hair tendency, and earwax/body-odour type.
+sources:
+  - type: pubmed
+    citation: "HERC2 rs12913832 as a major eye-colour predictor"
+    url: "https://pubmed.ncbi.nlm.nih.gov/36980970/"
+  - type: pubmed
+    citation: "rs1805007 and related pigmentation SNPs in human hair-colour prediction"
+    url: "https://pubmed.ncbi.nlm.nih.gov/28242083/"
+  - type: pubmed
+    citation: "ABCC11 rs17822931 determines earwax type and body odour tendency"
+    url: "https://pubmed.ncbi.nlm.nih.gov/23325016/"
+limitations:
+  - These are tendencies, not perfect phenotype predictions.
+  - Visible traits remain influenced by ancestry and additional loci not represented here.
+  - This core panel excludes behavioral or mood-related SNP claims.
 
 variants:
   - rsid: rs12913832
     gene: HERC2/OCA2
     trait: Eye color
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "HERC2 rs12913832 as a major eye-colour predictor"
+        url: "https://pubmed.ncbi.nlm.nih.gov/36980970/"
     genotypes:
       GG:
         effect: blue_eyes
@@ -20,6 +46,11 @@ variants:
   - rsid: rs1805007
     gene: MC1R
     trait: Red hair and fair skin (R151C)
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "rs1805007 and related pigmentation SNPs in human hair-colour prediction"
+        url: "https://pubmed.ncbi.nlm.nih.gov/28242083/"
     genotypes:
       CC:
         effect: normal
@@ -34,6 +65,11 @@ variants:
   - rsid: rs17822931
     gene: ABCC11
     trait: Earwax type and body odor
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "ABCC11 rs17822931 determines earwax type and body odour tendency"
+        url: "https://pubmed.ncbi.nlm.nih.gov/23325016/"
     genotypes:
       CC:
         effect: wet
@@ -44,45 +80,3 @@ variants:
       TT:
         effect: dry
         description: Dry earwax. Reduced body odor. Common in East Asian populations.
-
-  - rsid: rs4481887
-    gene: ALDH2 region
-    trait: Alcohol flush reaction
-    genotypes:
-      AA:
-        effect: normal
-        description: Normal aldehyde dehydrogenase. No flush reaction to alcohol.
-      AG:
-        effect: flush
-        description: Reduced enzyme activity. May experience facial flushing with alcohol.
-      GG:
-        effect: strong_flush
-        description: Strongly reduced activity. Significant alcohol intolerance and flush.
-
-  - rsid: rs4570625
-    gene: TPH2
-    trait: Serotonin production
-    genotypes:
-      GG:
-        effect: normal
-        description: Normal serotonin synthesis in the brain.
-      GT:
-        effect: altered
-        description: Altered serotonin synthesis. May have increased emotional reactivity.
-      TT:
-        effect: significantly_altered
-        description: Significantly altered serotonin production. Higher anxiety susceptibility.
-
-  - rsid: rs53576
-    gene: OXTR
-    trait: Oxytocin receptor — social behavior
-    genotypes:
-      GG:
-        effect: enhanced
-        description: Enhanced oxytocin signaling. Associated with higher empathy and social bonding.
-      AG:
-        effect: intermediate
-        description: Intermediate oxytocin receptor expression.
-      AA:
-        effect: reduced
-        description: Reduced oxytocin receptor expression. May be less socially sensitive.
