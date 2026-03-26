@@ -6,9 +6,9 @@ This is a maturity checklist for the project. It is intentionally not tied to a 
 
 - [x] Package and CLI naming are aligned on `hda`
 - [x] Basic CLI workflow is documented from the project folder
-- [ ] Public Python API is documented as a stable surface
-- [ ] CLI commands have automated coverage for success and failure paths
-- [ ] CI runs smoke checks automatically on every change
+- [x] Public Python API is documented as a stable surface
+- [x] CLI commands have automated coverage for success and failure paths
+- [x] CI runs smoke checks automatically on every change
 
 ## Import Pipeline
 
@@ -25,19 +25,22 @@ This is a maturity checklist for the project. It is intentionally not tied to a 
 ## Analysis Engine
 
 - [x] Panel-driven analysis exists and is usable through CLI and agent tools
-- [ ] Core panel schema and provenance requirements are enforced consistently
-- [ ] Panel filename conventions (`.yaml`, `.experimental.yaml`, `.draft.yaml`) are enforced consistently
-- [ ] Core panels include panel-level provenance metadata
-- [ ] Core panels include variant-level evidence metadata
-- [ ] Panel engine supports validated multi-SNP / haplotype interpretations where single SNPs are insufficient (for example APOE)
-- [ ] Every panel kept in the core set is reviewed, improved, and promoted to `verified`
+- [x] Core panel schema and provenance requirements are enforced consistently
+- [x] Panel filename conventions (`.yaml`, `.experimental.yaml`, `.draft.yaml`) are enforced consistently
+- [x] Core panels include panel-level provenance metadata
+- [x] Core panels include variant-level evidence metadata
+- [x] Panel engine supports validated multi-SNP / haplotype interpretations where single SNPs are insufficient (for example APOE)
+- [x] Every panel kept in the core set is reviewed, improved, and promoted to `verified`
 - [ ] Panels have automated regression tests against fixture data
 - [ ] Annotation fetch/caching paths have automated tests
-- [ ] Risk summary behavior is covered by tests
+- [x] Risk summary behavior is covered by tests
 
 ## Product Readiness
 
 - [x] Multi-subject workflow exists
+- [x] Low-level subject comparison is available through CLI and API (`compare`, `compare-variant`, `search`)
+- [x] Panel-level subject comparison exists through CLI and API (`compare-panel`, `compare_panel`)
+- [x] Heuristic relatedness summaries exist with explicit exploratory warnings
 - [x] Persistent subject context exists
 - [x] Dashboard exists for manual exploration
 - [x] README includes troubleshooting for common import failures
@@ -53,6 +56,7 @@ This is a maturity checklist for the project. It is intentionally not tied to a 
 - [ ] Session context loading/writing is routed through validated helper functions instead of ad hoc paths
 - [ ] Optional per-subject export / backup commands exist
 - [ ] Sensitive-data handling and local family-use assumptions are documented explicitly
+- [ ] Relatedness heuristics are validated against known family relationships or pruned marker sets
 
 ## Current Focus
 
@@ -60,7 +64,7 @@ This is a maturity checklist for the project. It is intentionally not tied to a 
 - [x] Add synthetic tests for supported provider formats
 - [ ] Validate the new provider imports on real 23andMe and AncestryDNA exports
 - [x] Decide and document a stable testing command for contributors
-- [ ] Improve each core panel and move it to verified status with provenance and safer wording
+- [x] Improve each core panel and move it to verified status with provenance and safer wording
 
 ## Exploratory Panel Triage
 
@@ -78,4 +82,4 @@ This is a maturity checklist for the project. It is intentionally not tied to a 
 - [x] Prune `cognitive.experimental` to a smaller memory/plasticity/aging exploratory panel
 - [x] Prune `adhd_neurodivergence.experimental` to a minimal exploratory panel centered on attention-regulation and medication-response signals
 - [x] Prune `autism_spectrum.experimental` to a minimal exploratory common-variant panel with explicit non-diagnostic limitations
-- [ ] Add minimum panel-level metadata (`summary`, `sources`, `limitations`) to all exploratory panels kept in the repository
+- [x] Add minimum panel-level metadata (`summary`, `sources`, `limitations`) to all exploratory panels kept in the repository

@@ -5,6 +5,24 @@ dicts/lists that are easy to serialize. The active subject from config.yaml
 is used as default when no subject is specified.
 """
 
+__all__ = [
+    "annotate",
+    "annotate_my_snp",
+    "available_panels",
+    "compare",
+    "compare_panel",
+    "compare_variant",
+    "estimate_relatedness",
+    "get_stats",
+    "list_all_subjects",
+    "lookup_snp",
+    "notable_findings",
+    "run_all_panels",
+    "run_panel",
+    "search",
+    "who_am_i",
+]
+
 from hda.analysis.panels import (
     analyze_all_panels,
     analyze_panel,
@@ -15,6 +33,7 @@ from hda.api.annotator import annotate_snp_sync
 from hda.config import get_active_subject, get_subject_profile, list_subjects
 from hda.db.query import (
     chromosome_summary,
+    estimate_relatedness as estimate_subject_relatedness,
     compare_snp,
     compare_subjects,
     count_snps,
@@ -163,6 +182,99 @@ def compare(
     }
 
 
+def compare_panel(panel_id: str, subject_a: str, subject_b: str) -> dict:
+    """Compare a curated panel between two subjects."""
+    panel_a = analyze_panel(panel_id, subject_a)
+    panel_b = analyze_panel(panel_id, subject_b)
+
+    def _index_rows(rows: list[dict], key: str) -> dict[str, dict]:
+        return {row[key]: row for row in rows}
+
+    by_rsid_a = _index_rows(panel_a["results"], "rsid")
+    by_rsid_b = _index_rows(panel_b["results"], "rsid")
+
+    compared_results = []
+    same_effect = 0
+    different_effect = 0
+    missing = 0
+
+    for rsid in by_rsid_a:
+        row_a = by_rsid_a[rsid]
+        row_b = by_rsid_b[rsid]
+        if not row_a["found"] or not row_b["found"]:
+            comparison = "missing"
+            missing += 1
+        elif row_a.get("effect") == row_b.get("effect"):
+            comparison = "same_effect"
+            same_effect += 1
+        else:
+            comparison = "different_effect"
+            different_effect += 1
+
+        compared_results.append(
+            {
+                "rsid": rsid,
+                "gene": row_a["gene"],
+                "trait": row_a["trait"],
+                "subject_a_genotype": row_a.get("genotype"),
+                "subject_b_genotype": row_b.get("genotype"),
+                "subject_a_effect": row_a.get("effect"),
+                "subject_b_effect": row_b.get("effect"),
+                "comparison": comparison,
+            }
+        )
+
+    composite_a = _index_rows(panel_a.get("composite_results", []), "id")
+    composite_b = _index_rows(panel_b.get("composite_results", []), "id")
+    compared_composites = []
+    for composite_id in composite_a:
+        row_a = composite_a[composite_id]
+        row_b = composite_b[composite_id]
+        if not row_a["found"] or not row_b["found"]:
+            comparison = "missing"
+        elif row_a.get("effect") == row_b.get("effect"):
+            comparison = "same_effect"
+        else:
+            comparison = "different_effect"
+
+        compared_composites.append(
+            {
+                "id": composite_id,
+                "gene": row_a["gene"],
+                "trait": row_a["trait"],
+                "components": row_a.get("components", []),
+                "subject_a_genotype": row_a.get("label") or row_a.get("genotype"),
+                "subject_b_genotype": row_b.get("label") or row_b.get("genotype"),
+                "subject_a_effect": row_a.get("effect"),
+                "subject_b_effect": row_b.get("effect"),
+                "comparison": comparison,
+            }
+        )
+
+    return {
+        "panel_id": panel_a["panel_id"],
+        "panel_name": panel_a["panel_name"],
+        "review_status": panel_a["review_status"],
+        "status": panel_a["status"],
+        "subject_a": subject_a,
+        "subject_b": subject_b,
+        "summary": {
+            "same_effect_count": same_effect,
+            "different_effect_count": different_effect,
+            "missing_count": missing,
+            "total_items": len(compared_results) + len(compared_composites),
+        },
+        "results": compared_results,
+        "composite_results": compared_composites,
+        **_panel_disclaimer_fields(panel_a.get("review_status")),
+    }
+
+
+def estimate_relatedness(subject_a: str, subject_b: str) -> dict:
+    """Estimate rough genetic relatedness between two subjects."""
+    return estimate_subject_relatedness(subject_a, subject_b)
+
+
 def annotate(
     rsid: str,
     subject: str | None = None,
@@ -219,7 +331,8 @@ def available_panels() -> list[dict]:
     """List all available analysis panels.
 
     Returns:
-        List of panels with id, name, description, category, and variant count.
+        List of panels with id, name, description, category, review metadata,
+        and explicit disclaimer fields for non-verified panels.
     """
     panels = []
     for panel in list_panels():

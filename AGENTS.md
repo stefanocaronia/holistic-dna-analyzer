@@ -53,14 +53,52 @@ data/context/
 
 **Always use the `hda` CLI commands and the project's API functions to query data.** Do not bypass them by writing raw SQL, importing modules with sys.path hacks, or any other workaround. The tools are designed to handle all data access correctly.
 
+The stable Python surface for agents is documented in [docs/PYTHON_API.md](docs/PYTHON_API.md). Prefer `from hda.tools import ...` for new agent integrations.
+
+## Environment Bootstrap
+
+Agents and users should both assume commands are run from the repository root.
+
+If the local environment is not ready yet, install it first:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -e .
+```
+
+If `.venv` already exists, activate it before using `hda`:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+After activation, `hda` should resolve in the current shell:
+
+```powershell
+hda subjects
+```
+
+If shell activation is unavailable, call the local executable directly:
+
+```powershell
+.\.venv\Scripts\hda.exe subjects
+```
+
 **CLI activation from the project folder:** run commands from the repository root. In PowerShell, activate the local environment first with `.\.venv\Scripts\Activate.ps1` so `hda` is on `PATH`. If activation is not available, call `.\.venv\Scripts\hda.exe ...` directly.
 
 **Import formats:** `hda import` supports MyHeritage (`.csv`), 23andMe (`.txt` or `.zip`), and AncestryDNA (`.txt` or `.zip`). Prefer the subject's configured `source_format`; if missing, the importer will try to detect it from the file.
 
 ### Preferred: CLI commands via shell
-For quick lookups and panel runs, use the `hda` CLI directly:
+For quick lookups, panel runs, and common comparisons/searches, use the `hda` CLI directly:
 ```bash
 hda snp rs53576              # Look up a single SNP
+hda search --chromosome 19 --start 44900000 --end 45500000
+hda compare stefano marco
+hda compare-variant rs429358 stefano marco
+hda compare-panel cardiovascular stefano marco
+hda relatedness stefano marco
+hda whoami
 hda annotate rs53576         # Fetch online annotations
 hda analyze cardiovascular   # Run a panel
 hda report                   # Notable findings across all panels
@@ -70,18 +108,18 @@ hda switch stefano           # Switch active subject
 ```
 
 ### Programmatic: import from the project's Python API
-When you need to do more complex queries (e.g., bulk lookups, searches with filters, comparisons), use the Python API. **Always run via the project's Python with PYTHONPATH=src**:
+Use the Python API when you need to compose multiple operations programmatically, post-process structured results, or build higher-level agent workflows. **Always run via the project's Python with PYTHONPATH=src**:
 ```bash
-PYTHONPATH=src .venv/Scripts/python.exe -c "from hda.tools.agent_tools import lookup_snp; print(lookup_snp('rs53576'))"
+PYTHONPATH=src .venv/Scripts/python.exe -c "from hda.tools import lookup_snp; print(lookup_snp('rs53576'))"
 ```
 
 Or for multi-line scripts:
 ```bash
 PYTHONPATH=src .venv/Scripts/python.exe -c "
-from hda.tools.agent_tools import run_panel, notable_findings, annotate_my_snp
+from hda.tools import run_panel, notable_findings, annotate_my_snp
 results = run_panel('autism_spectrum')
 for r in results['results']:
-    if r['effect'] != 'normal':
+    if r['effect'] not in ('normal', 'typical'):
         print(f\"{r['rsid']} ({r['gene']}): {r['genotype']} -> {r['effect']}\")
 "
 ```
@@ -101,6 +139,8 @@ If you create or review analysis panels, follow [docs/PANEL_SCHEMA.md](docs/PANE
 
 ### Key rules
 - **Panels first.** Always start with `run_panel()` or `hda analyze` for structured questions. Panels are curated and cover the most important variants per domain.
+- **Use panel comparison for trait differences.** If the user asks how two relatives differ on a specific domain, prefer `compare_panel(...)` or `hda compare-panel ...` over ad hoc SNP diffing.
+- **Use relatedness heuristics carefully.** `estimate_relatedness(...)` and `hda relatedness ...` are exploratory IBS-style summaries, not formal kinship inference.
 - **Annotate for depth.** Use `annotate_my_snp()` or `hda annotate` when you need online database context for a specific SNP.
 - **Search for exploration.** Use `search()` when you need to scan a genomic region or find variants by pattern.
 - **Don't reinvent panels.** If a relevant panel exists, use it. Don't manually look up 30 SNPs one by one when a panel covers them.
@@ -182,13 +222,13 @@ The `data/panels/` directory contains curated YAML panels, each covering a speci
 - **nutrition_micronutrients** — verified core; vitamin D/A/B6/B12 and omega-3 conversion/absorption tendencies
 - **traits** — verified core; strongly associated visible physical traits
 - **wellness** — exploratory; exercise response, recovery, motivation
-- **addiction** — exploratory; nicotine, alcohol, opioids, cannabis, reward seeking
-- **health_over50** — exploratory; age-related screening themes still need pruning
-- **sleep** — exploratory; chronotype, melatonin, circadian rhythm, deep sleep
-- **mental_health** — exploratory; depression, anxiety, serotonin, cortisol, PTSD vulnerability
-- **adhd_neurodivergence** — exploratory; dopamine transport, attention, autism spectrum traits, executive function
-- **autism_spectrum** — exploratory; synaptic adhesion, social cognition, neurodevelopment, neurotransmitter balance, immune-neural interactions, methylation
-- **cognitive** — exploratory; memory, learning, processing speed, cognitive aging
+- **addiction** — exploratory; focused nicotine/alcohol susceptibility signals
+- **health_over50** — exploratory; selected age-related screening themes
+- **sleep** — exploratory; compact chronotype and sleep-pressure signals
+- **mental_health** — exploratory; compact stress-response and neuroplasticity panel
+- **adhd_neurodivergence** — exploratory; minimal attention-regulation and treatment-response signals
+- **autism_spectrum** — exploratory; minimal common-variant association panel with explicit non-diagnostic limitations
+- **cognitive** — exploratory; compact memory, plasticity, and cognitive-aging signals
 
 ## Tool Functions Reference
 
@@ -203,6 +243,8 @@ Import and call from `hda.tools.agent_tools`:
 | `get_stats(subject?)` | Total SNPs + per-chromosome breakdown |
 | `compare_variant(rsid, subject_a, subject_b)` | Compare one SNP between two subjects |
 | `compare(subject_a, subject_b, only_different?, chromosome?, limit?)` | Bulk compare SNPs between subjects |
+| `compare_panel(panel_id, subject_a, subject_b)` | Compare one curated panel between two subjects |
+| `estimate_relatedness(subject_a, subject_b)` | Heuristic relatedness summary from shared SNP overlap |
 | `annotate(rsid, subject?, sources?, force_refresh?)` | Fetch annotations from online DBs (SNPedia, ClinVar, Ensembl). Cached locally |
 | `annotate_my_snp(rsid, sources?)` | Look up genotype + annotate in one call |
 | `available_panels()` | List all analysis panels |
@@ -233,9 +275,15 @@ Results are cached in the `annotations` table so each SNP is fetched only once. 
 ### CLI Commands
 ```bash
 hda subjects          # List all subjects
+hda whoami            # Show the active subject profile
 hda switch <name>     # Switch active subject
 hda import [name]     # Import source CSV into SQLite
 hda snp <rsid>        # Look up a SNP
+hda search ...        # Search SNPs by filters
+hda compare a b       # Compare two subjects
+hda compare-variant <rsid> <a> <b>  # Compare one SNP between two subjects
+hda compare-panel <panel> <a> <b>   # Compare one panel between two subjects
+hda relatedness <a> <b>             # Heuristic relatedness summary
 hda stats             # Chromosome summary
 hda annotate <rsid>   # Fetch online annotations
 hda panels            # List available analysis panels

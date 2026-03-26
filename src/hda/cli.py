@@ -87,6 +87,25 @@ def subjects():
 
 
 @main.command()
+def whoami():
+    """Show the active subject profile."""
+    from hda.config import get_active_subject, get_subject_profile
+
+    subject = get_active_subject()
+    profile = get_subject_profile(subject)
+
+    table = Table(title="Active Subject")
+    table.add_column("Field", style="bold")
+    table.add_column("Value")
+
+    table.add_row("Subject key", subject)
+    for key, value in profile.items():
+        table.add_row(key.replace("_", " ").title(), str(value or "—"))
+
+    console.print(table)
+
+
+@main.command()
 @click.argument("rsid")
 @click.option("--subject", "-s", default=None, help="Subject key (default: active)")
 def snp(rsid: str, subject: str | None):
@@ -106,6 +125,53 @@ def snp(rsid: str, subject: str | None):
 
 
 @main.command()
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--chromosome", "-c", default=None, help="Chromosome filter (e.g. 1, X, MT)")
+@click.option("--start", type=int, default=None, help="Minimum base-pair position")
+@click.option("--end", type=int, default=None, help="Maximum base-pair position")
+@click.option("--genotype", "-g", default=None, help="Exact genotype filter (e.g. AA, CT)")
+@click.option("--rsid-pattern", default=None, help="SQL LIKE pattern for rsid (e.g. rs53%)")
+@click.option("--limit", type=int, default=25, show_default=True, help="Maximum number of rows")
+def search(
+    subject: str | None,
+    chromosome: str | None,
+    start: int | None,
+    end: int | None,
+    genotype: str | None,
+    rsid_pattern: str | None,
+    limit: int,
+):
+    """Search SNPs with basic filters."""
+    from hda.db.query import search_snps
+
+    try:
+        results = search_snps(
+            chromosome=chromosome,
+            position_start=start,
+            position_end=end,
+            genotype=genotype,
+            rsid_pattern=rsid_pattern,
+            subject=subject,
+            limit=limit,
+        )
+    except (FileNotFoundError, KeyError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    title = f"SNP Search ({len(results)} result{'s' if len(results) != 1 else ''})"
+    table = Table(title=title)
+    table.add_column("rsid", style="bold")
+    table.add_column("Chromosome", justify="right")
+    table.add_column("Position", justify="right")
+    table.add_column("Genotype", justify="center")
+
+    for row in results:
+        table.add_row(row["rsid"], row["chromosome"], str(row["position"]), row["genotype"])
+
+    console.print(table)
+
+
+@main.command()
 @click.option("--subject", "-s", default=None)
 def stats(subject: str | None):
     """Show chromosome summary for a subject."""
@@ -121,6 +187,173 @@ def stats(subject: str | None):
     for row in summary:
         table.add_row(row["chromosome"], f"{row['count']:,}")
 
+    console.print(table)
+
+
+@main.command("compare-variant")
+@click.argument("rsid")
+@click.argument("subject_a")
+@click.argument("subject_b")
+def compare_variant_cmd(rsid: str, subject_a: str, subject_b: str):
+    """Compare one SNP between two subjects."""
+    from hda.db.query import compare_snp
+
+    try:
+        result = compare_snp(rsid, subject_a, subject_b)
+    except (FileNotFoundError, KeyError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    table = Table(title=f"Variant Comparison: {rsid}")
+    table.add_column("rsid", style="bold")
+    table.add_column(subject_a, justify="center")
+    table.add_column(subject_b, justify="center")
+    table.add_column("Match", justify="center")
+    table.add_row(
+        result["rsid"],
+        str(result.get(subject_a) or "—"),
+        str(result.get(subject_b) or "—"),
+        "yes" if result.get("match") else "no",
+    )
+    console.print(table)
+
+
+@main.command("compare")
+@click.argument("subject_a")
+@click.argument("subject_b")
+@click.option("--all", "show_all", is_flag=True, help="Include matching SNPs too")
+@click.option("--chromosome", "-c", default=None, help="Optional chromosome filter")
+@click.option("--limit", type=int, default=25, show_default=True, help="Maximum number of rows")
+def compare_cmd(subject_a: str, subject_b: str, show_all: bool, chromosome: str | None, limit: int):
+    """Compare SNPs between two subjects."""
+    from hda.db.query import compare_subjects
+
+    try:
+        results = compare_subjects(
+            subject_a=subject_a,
+            subject_b=subject_b,
+            only_different=not show_all,
+            chromosome=chromosome,
+            limit=limit,
+        )
+    except (FileNotFoundError, KeyError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    title = f"Compare {subject_a} vs {subject_b} ({len(results)} result{'s' if len(results) != 1 else ''})"
+    table = Table(title=title)
+    table.add_column("rsid", style="bold")
+    table.add_column("Chromosome", justify="right")
+    table.add_column("Position", justify="right")
+    table.add_column(subject_a, justify="center")
+    table.add_column(subject_b, justify="center")
+
+    for row in results:
+        table.add_row(
+            row["rsid"],
+            row["chromosome"],
+            str(row["position"]),
+            row["genotype_a"],
+            row["genotype_b"],
+        )
+
+    console.print(table)
+
+
+@main.command("compare-panel")
+@click.argument("panel_id")
+@click.argument("subject_a")
+@click.argument("subject_b")
+def compare_panel_cmd(panel_id: str, subject_a: str, subject_b: str):
+    """Compare one analysis panel between two subjects."""
+    from hda.tools import compare_panel
+
+    try:
+        result = compare_panel(panel_id, subject_a, subject_b)
+    except (FileNotFoundError, KeyError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    if result.get("requires_disclaimer"):
+        console.print(
+            f"[yellow]Note:[/] panel review status is '{result['review_status']}'. "
+            "Treat comparison output as exploratory unless independently reviewed."
+        )
+
+    summary = result["summary"]
+    console.print(
+        f"[bold]{result['panel_name']}[/] — {subject_a} vs {subject_b} "
+        f"(same effect: {summary['same_effect_count']}, "
+        f"different effect: {summary['different_effect_count']}, "
+        f"missing: {summary['missing_count']})"
+    )
+
+    table = Table(title="Panel Comparison")
+    table.add_column("Gene", style="bold")
+    table.add_column("rsid")
+    table.add_column("Trait")
+    table.add_column(subject_a, justify="center")
+    table.add_column(subject_b, justify="center")
+    table.add_column("Comparison")
+
+    for row in result["results"]:
+        table.add_row(
+            row["gene"],
+            row["rsid"],
+            row["trait"],
+            f"{row.get('subject_a_genotype') or '—'} / {row.get('subject_a_effect') or '—'}",
+            f"{row.get('subject_b_genotype') or '—'} / {row.get('subject_b_effect') or '—'}",
+            row["comparison"],
+        )
+
+    console.print(table)
+
+    if result.get("composite_results"):
+        composite_table = Table(title="Composite Panel Comparison")
+        composite_table.add_column("Gene", style="bold")
+        composite_table.add_column("Components")
+        composite_table.add_column("Trait")
+        composite_table.add_column(subject_a, justify="center")
+        composite_table.add_column(subject_b, justify="center")
+        composite_table.add_column("Comparison")
+
+        for row in result["composite_results"]:
+            composite_table.add_row(
+                row["gene"],
+                ", ".join(row.get("components", [])),
+                row["trait"],
+                f"{row.get('subject_a_genotype') or '—'} / {row.get('subject_a_effect') or '—'}",
+                f"{row.get('subject_b_genotype') or '—'} / {row.get('subject_b_effect') or '—'}",
+                row["comparison"],
+            )
+
+        console.print(composite_table)
+
+
+@main.command()
+@click.argument("subject_a")
+@click.argument("subject_b")
+def relatedness(subject_a: str, subject_b: str):
+    """Estimate rough genetic relatedness between two subjects."""
+    from hda.tools import estimate_relatedness
+
+    try:
+        result = estimate_relatedness(subject_a, subject_b)
+    except (FileNotFoundError, KeyError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    table = Table(title=f"Relatedness: {subject_a} vs {subject_b}")
+    table.add_column("Metric", style="bold")
+    table.add_column("Value")
+    table.add_row("Shared SNPs", f"{result['shared_snps']:,}")
+    table.add_row("Comparable SNPs", f"{result['comparable_snps']:,}")
+    table.add_row("Exact match rate", f"{result['exact_match_rate']:.2%}")
+    table.add_row("IBS0 rate", f"{result.get('ibs0_rate', 0.0):.2%}")
+    table.add_row("IBS1 rate", f"{result.get('ibs1_rate', 0.0):.2%}")
+    table.add_row("IBS2 rate", f"{result.get('ibs2_rate', 0.0):.2%}")
+    table.add_row("Heuristic relationship", result["heuristic_relationship"])
+    table.add_row("Warning", result["interpretation_warning"])
     console.print(table)
 
 

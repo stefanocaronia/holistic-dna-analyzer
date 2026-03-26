@@ -4,7 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import hda.analysis.panels as panels
-from hda.analysis.panels import analyze_panel, list_panels, load_panel
+from hda.analysis.panels import analyze_panel, get_risk_summary, list_panels, load_panel
 
 
 class PanelMetadataTests(unittest.TestCase):
@@ -39,6 +39,12 @@ class PanelMetadataTests(unittest.TestCase):
                 "name: Focus\n"
                 "description: Experimental focus panel\n"
                 "category: health\n"
+                "summary: Test summary\n"
+                "sources:\n"
+                "  - type: pubmed\n"
+                "    id: '1'\n"
+                "limitations:\n"
+                "  - Test limitation\n"
                 "variants: []\n",
                 encoding="utf-8",
             )
@@ -46,6 +52,12 @@ class PanelMetadataTests(unittest.TestCase):
                 "name: Sleep Boost\n"
                 "description: Draft panel\n"
                 "category: wellness\n"
+                "summary: Test summary\n"
+                "sources:\n"
+                "  - type: pubmed\n"
+                "    id: '2'\n"
+                "limitations:\n"
+                "  - Test limitation\n"
                 "variants: []\n",
                 encoding="utf-8",
             )
@@ -66,6 +78,12 @@ class PanelMetadataTests(unittest.TestCase):
                 "name: APOE Test\n"
                 "description: Test panel\n"
                 "category: health\n"
+                "summary: Test summary\n"
+                "sources:\n"
+                "  - type: pubmed\n"
+                "    id: '3'\n"
+                "limitations:\n"
+                "  - Test limitation\n"
                 "variants: []\n"
                 "composites:\n"
                 "  - id: apoe_profile\n"
@@ -95,6 +113,73 @@ class PanelMetadataTests(unittest.TestCase):
                 self.assertEqual(result["found_in_genome"], 1)
                 self.assertEqual(result["composite_results"][0]["label"], "e3/e3")
                 self.assertEqual(result["composite_results"][0]["effect"], "typical")
+
+    def test_invalid_panel_schema_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "broken.yaml").write_text(
+                "name: Broken\n"
+                "description: Broken panel\n"
+                "category: health\n"
+                "variants:\n"
+                "  - rsid: rs1\n"
+                "    gene: TEST\n"
+                "    trait: Missing metadata\n"
+                "    genotypes: {}\n",
+                encoding="utf-8",
+            )
+
+            with patch.object(panels, "PANELS_DIR", root):
+                with self.assertRaises(ValueError):
+                    load_panel("broken")
+
+    def test_risk_summary_excludes_typical_and_includes_composite_risk(self):
+        fake_results = [
+            {
+                "panel_name": "Core Panel",
+                "review_status": "verified",
+                "results": [
+                    {
+                        "found": True,
+                        "rsid": "rs1",
+                        "gene": "GENE1",
+                        "trait": "Trait 1",
+                        "genotype": "AA",
+                        "effect": "typical",
+                        "description": "Typical result.",
+                    },
+                    {
+                        "found": True,
+                        "rsid": "rs2",
+                        "gene": "GENE2",
+                        "trait": "Trait 2",
+                        "genotype": "CT",
+                        "effect": "higher_risk",
+                        "description": "Risk result.",
+                    },
+                ],
+                "composite_results": [
+                    {
+                        "found": True,
+                        "components": ["rs3", "rs4"],
+                        "gene": "APOE",
+                        "trait": "Composite trait",
+                        "genotype": "TC|CC",
+                        "label": "e3/e4",
+                        "effect": "increased_risk",
+                        "description": "Composite risk.",
+                    }
+                ],
+            }
+        ]
+
+        with patch.object(panels, "analyze_all_panels", return_value=fake_results):
+            summary = get_risk_summary("stefano")
+
+        self.assertEqual(len(summary), 2)
+        self.assertEqual(summary[0]["rsid"], "rs2")
+        self.assertEqual(summary[1]["rsid"], "rs3,rs4")
+        self.assertEqual(summary[1]["genotype"], "e3/e4")
 
 
 if __name__ == "__main__":

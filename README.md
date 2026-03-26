@@ -15,6 +15,13 @@ You bring your raw genotyping file (MyHeritage, 23andMe, AncestryDNA, etc.), the
 
 HDA provides the local data layer, navigation tools, curated panels, and agent-facing functions. When you use an LLM on top of HDA, the model is still generating an interpretation. That interpretation can be useful, but it can also overstate evidence, miss context, or hallucinate. Use it for exploration, not diagnosis.
 
+The stable Python API for agents and automation is documented in [docs/PYTHON_API.md](docs/PYTHON_API.md).
+
+This project is also developed with the help of LLM-assisted workflows. Code,
+documentation, and panel content are reviewed and curated in-repo, but
+LLM-generated interpretations should still be treated as exploratory outputs,
+not authoritative conclusions.
+
 Current verified core panels:
 - `cardiovascular`
 - `pharmacogenomics`
@@ -75,47 +82,57 @@ git clone https://github.com/YOUR_USER/holistic-dna-analyzer.git
 cd holistic-dna-analyzer
 ```
 
-### Activate `hda` in this folder
+### Environment Setup
 
-From the project root, activate the local virtualenv so the `hda` command is available in the current shell.
+From the project root, create and install the local virtual environment:
 
 PowerShell:
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-If `.venv` does not exist yet:
 ```powershell
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -e .
 ```
 
-After activation, you can run:
+If `.venv` already exists, you only need:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+### Activate `hda` in this folder
+
+After the virtualenv is active, `hda` is available in the current shell:
+
 ```powershell
 hda subjects
 ```
 
-Without activating the shell, you can still call the local command directly:
+Without activating the shell, call the local command directly:
+
 ```powershell
 .\.venv\Scripts\hda.exe subjects
 ```
 
-### First-time project setup
+### First-Time Project Setup
 
-```bash
-python -m pip install -e .
+Once the environment is installed and `hda` is available:
 
-# Configure your profile
-cp config.yaml.example config.yaml
-# Edit config.yaml with your name, sex, date of birth
+```powershell
+Copy-Item config.yaml.example config.yaml
+```
 
-# Place your raw DNA file in data/sources/
-# Supported examples:
-#   dna-john.csv          -> MyHeritage
-#   genome_john.txt       -> AncestryDNA / 23andMe
-#   genome_john.zip       -> 23andMe / AncestryDNA zipped download
-# Import it
+Edit `config.yaml` with your name, sex, date of birth, source file, and source format.
+
+Place your raw DNA file in `data/sources/`.
+
+Supported examples:
+- `dna-john.csv` -> MyHeritage
+- `genome_john.txt` -> AncestryDNA / 23andMe
+- `genome_john.zip` -> 23andMe / AncestryDNA zipped download
+
+Then import it:
+
+```powershell
 hda import
 ```
 
@@ -125,9 +142,15 @@ Besides talking to the agent, you can use the CLI directly:
 
 ```bash
 hda subjects          # List all subjects
+hda whoami            # Show the active subject profile
 hda switch <name>     # Switch active subject (like git switch)
 hda import [name]     # Import DNA source file into SQLite
 hda snp <rsid>        # Look up a single SNP
+hda search ...        # Search SNPs by chromosome, position, genotype, or rsid pattern
+hda compare a b       # Compare SNPs between two subjects
+hda compare-variant   # Compare one SNP between two subjects
+hda compare-panel     # Compare one analysis panel between two subjects
+hda relatedness a b   # Heuristic relatedness summary between two subjects
 hda stats             # Chromosome summary
 hda annotate <rsid>   # Fetch online annotations (SNPedia, ClinVar, Ensembl)
 hda panels            # List analysis panels
@@ -135,13 +158,39 @@ hda analyze <panel>   # Run a panel (e.g. pharmacogenomics, cardiovascular)
 hda report            # All notable findings across panels
 ```
 
+## Python API
+
+The stable agent-facing import surface is `hda.tools`:
+
+```python
+from hda.tools import available_panels, run_panel, who_am_i
+```
+
+Use this layer for agents, scripts, and local automation. It returns plain
+Python dictionaries/lists and exposes panel review metadata such as
+`review_status`, `requires_disclaimer`, and `interpretation_warning`.
+
+Prefer the CLI for interactive work and repeatable shell usage. Use the Python
+API when you want to compose multiple operations programmatically or build
+agent-side automation on top of HDA.
+
+Subject-to-subject comparison is available in both layers:
+- low-level SNP comparison via `hda compare`, `hda compare-variant`, and `search`
+- characteristic-level comparison via `hda compare-panel`
+- heuristic family/relatedness estimation via `hda relatedness`
+
+Internal modules under `hda.analysis`, `hda.db`, and `hda.api` are not the
+stable public surface. Details and examples are in [docs/PYTHON_API.md](docs/PYTHON_API.md).
+
 ## Testing
 
 Run the current automated checks from the project root:
 
 ```powershell
-$env:PYTHONPATH='src'
+.\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\python.exe -m pip install -e .
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
+.\.venv\Scripts\python.exe -m hda.cli panels
 ```
 
 ## Dashboard

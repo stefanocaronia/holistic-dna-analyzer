@@ -2,6 +2,9 @@
 
 This document defines the minimum structure for panels that are safe to version in the repository.
 
+The runtime validates this schema when loading panels, so versioned panels
+should follow it exactly.
+
 ## Repository Policy
 
 - The repository should version only **core** panels.

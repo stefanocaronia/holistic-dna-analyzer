@@ -18,6 +18,13 @@ PANEL_ID_ALIASES = {
 }
 
 
+def _require_mapping(data: object, path: Path) -> dict:
+    """Ensure the decoded YAML document is a mapping."""
+    if not isinstance(data, dict):
+        raise ValueError(f"Panel '{path.name}' must decode to a mapping.")
+    return data
+
+
 def _split_panel_filename(path: Path) -> tuple[str, str | None]:
     """Split a panel filename into base id and optional status suffix."""
     stem = path.stem
@@ -25,6 +32,67 @@ def _split_panel_filename(path: Path) -> tuple[str, str | None]:
         if stem.endswith(suffix):
             return stem.removesuffix(suffix), review_status
     return stem, None
+
+
+def _validate_panel_definition(path: Path, panel_id: str, data: dict, inferred_review_status: str | None = None) -> None:
+    """Validate the panel schema used by the runtime."""
+    review_status = data.get("review_status") or inferred_review_status or "verified"
+    status = data.get("status")
+
+    required_panel_fields = ("name", "description", "category", "summary", "sources", "limitations")
+    missing_panel_fields = [field for field in required_panel_fields if not data.get(field)]
+    if missing_panel_fields:
+        raise ValueError(
+            f"Panel '{panel_id}' is missing required metadata: {', '.join(missing_panel_fields)}."
+        )
+
+    if not isinstance(data.get("sources"), list):
+        raise ValueError(f"Panel '{panel_id}' must define 'sources' as a list.")
+    if not isinstance(data.get("limitations"), list):
+        raise ValueError(f"Panel '{panel_id}' must define 'limitations' as a list.")
+    if not isinstance(data.get("variants", []), list):
+        raise ValueError(f"Panel '{panel_id}' must define 'variants' as a list.")
+    if data.get("composites") is not None and not isinstance(data.get("composites"), list):
+        raise ValueError(f"Panel '{panel_id}' must define 'composites' as a list when present.")
+
+    if review_status == "verified" and status not in (None, "core"):
+        raise ValueError(f"Verified panel '{panel_id}' must have status 'core'.")
+    if review_status == "exploratory" and status not in (None, "experimental"):
+        raise ValueError(f"Exploratory panel '{panel_id}' must have status 'experimental'.")
+    if review_status == "draft" and status not in (None, "draft"):
+        raise ValueError(f"Draft panel '{panel_id}' must have status 'draft'.")
+
+    for variant in data.get("variants", []):
+        missing_variant_fields = [
+            field for field in ("rsid", "gene", "trait", "evidence_level", "sources", "genotypes")
+            if not variant.get(field)
+        ]
+        if missing_variant_fields:
+            rsid = variant.get("rsid", "<unknown>")
+            raise ValueError(
+                f"Panel '{panel_id}' variant '{rsid}' is missing required fields: "
+                f"{', '.join(missing_variant_fields)}."
+            )
+        if not isinstance(variant.get("sources"), list):
+            raise ValueError(f"Panel '{panel_id}' variant '{variant['rsid']}' must define 'sources' as a list.")
+        if not isinstance(variant.get("genotypes"), dict):
+            raise ValueError(f"Panel '{panel_id}' variant '{variant['rsid']}' must define 'genotypes' as a mapping.")
+
+    for composite in data.get("composites", []):
+        missing_composite_fields = [
+            field for field in ("id", "gene", "trait", "components", "genotypes")
+            if not composite.get(field)
+        ]
+        if missing_composite_fields:
+            composite_id = composite.get("id", "<unknown>")
+            raise ValueError(
+                f"Panel '{panel_id}' composite '{composite_id}' is missing required fields: "
+                f"{', '.join(missing_composite_fields)}."
+            )
+        if not isinstance(composite.get("components"), list):
+            raise ValueError(f"Panel '{panel_id}' composite '{composite['id']}' must define 'components' as a list.")
+        if not isinstance(composite.get("genotypes"), dict):
+            raise ValueError(f"Panel '{panel_id}' composite '{composite['id']}' must define 'genotypes' as a mapping.")
 
 
 def _panel_metadata(panel_id: str, data: dict, inferred_review_status: str | None = None) -> dict:
@@ -67,8 +135,9 @@ def list_panels() -> list[dict]:
     panels = []
     for f in sorted(PANELS_DIR.glob("*.yaml")):
         with open(f, "r", encoding="utf-8") as fh:
-            data = yaml.safe_load(fh)
+            data = _require_mapping(yaml.safe_load(fh), f)
         panel_id, inferred_review_status = _split_panel_filename(f)
+        _validate_panel_definition(f, panel_id, data, inferred_review_status)
         panels.append(_panel_metadata(panel_id, data, inferred_review_status))
     return panels
 
@@ -83,9 +152,10 @@ def load_panel(panel_id: str) -> dict:
     if path is None:
         raise FileNotFoundError(f"Panel '{panel_id}' not found. Available: {[p['id'] for p in list_panels()]}")
     with open(path, "r", encoding="utf-8") as f:
-        data = yaml.safe_load(f)
+        data = _require_mapping(yaml.safe_load(f), path)
 
     _, inferred_review_status = _split_panel_filename(path)
+    _validate_panel_definition(path, canonical_id, data, inferred_review_status)
     metadata = _panel_metadata(canonical_id, data, inferred_review_status)
     return {**data, **metadata}
 
