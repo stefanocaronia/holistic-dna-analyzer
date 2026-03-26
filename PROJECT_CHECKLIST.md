@@ -20,7 +20,7 @@ This is a maturity checklist for the project. It is intentionally not tied to a 
 - [x] Synthetic automated tests cover format detection and parser behavior
 - [ ] 23andMe import validated on a real export file
 - [ ] AncestryDNA import validated on a real export file
-- [ ] Unsupported or malformed raw files have dedicated regression tests
+- [x] Unsupported or malformed raw files have dedicated regression tests
 
 ## Analysis Engine
 

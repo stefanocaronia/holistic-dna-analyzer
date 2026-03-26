@@ -1,0 +1,5 @@
+#AncestryDNA raw data download
+# This fixture is synthetic but matches the documented five-column export structure.
+# rsid	chromosome	position	allele1	allele2
+rs20	2	333	C	T
+rs21	24	444	0	0

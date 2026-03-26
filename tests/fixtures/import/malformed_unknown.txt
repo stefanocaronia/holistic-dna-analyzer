@@ -1,0 +1,2 @@
+This is not a supported raw DNA export.
+It intentionally lacks provider headers and valid SNP columns.

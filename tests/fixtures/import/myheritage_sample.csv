@@ -1,0 +1,5 @@
+##fileformat=MyHeritage
+# Minimal realistic fixture for parser tests
+RSID,CHROMOSOME,POSITION,RESULT
+rs1,1,123,AA
+rs2,X,456,CT
