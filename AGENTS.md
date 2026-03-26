@@ -55,6 +55,8 @@ data/context/
 
 **CLI activation from the project folder:** run commands from the repository root. In PowerShell, activate the local environment first with `.\.venv\Scripts\Activate.ps1` so `hda` is on `PATH`. If activation is not available, call `.\.venv\Scripts\hda.exe ...` directly.
 
+**Import formats:** `hda import` supports MyHeritage (`.csv`), 23andMe (`.txt` or `.zip`), and AncestryDNA (`.txt` or `.zip`). Prefer the subject's configured `source_format`; if missing, the importer will try to detect it from the file.
+
 ### Preferred: CLI commands via shell
 For quick lookups and panel runs, use the `hda` CLI directly:
 ```bash

@@ -2,7 +2,7 @@
 
 A Python/agent framework that can read your DNA data and answer your questions about it.
 
-You bring your raw genotyping file (MyHeritage, 23andMe, etc.), the framework imports it, and then any AI agent (Claude, GPT, local LLMs) can have a fluent, informed conversation about your genome — not as a lookup tool, but as an integrative analyst that cross-references multiple biological systems and gives you a coherent picture.
+You bring your raw genotyping file (MyHeritage, 23andMe, AncestryDNA, etc.), the framework imports it, and then any AI agent (Claude, GPT, local LLMs) can have a fluent, informed conversation about your genome — not as a lookup tool, but as an integrative analyst that cross-references multiple biological systems and gives you a coherent picture.
 
 ## What It Does
 
@@ -87,6 +87,10 @@ cp config.yaml.example config.yaml
 # Edit config.yaml with your name, sex, date of birth
 
 # Place your raw DNA file in data/sources/
+# Supported examples:
+#   dna-john.csv          -> MyHeritage
+#   genome_john.txt       -> AncestryDNA / 23andMe
+#   genome_john.zip       -> 23andMe / AncestryDNA zipped download
 # Import it
 hda import
 ```
@@ -154,7 +158,8 @@ Your DNA data stays local. Raw files, databases, and context folders are all git
 ## Supported Formats
 
 - **MyHeritage** (CSV export)
-- 23andMe, AncestryDNA — planned
+- **23andMe** (`.txt` or `.zip` raw data export)
+- **AncestryDNA** (`.txt` or `.zip` raw data export)
 
 ## License
 

@@ -17,8 +17,8 @@ subjects:
     surname: Doe
     sex: female
     date_of_birth: 1992-06-20
-    source_file: dna-jane.csv
-    source_format: MyHeritage
+    source_file: genome-jane.zip   # .csv, .txt, or .zip raw data export
+    source_format: 23andMe
     chip: GSA
     reference: build37
     imported_at: null
