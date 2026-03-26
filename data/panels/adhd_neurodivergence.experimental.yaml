@@ -1,168 +1,66 @@
-name: ADHD & Neurodivergence
-description: Genetic variants associated with ADHD, autism spectrum traits, sensory processing, and executive function
+name: Attention Regulation & ADHD Signals
+description: Exploratory common-variant panel for attention regulation and medication-relevant ADHD signals
 category: health
+status: experimental
+review_status: exploratory
+version: 1
+last_reviewed: 2026-03-26
+summary: >
+  Narrow exploratory panel centered on two common variants with some relevance to
+  attention regulation and ADHD medication response. These are small probabilistic
+  signals and should not be treated as diagnostic markers for ADHD or
+  neurodivergence.
+sources:
+  - type: pubmed
+    id: "25915480"
+  - type: pubmed
+    id: "36325160"
+  - type: pubmed
+    id: "20864182"
+limitations:
+  - Common variants explain only a small fraction of ADHD risk and do not diagnose ADHD.
+  - Clinical presentation depends much more on behavior, development, environment, and impairment than on these SNPs.
+  - This panel is best used as contextual support alongside sleep, stress, and nutrition findings.
 
 variants:
-  - rsid: rs1800955
-    gene: DRD4
-    trait: Dopamine D4 receptor — novelty seeking and attention
-    genotypes:
-      TT:
-        effect: normal
-        description: Normal D4 receptor expression. Standard attention regulation and novelty response.
-      TC:
-        effect: altered
-        description: Altered D4 receptor. Higher novelty seeking, may struggle with routine tasks. Associated with ADHD traits.
-      CC:
-        effect: significantly_altered
-        description: Significantly altered D4 expression. Strong novelty-seeking drive. Higher ADHD trait association. Stimulating environments help focus.
-
   - rsid: rs27072
     gene: SLC6A3 (DAT1)
-    trait: Dopamine transporter — dopamine recycling speed
+    trait: Dopamine transporter / attention-regulation signal
+    evidence_level: low
+    sources:
+      - type: pubmed
+        id: "25915480"
     genotypes:
       CC:
-        effect: normal
-        description: Normal dopamine reuptake speed. Standard dopamine signaling duration.
+        effect: typical
+        description: Typical common-variant DAT1 signal in this panel.
       CT:
-        effect: faster_reuptake
-        description: Faster dopamine clearance from synapses. May experience quicker loss of focus and motivation. Responds well to stimulant medications.
+        effect: altered_signal
+        description: Exploratory signal that may modestly shift dopamine transporter-related attention traits.
       TT:
-        effect: significantly_faster
-        description: Significantly faster dopamine clearance. Strongly associated with ADHD. Dopamine is removed before it fully signals. Stimulant medication typically very effective.
-
-  - rsid: rs4680
-    gene: COMT
-    trait: Prefrontal dopamine — executive function
-    genotypes:
-      GG:
-        effect: fast_clearance
-        description: Fast dopamine breakdown in prefrontal cortex. Better multitasking under stress but lower sustained attention in calm settings.
-      GA:
-        effect: intermediate
-        description: Balanced prefrontal dopamine. Good mix of flexibility and sustained attention.
-      AA:
-        effect: slow_clearance
-        description: Slow prefrontal dopamine breakdown. Excellent sustained focus in calm settings but overwhelmed under stress. May appear ADHD-like when anxious.
+        effect: stronger_altered_signal
+        description: Exploratory signal with a somewhat stronger DAT1-related association in ADHD studies.
     aliases:
-      AG: GA
-
-  - rsid: rs1800497
-    gene: DRD2/ANKK1
-    trait: Dopamine D2 receptor density — reward and motivation
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal D2 receptor density. Standard reward sensitivity and motivation.
-      CT:
-        effect: reduced
-        description: Reduced D2 receptors. Need more stimulation to feel rewarded. Associated with procrastination and ADHD-type motivation issues.
-      TT:
-        effect: significantly_reduced
-        description: Significantly reduced D2 receptors. Strong reward deficiency. High association with ADHD, addictive tendencies, and need for external motivation.
-    aliases:
-      GG: CC
-      AG: CT
-      AA: TT
-
-  - rsid: rs363050
-    gene: SNAP25
-    trait: Synaptic vesicle release — neurotransmitter efficiency
-    genotypes:
-      AA:
-        effect: normal
-        description: Normal synaptic vesicle protein. Efficient neurotransmitter release.
-      AG:
-        effect: altered
-        description: Altered SNAP-25. Slightly less efficient neurotransmission. Associated with ADHD and cognitive variability.
-      GG:
-        effect: significantly_altered
-        description: Significantly altered synaptic vesicle function. Strongly associated with ADHD in multiple studies. Inconsistent cognitive performance.
-
-  - rsid: rs2652511
-    gene: SLC6A3 (DAT1)
-    trait: Dopamine transporter expression level
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal DAT1 expression. Standard dopamine transporter levels.
-      CT:
-        effect: higher_expression
-        description: Higher dopamine transporter expression. More dopamine pulled from synapses. Compounds ADHD risk from other variants.
-      TT:
-        effect: significantly_higher
-        description: Significantly elevated DAT1. Rapid dopamine removal. Strong ADHD association. Very responsive to methylphenidate.
-
-  - rsid: rs6265
-    gene: BDNF
-    trait: Brain-derived neurotrophic factor — neural development
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal BDNF. Good neural development and synaptic plasticity.
-      CT:
-        effect: reduced
-        description: Reduced BDNF secretion. May affect attention networks and working memory. Exercise is a potent BDNF booster.
-      TT:
-        effect: significantly_reduced
-        description: Significantly reduced BDNF. Impacts neural circuit development. Strong exercise recommendation — it can normalize BDNF levels.
-    aliases:
-      GG: CC
-      GA: CT
-      AA: TT
+      TC: CT
 
   - rsid: rs1800544
     gene: ADRA2A
-    trait: Norepinephrine alpha-2A receptor — attention regulation
+    trait: Noradrenergic medication-response tendency
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        id: "36325160"
+      - type: pubmed
+        id: "20864182"
     genotypes:
       CC:
-        effect: normal
-        description: Normal norepinephrine regulation in prefrontal cortex. Standard attention switching.
+        effect: typical
+        description: Typical common-variant signal for this medication-response marker.
       CG:
-        effect: altered
-        description: Altered alpha-2A receptor. May have difficulty with sustained attention. Clonidine/guanfacine type medications may help.
+        effect: treatment_relevant
+        description: Variant associated in some studies with differences in response to noradrenergic or stimulant treatment.
       GG:
-        effect: significantly_altered
-        description: Significantly altered norepinephrine regulation. Associated with ADHD inattentive type. Prefrontal cortex understimulated.
-
-  - rsid: rs7794745
-    gene: CNTNAP2
-    trait: Language and social cognition — autism spectrum traits
-    genotypes:
-      TT:
-        effect: normal
-        description: Normal contactin-associated protein. Standard language development and social cognition.
-      AT:
-        effect: variant
-        description: One variant allele. Associated with subtle differences in language processing and social communication style.
-      AA:
-        effect: significantly_altered
-        description: Two variant alleles. Associated with autism spectrum traits — different (not deficient) social processing and language patterns. Strengths in systemizing.
-
-  - rsid: rs2710102
-    gene: CNTNAP2
-    trait: Neural connectivity — communication between brain regions
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal neural connectivity patterns.
-      CT:
-        effect: variant
-        description: Altered connectivity. May process information differently — potential strength in pattern recognition.
-      TT:
-        effect: significantly_altered
-        description: Significantly different connectivity. Associated with ASD traits and different cognitive style. Often comes with strengths in detail-oriented thinking.
-
-  - rsid: rs1858830
-    gene: MET
-    trait: MET receptor — brain development and gut-brain connection
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal MET signaling. Standard brain development and GI function.
-      CG:
-        effect: variant
-        description: Altered MET expression. Associated with autism spectrum traits and GI sensitivities.
-      GG:
-        effect: significantly_altered
-        description: Significantly altered MET. Strongest association with ASD traits and gastrointestinal issues. Gut health optimization may support wellbeing.
+        effect: treatment_relevant
+        description: Variant associated in some studies with treatment-response differences, but not sufficient for clinical decision-making on its own.
+    aliases:
+      GC: CG

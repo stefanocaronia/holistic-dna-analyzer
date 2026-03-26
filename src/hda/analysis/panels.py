@@ -32,7 +32,14 @@ def _panel_metadata(panel_id: str, data: dict, inferred_review_status: str | Non
     review_status = data.get("review_status") or inferred_review_status or "verified"
     status = data.get("status")
     if not status:
-        status = "core" if inferred_review_status is None else "custom"
+        if inferred_review_status is None:
+            status = "core"
+        elif inferred_review_status == "exploratory":
+            status = "experimental"
+        elif inferred_review_status == "draft":
+            status = "draft"
+        else:
+            status = "custom"
 
     return {
         "id": panel_id,
@@ -99,6 +106,7 @@ def analyze_panel(panel_id: str, subject: str | None = None) -> dict:
 
     results = []
     found_count = 0
+    genotype_by_rsid = {}
     for variant in panel.get("variants", []):
         rsid = variant["rsid"]
         snp_data = get_snp(rsid, subject)
@@ -118,6 +126,7 @@ def analyze_panel(panel_id: str, subject: str | None = None) -> dict:
             entry["genotype"] = genotype
             entry["found"] = True
             found_count += 1
+            genotype_by_rsid[rsid] = genotype
 
             # Look up interpretation — try direct match first, then aliases
             genotypes = variant.get("genotypes", {})
@@ -141,6 +150,54 @@ def analyze_panel(panel_id: str, subject: str | None = None) -> dict:
 
         results.append(entry)
 
+    composite_results = []
+    composite_found_count = 0
+    for composite in panel.get("composites", []):
+        component_rsids = composite.get("components", [])
+        component_genotypes = {}
+        missing_components = []
+        for rsid in component_rsids:
+            genotype = genotype_by_rsid.get(rsid)
+            if genotype is None:
+                snp_data = get_snp(rsid, subject)
+                genotype = snp_data["genotype"] if snp_data else None
+                if genotype:
+                    genotype_by_rsid[rsid] = genotype
+            if genotype is None:
+                missing_components.append(rsid)
+            else:
+                component_genotypes[rsid] = genotype
+
+        entry = {
+            "id": composite.get("id"),
+            "gene": composite.get("gene", ""),
+            "trait": composite.get("trait", ""),
+            "genotype": None,
+            "effect": None,
+            "description": None,
+            "found": False,
+            "composite": True,
+            "components": component_rsids,
+            "component_genotypes": component_genotypes,
+        }
+
+        if missing_components:
+            entry["description"] = f"Missing component SNPs: {', '.join(missing_components)}."
+        else:
+            key = "|".join(component_genotypes[rsid] for rsid in component_rsids)
+            entry["genotype"] = key
+            interpretation = composite.get("genotypes", {}).get(key)
+            if interpretation:
+                entry["found"] = True
+                composite_found_count += 1
+                entry["effect"] = interpretation.get("effect")
+                entry["description"] = interpretation.get("description")
+                entry["label"] = interpretation.get("label")
+            else:
+                entry["description"] = f"Composite genotype {key} not in panel definitions."
+
+        composite_results.append(entry)
+
     return {
         "panel_id": canonical_id,
         "requested_panel_id": panel_id,
@@ -155,9 +212,10 @@ def analyze_panel(panel_id: str, subject: str | None = None) -> dict:
         "sources": panel.get("sources", []),
         "limitations": panel.get("limitations", []),
         "subject": subject,
-        "total_variants": len(results),
-        "found_in_genome": found_count,
+        "total_variants": len(results) + len(composite_results),
+        "found_in_genome": found_count + composite_found_count,
         "results": results,
+        "composite_results": composite_results,
     }
 
 
@@ -182,7 +240,7 @@ def get_risk_summary(subject: str | None = None) -> list[dict]:
             if not result["found"]:
                 continue
             effect = result.get("effect", "")
-            if effect and effect not in ("normal", "lower_risk", "no_e4", "no_e2"):
+            if effect and effect not in ("normal", "lower_risk", "no_e4", "no_e2", "typical", "protective"):
                 notable.append({
                     "panel": panel["panel_name"],
                     "panel_review_status": panel.get("review_status", "unknown"),
@@ -190,6 +248,21 @@ def get_risk_summary(subject: str | None = None) -> list[dict]:
                     "gene": result["gene"],
                     "trait": result["trait"],
                     "genotype": result["genotype"],
+                    "effect": effect,
+                    "description": result["description"],
+                })
+        for result in panel.get("composite_results", []):
+            if not result["found"]:
+                continue
+            effect = result.get("effect", "")
+            if effect and effect not in ("normal", "lower_risk", "no_e4", "no_e2", "typical", "protective"):
+                notable.append({
+                    "panel": panel["panel_name"],
+                    "panel_review_status": panel.get("review_status", "unknown"),
+                    "rsid": ",".join(result.get("components", [])),
+                    "gene": result["gene"],
+                    "trait": result["trait"],
+                    "genotype": result.get("label") or result["genotype"],
                     "effect": effect,
                     "description": result["description"],
                 })

@@ -222,7 +222,7 @@ def analyze(panel_id: str, subject: str | None):
         else:
             effect = r["effect"] or ""
             style = ""
-            if effect in ("normal", "lower_risk", "no_e4", "no_e2"):
+            if effect in ("normal", "lower_risk", "no_e4", "no_e2", "typical", "protective"):
                 style = "green"
             elif "reduced" in effect or "risk" in effect or "altered" in effect:
                 style = "yellow"
@@ -237,6 +237,41 @@ def analyze(panel_id: str, subject: str | None):
             )
 
     console.print(table)
+
+    composite_results = result.get("composite_results", [])
+    if composite_results:
+        composite_table = Table(title=f"{result['panel_name']} — Composite Interpretations")
+        composite_table.add_column("Gene", style="bold")
+        composite_table.add_column("Components")
+        composite_table.add_column("Trait")
+        composite_table.add_column("Genotype", justify="center")
+        composite_table.add_column("Effect")
+        composite_table.add_column("Description")
+
+        for r in composite_results:
+            components = ", ".join(r.get("components", []))
+            if not r["found"]:
+                composite_table.add_row(r["gene"], components, r["trait"], "[dim]—[/]", "[dim]not available[/]", r["description"] or "")
+            else:
+                effect = r["effect"] or ""
+                style = ""
+                if effect in ("normal", "lower_risk", "no_e4", "no_e2", "typical", "protective"):
+                    style = "green"
+                elif "reduced" in effect or "risk" in effect or "altered" in effect:
+                    style = "yellow"
+                elif "significantly" in effect or "higher" in effect or "poor" in effect or "at_risk" in effect:
+                    style = "red"
+
+                composite_table.add_row(
+                    r["gene"],
+                    components,
+                    r["trait"],
+                    f"[bold]{r.get('label') or r['genotype']}[/]",
+                    f"[{style}]{effect}[/]" if style else effect,
+                    r["description"] or "",
+                )
+
+        console.print(composite_table)
 
 
 @main.command()

@@ -1,158 +1,123 @@
-name: Addiction & Dependencies
-description: Genetic predisposition to substance dependencies — nicotine, alcohol, opioids, and reward-seeking behavior
+name: "Addiction & Substance Use"
+description: Focused exploratory panel for nicotine dependence and alcohol-response biology
 category: health
+status: experimental
+review_status: exploratory
+version: 1
+last_reviewed: 2026-03-26
+summary: >
+  Exploratory addiction panel narrowed to a few loci with comparatively strong support for
+  nicotine dependence or alcohol-response biology. It avoids broad personality claims and
+  treats these variants as modifiers of substance response or exposure patterns, not as
+  destiny or diagnosis.
+sources:
+  - type: pubmed
+    citation: "CHRNA5 rs16969968 as a strong predictor of nicotine dependence"
+    url: "https://pubmed.ncbi.nlm.nih.gov/26239294/"
+  - type: pubmed
+    citation: "rs1051730 as a regulatory signal for nicotine dependence and lung-cancer risk"
+    url: "https://pubmed.ncbi.nlm.nih.gov/40755048/"
+  - type: pubmed
+    citation: "ADH1B rs1229984 and alcohol-consumption / alcohol-use outcomes"
+    url: "https://pubmed.ncbi.nlm.nih.gov/24988262/"
+  - type: pubmed
+    citation: "ALDH2 rs671 and alcohol-related esophageal cancer risk meta-analysis"
+    url: "https://pubmed.ncbi.nlm.nih.gov/37795758/"
+limitations:
+  - These variants do not diagnose addiction or predict behavior on their own.
+  - Environment, exposure, stress, trauma, culture, and access to substances matter more than any single locus.
+  - Dopamine-, cannabinoid-, and opioid-related SNPs were intentionally removed because the previous panel over-interpreted weaker and less consistent evidence.
 
 variants:
   - rsid: rs1051730
     gene: CHRNA3
-    trait: Nicotine dependence — receptor binding
+    trait: Nicotine dependence susceptibility
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "rs1051730 as a regulatory signal for nicotine dependence and lung-cancer risk"
+        url: "https://pubmed.ncbi.nlm.nih.gov/40755048/"
     genotypes:
       CC:
         effect: lower_risk
-        description: Normal nicotinic receptor. Lower genetic risk for nicotine dependence.
+        description: Lower known nicotine-dependence signal at this locus.
       CT:
         effect: moderate_risk
-        description: One risk allele. Moderately increased risk of nicotine dependence and heavier smoking.
+        description: One risk allele. Associated with greater nicotine dependence and heavier smoking in multiple cohorts.
       TT:
         effect: higher_risk
-        description: Two risk alleles. Significantly increased susceptibility to nicotine addiction and difficulty quitting.
+        description: Two risk alleles. Stronger nicotine-dependence signal at this locus, especially in populations where this association has replicated well.
     aliases:
       GG: CC
       GA: CT
       AA: TT
+      TC: CT
 
   - rsid: rs16969968
     gene: CHRNA5
-    trait: Nicotine dependence — heavy smoking
+    trait: Heavy-smoking susceptibility
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "CHRNA5 rs16969968 as a strong predictor of nicotine dependence"
+        url: "https://pubmed.ncbi.nlm.nih.gov/26239294/"
     genotypes:
       GG:
         effect: lower_risk
-        description: Normal nicotinic receptor subunit. Lower risk of heavy smoking behavior.
+        description: Lower heavy-smoking signal at this locus.
       GA:
         effect: moderate_risk
-        description: One risk allele. Increased likelihood of smoking more cigarettes per day.
+        description: One risk allele. Associated with a greater tendency toward heavier smoking or stronger nicotine dependence.
       AA:
         effect: higher_risk
-        description: Two risk alleles. Strongly associated with heavy smoking and difficulty reducing consumption.
-
-  - rsid: rs1800497
-    gene: DRD2/ANKK1
-    trait: Dopamine reward sensitivity
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal dopamine receptor density. Standard reward response.
-      CT:
-        effect: reduced
-        description: Slightly reduced dopamine receptor density. May seek more stimulation for satisfaction.
-      TT:
-        effect: significantly_reduced
-        description: Significantly reduced dopamine receptors. Higher susceptibility to addictive behaviors across substances.
-    aliases:
-      GG: CC
-      AG: CT
-      AA: TT
-
-  - rsid: rs4680
-    gene: COMT
-    trait: Dopamine breakdown speed
-    genotypes:
-      GG:
-        effect: fast_breakdown
-        description: Fast dopamine breakdown (warrior type). More stress-resilient but may seek more reward stimulation.
-      GA:
-        effect: intermediate
-        description: Intermediate dopamine levels. Balanced between stress tolerance and reward sensitivity.
-      AA:
-        effect: slow_breakdown
-        description: Slow dopamine breakdown (worrier type). Higher baseline dopamine, more sensitive to substances.
+        description: Two risk alleles. Stronger nicotine-dependence signal, though actual behavior still depends heavily on exposure and environment.
     aliases:
       AG: GA
 
-  - rsid: rs1799971
-    gene: OPRM1
-    trait: Opioid receptor sensitivity
-    genotypes:
-      AA:
-        effect: normal
-        description: Normal opioid receptor binding. Standard response to endorphins and opioid substances.
-      AG:
-        effect: altered
-        description: Altered opioid receptor. May need higher doses for pain relief. Altered alcohol reward response.
-      GG:
-        effect: significantly_altered
-        description: Significantly altered opioid binding. Reduced natural endorphin response, altered addiction risk.
-
-  - rsid: rs279858
-    gene: GABRA2
-    trait: Alcohol dependence — GABA receptor
-    genotypes:
-      CC:
-        effect: lower_risk
-        description: Normal GABA receptor function. Lower genetic risk for alcohol dependence.
-      CT:
-        effect: moderate_risk
-        description: One risk allele. Moderately increased risk of alcohol use disorder.
-      TT:
-        effect: higher_risk
-        description: Two risk alleles. Higher genetic predisposition to alcohol dependence.
-    aliases:
-      GG: CC
-      AG: CT
-      AA: TT
-
   - rsid: rs1229984
     gene: ADH1B
-    trait: Alcohol metabolism speed
+    trait: Alcohol aversive-response / reduced drinking tendency
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "ADH1B rs1229984 and alcohol-consumption / alcohol-use outcomes"
+        url: "https://pubmed.ncbi.nlm.nih.gov/24988262/"
+      - type: pubmed
+        citation: "Mendelian randomization using ADH1B rs1229984"
+        url: "https://pubmed.ncbi.nlm.nih.gov/25011450/"
     genotypes:
       CC:
-        effect: normal
-        description: Normal alcohol metabolism. Standard rate of ethanol to acetaldehyde conversion.
+        effect: typical
+        description: Typical alcohol-metabolism profile at this locus.
       CT:
-        effect: fast_metabolizer
-        description: Fast alcohol metabolism. Quick buildup of acetaldehyde causes unpleasant flushing — protective against alcoholism.
+        effect: protective
+        description: One fast-metabolizing allele. Often associated with lower alcohol consumption and lower alcohol-use-disorder risk because alcohol can feel less pleasant.
       TT:
-        effect: very_fast
-        description: Very fast alcohol metabolism. Strong protective effect against alcohol dependence due to unpleasant reaction.
+        effect: strongly_protective
+        description: Two fast-metabolizing alleles. Stronger aversive alcohol-response tendency, though prevalence is low in many populations.
+    aliases:
+      TC: CT
 
   - rsid: rs671
     gene: ALDH2
-    trait: Alcohol flush reaction (acetaldehyde clearance)
+    trait: Alcohol flush / acetaldehyde clearance
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "ALDH2 rs671 and alcohol-related esophageal cancer risk meta-analysis"
+        url: "https://pubmed.ncbi.nlm.nih.gov/37795758/"
+      - type: pubmed
+        citation: "ALDH2 variants leading to acetaldehyde accumulation after alcohol challenge"
+        url: "https://pubmed.ncbi.nlm.nih.gov/39075523/"
     genotypes:
       GG:
-        effect: normal
-        description: Normal acetaldehyde clearance. No alcohol flush.
+        effect: typical
+        description: Typical acetaldehyde clearance at this locus.
       GA:
-        effect: reduced
-        description: Reduced clearance. Moderate alcohol flush, increased cancer risk from drinking.
+        effect: reduced_clearance
+        description: Reduced acetaldehyde clearance. Often causes flushing and can strongly change alcohol tolerance and cancer risk if drinking continues.
       AA:
-        effect: severely_reduced
-        description: Severely impaired clearance. Strong flush, nausea from alcohol. Very high esophageal cancer risk if drinking.
-
-  - rsid: rs2023239
-    gene: CNR1
-    trait: Cannabis receptor sensitivity
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal cannabinoid receptor expression.
-      CT:
-        effect: altered
-        description: Altered CB1 receptor. May experience stronger effects from cannabis and higher dependence risk.
-      TT:
-        effect: significantly_altered
-        description: Significantly altered CB1 receptor expression. Higher susceptibility to cannabis dependence.
-
-  - rsid: rs6277
-    gene: DRD2
-    trait: Dopamine D2 receptor expression
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal D2 receptor expression. Standard dopamine signaling.
-      CT:
-        effect: reduced
-        description: Reduced D2 receptor expression. May contribute to reward deficiency and substance seeking.
-      TT:
-        effect: significantly_reduced
-        description: Significantly reduced D2 expression. Associated with impulsivity and higher addiction vulnerability.
+        effect: severely_reduced_clearance
+        description: Severely reduced acetaldehyde clearance. Strong alcohol flush/aversive response and substantially altered alcohol-related risk profile.
+    aliases:
+      AG: GA

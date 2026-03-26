@@ -176,11 +176,11 @@ The most impactful things for your specific profile: regular aerobic exercise (i
 The `data/panels/` directory contains curated YAML panels, each covering a specific health or trait domain. Panels are regularly updated. Use `available_panels()` to see the current list. Current panels include:
 
 - **pharmacogenomics** — verified core; conservative medication and caffeine response markers
+- **cardiovascular** — verified core; APOE isoform profile plus the 9p21 coronary artery disease locus
 - **inflammation** — verified core; immune susceptibility and gut-inflammation loci with stronger support
 - **nutrition_metabolism** — verified core; lactose, obesity risk, iron, diabetes, food-response metabolism
 - **nutrition_micronutrients** — verified core; vitamin D/A/B6/B12 and omega-3 conversion/absorption tendencies
 - **traits** — verified core; strongly associated visible physical traits
-- **cardiovascular** — exploratory; includes loci that need more curation or composite interpretation
 - **wellness** — exploratory; exercise response, recovery, motivation
 - **addiction** — exploratory; nicotine, alcohol, opioids, cannabis, reward seeking
 - **health_over50** — exploratory; age-related screening themes still need pruning

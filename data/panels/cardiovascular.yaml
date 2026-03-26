@@ -1,0 +1,89 @@
+name: "Cardiovascular Risk: Core Markers"
+description: Conservative cardiovascular panel focused on APOE isoform status and the 9p21 coronary artery disease locus
+category: health
+status: core
+review_status: verified
+version: 1
+last_reviewed: 2026-03-26
+summary: >
+  Curated cardiovascular panel limited to a small number of comparatively stable markers:
+  APOE isoform status, interpreted as a composite from rs429358 and rs7412, and the
+  9p21 coronary artery disease locus. It intentionally excludes weaker or context-heavy
+  blood-pressure and folate claims from the trusted core set.
+sources:
+  - type: medlineplus
+    citation: "APOE gene overview"
+    url: "https://medlineplus.gov/genetics/gene/apoe/"
+  - type: pubmed
+    citation: "Chromosome 9p21 and risk of first versus subsequent coronary heart disease events"
+    url: "https://pubmed.ncbi.nlm.nih.gov/21994422/"
+  - type: pubmed
+    citation: "APOE genotype and premature myocardial infarction association study"
+    url: "https://pubmed.ncbi.nlm.nih.gov/41540357/"
+limitations:
+  - Associations are probabilistic and not diagnostic.
+  - APOE cardiovascular interpretation is simplified and focuses on common isoform patterns, not full lipid phenotyping.
+  - This panel intentionally excludes MTHFR and AGTR1 from the core set because their cardiovascular interpretation is too context-dependent for a trusted default panel.
+
+variants:
+  - rsid: rs1333049
+    gene: 9p21 region
+    trait: Coronary artery disease risk (9p21 locus)
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "Chromosome 9p21 and risk of first versus subsequent coronary heart disease events"
+        url: "https://pubmed.ncbi.nlm.nih.gov/21994422/"
+    genotypes:
+      GG:
+        effect: lower_risk
+        description: Lower known coronary artery disease risk at this locus.
+      GC:
+        effect: moderate_risk
+        description: One risk allele. Associated with moderately increased coronary artery disease risk in multiple cohorts.
+      CC:
+        effect: higher_risk
+        description: Two risk alleles. Associated with higher coronary artery disease risk, though blood pressure, LDL burden, smoking, and diabetes still matter far more clinically.
+    aliases:
+      CG: GC
+
+composites:
+  - id: apoe_isoform
+    gene: APOE
+    trait: APOE isoform profile
+    evidence_level: high
+    sources:
+      - type: medlineplus
+        citation: "APOE gene overview"
+        url: "https://medlineplus.gov/genetics/gene/apoe/"
+      - type: pubmed
+        citation: "APOE genotype and premature myocardial infarction association study"
+        url: "https://pubmed.ncbi.nlm.nih.gov/41540357/"
+    components:
+      - rs429358
+      - rs7412
+    genotypes:
+      "TT|CC":
+        label: "e3/e3"
+        effect: typical
+        description: Typical APOE isoform profile. No common e2 or e4 allele is inferred from these two positions.
+      "TT|CT":
+        label: "e2/e3"
+        effect: protective
+        description: APOE e2/e3 profile. Often associated with somewhat lower LDL-related cardiovascular risk, though not universally beneficial in every context.
+      "TT|TT":
+        label: "e2/e2"
+        effect: mixed_profile
+        description: APOE e2/e2 profile. Often lowers atherosclerotic risk but can predispose to remnant-particle dyslipidemia in some carriers.
+      "TC|CC":
+        label: "e3/e4"
+        effect: increased_risk
+        description: APOE e3/e4 profile. Commonly associated with higher LDL-related cardiovascular risk than e3/e3.
+      "CC|CC":
+        label: "e4/e4"
+        effect: higher_risk
+        description: APOE e4/e4 profile. Stronger tendency toward an unfavorable lipid profile and higher cardiovascular risk.
+      "TC|CT":
+        label: "e2/e4"
+        effect: mixed_profile
+        description: "APOE e2/e4 profile. Mixed signal: e2 can be protective while e4 can worsen LDL-related risk, so lipid labs matter more than genotype shorthand."

@@ -8,7 +8,8 @@ This document defines the minimum structure for panels that are safe to version 
 - Core panels should use the plain filename, for example `nutrition_metabolism.yaml`.
 - Exploratory panels should use the suffix `.experimental.yaml`.
 - Draft panels should use the suffix `.draft.yaml`.
-- Experimental, speculative, or user-customized panels should stay local unless they are promoted after review.
+- Exploratory panels may stay in the repository if they are clearly marked and documented as non-core.
+- Draft or user-customized panels should stay local unless they are promoted after review.
 - A panel is not considered core just because an LLM drafted it.
 
 ## Panel File Naming
@@ -75,6 +76,9 @@ variants:
 - Plain `.yaml` files are treated as `review_status=verified` unless explicitly overridden.
 - `.experimental.yaml` files are treated as `review_status=exploratory`.
 - `.draft.yaml` files are treated as `review_status=draft`.
+- Plain `.yaml` files default to `status=core`.
+- `.experimental.yaml` files default to `status=experimental`.
+- `.draft.yaml` files default to `status=draft`.
 - `sources` must exist at panel level.
 - `evidence_level` should exist for each variant.
 - Descriptions must avoid diagnostic claims.
@@ -93,3 +97,10 @@ Panels dominated by `low` evidence variants should remain local or experimental,
 - `verified`: reviewed for repository inclusion; safest default status
 - `exploratory`: usable, but not part of the trusted default set
 - `draft`: LLM-authored or user-authored draft with no verification yet
+
+## Status Meanings
+
+- `core`: verified default panel shipped as part of the trusted set
+- `experimental`: shipped with the repository, but intentionally outside the trusted default set
+- `draft`: unverified work in progress; normally local only
+- `custom`: reserved for explicitly user-defined statuses when needed

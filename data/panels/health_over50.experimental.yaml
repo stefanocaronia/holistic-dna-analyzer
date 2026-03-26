@@ -1,176 +1,119 @@
-name: Health After 50
-description: Key genetic variants to monitor for cancer risk, bone health, prostate, cognitive decline, and age-related conditions
+name: "Health After 50"
+description: Exploratory age-related screening panel with a few stronger prostate, PSA, and detoxification markers
 category: health
+status: experimental
+review_status: exploratory
+version: 1
+last_reviewed: 2026-03-26
+summary: >
+  Exploratory panel for age-related screening themes. It now focuses on a smaller subset
+  of loci with more defensible links to prostate-cancer susceptibility, PSA baseline
+  interpretation, and one detoxification-related cancer-susceptibility marker. It is not
+  a substitute for standard screening or family-history-based clinical decisions.
+sources:
+  - type: pubmed
+    citation: "8q24 research synopsis and meta-analysis across cancers"
+    url: "https://pubmed.ncbi.nlm.nih.gov/32590746/"
+  - type: pubmed
+    citation: "8q24 polymorphisms and prostate cancer systematic review / meta-analysis"
+    url: "https://pubmed.ncbi.nlm.nih.gov/29158792/"
+  - type: pubmed
+    citation: "KLK3 rs2735839 and aggressive prostate cancer"
+    url: "https://pubmed.ncbi.nlm.nih.gov/25274378/"
+  - type: pubmed
+    citation: "NQO1 rs1800566 and cancer susceptibility meta-analysis"
+    url: "https://pubmed.ncbi.nlm.nih.gov/36338728/"
+limitations:
+  - This panel is exploratory and should not drive cancer screening decisions by itself.
+  - Several age-related traits originally included here were removed because evidence was weaker, too context-dependent, or already handled better elsewhere.
+  - Most retained signals are most useful when combined with age, sex, family history, PSA/lipid labs, and routine medical care.
 
 variants:
-  - rsid: rs1042522
-    gene: TP53
-    trait: p53 tumor suppressor efficiency
-    genotypes:
-      GG:
-        effect: normal
-        description: Pro/Pro variant. Standard p53 tumor suppressor function.
-      GC:
-        effect: variant
-        description: Pro/Arg variant. Altered p53 apoptosis efficiency. Some studies link to modified cancer risk.
-      CC:
-        effect: variant
-        description: Arg/Arg variant. Different apoptosis balance. Associated with altered risk for several cancers.
-
   - rsid: rs1800566
     gene: NQO1
-    trait: Quinone detoxification — cancer protection
+    trait: Quinone detoxification / cancer susceptibility marker
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "NQO1 rs1800566 and cancer susceptibility meta-analysis"
+        url: "https://pubmed.ncbi.nlm.nih.gov/36338728/"
     genotypes:
       CC:
-        effect: normal
-        description: Normal NQO1 enzyme. Good detoxification of environmental carcinogens.
+        effect: typical
+        description: Typical NQO1 activity at this locus.
       CT:
         effect: reduced
-        description: Reduced detox capacity. Increase cruciferous vegetables and antioxidant intake.
+        description: Reduced NQO1 activity. This may modestly alter carcinogen handling, but any cancer-risk interpretation remains broad and context-dependent.
       TT:
-        effect: absent
-        description: No NQO1 enzyme activity. Significantly reduced carcinogen detoxification. Avoid smoking and chemical exposure.
-
-  - rsid: rs4986850
-    gene: BRCA1 region
-    trait: BRCA1 region variant
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal BRCA1 region. Standard DNA repair function.
-      CT:
-        effect: variant
-        description: Carrier of a BRCA1 region variant. Does not mean BRCA1 pathogenic mutation — further testing recommended if family history exists.
-      TT:
-        effect: variant
-        description: Homozygous variant in BRCA1 region. Discuss with a genetic counselor if cancer family history present.
+        effect: markedly_reduced
+        description: Markedly reduced NQO1 activity at this locus. Environmental exposure and smoking history matter far more clinically than genotype alone.
+    aliases:
+      GG: CC
+      AG: CT
+      AA: TT
 
   - rsid: rs1447295
     gene: 8q24 region
-    trait: Prostate cancer risk (men)
+    trait: Prostate cancer susceptibility locus 1
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "8q24 polymorphisms and prostate cancer systematic review / meta-analysis"
+        url: "https://pubmed.ncbi.nlm.nih.gov/29158792/"
     genotypes:
       CC:
         effect: lower_risk
-        description: Lower genetic risk at this locus for prostate cancer.
+        description: Lower known prostate-cancer susceptibility at this locus.
       CA:
         effect: moderate_risk
-        description: One risk allele. Moderately increased prostate cancer risk. Regular PSA screening after 50 recommended.
+        description: One risk allele. Associated with moderately increased prostate-cancer susceptibility in meta-analyses.
       AA:
         effect: higher_risk
-        description: Two risk alleles. Higher prostate cancer susceptibility. Discuss early screening with urologist.
-    note: Relevant for males only
+        description: Two risk alleles. Associated with higher prostate-cancer susceptibility, but still far from deterministic.
+    aliases:
+      AC: CA
+    note: Most relevant for males
 
   - rsid: rs16901979
     gene: 8q24 region
-    trait: Prostate cancer risk (second locus)
+    trait: Prostate cancer susceptibility locus 2
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "8q24 research synopsis and meta-analysis across cancers"
+        url: "https://pubmed.ncbi.nlm.nih.gov/32590746/"
     genotypes:
       CC:
         effect: lower_risk
-        description: Lower risk at this second 8q24 locus.
+        description: Lower known prostate-cancer susceptibility at this locus.
       CA:
         effect: moderate_risk
-        description: One risk allele. Additional prostate cancer risk factor. Compounds with rs1447295.
+        description: One risk allele. Adds modest prostate-cancer susceptibility in several datasets.
       AA:
         effect: higher_risk
-        description: Two risk alleles. Significant additional risk. Combined with other 8q24 variants, warrants proactive screening.
-    note: Relevant for males only
-
-  - rsid: rs2234693
-    gene: ESR1
-    trait: Estrogen receptor — bone density and cardiovascular (women)
-    genotypes:
-      TT:
-        effect: normal
-        description: Normal estrogen receptor signaling. Standard bone density maintenance.
-      TC:
-        effect: variant
-        description: Altered estrogen receptor. May affect bone density response post-menopause. DEXA screening recommended.
-      CC:
-        effect: variant
-        description: Homozygous variant. Potentially reduced bone density protection. Monitor with DEXA scan and ensure calcium/vitamin D.
-    note: Most relevant for females, but men carry the variant too
-
-  - rsid: rs9305614
-    gene: COL1A1 region
-    trait: Osteoporosis risk — collagen formation
-    genotypes:
-      AA:
-        effect: normal
-        description: Normal collagen type I formation. Standard bone strength.
-      AG:
-        effect: moderate_risk
-        description: One risk allele. Slightly increased osteoporosis risk. Weight-bearing exercise and calcium important.
-      GG:
-        effect: higher_risk
-        description: Two risk alleles. Higher osteoporosis susceptibility. DEXA screening and proactive bone health measures.
-
-  - rsid: rs429358
-    gene: APOE
-    trait: Alzheimer's disease risk (APOE4)
-    genotypes:
-      TT:
-        effect: lower_risk
-        description: No APOE4 allele. Lower genetic risk for late-onset Alzheimer's.
-      TC:
-        effect: moderate_risk
-        description: One APOE4 allele. ~3x increased Alzheimer's risk. Cognitive exercise, cardiovascular health, and omega-3 are protective.
-      CC:
-        effect: higher_risk
-        description: Two APOE4 alleles. ~12x increased risk. Mediterranean diet, exercise, sleep, and mental stimulation are especially important.
-
-  - rsid: rs7412
-    gene: APOE
-    trait: Alzheimer's protection (APOE2)
-    genotypes:
-      CC:
-        effect: no_protection
-        description: No APOE2 protective allele. Risk determined by other APOE variants.
-      CT:
-        effect: protective
-        description: One APOE2 allele. Associated with lower Alzheimer's risk and better lipid profile.
-      TT:
-        effect: strongly_protective
-        description: Two APOE2 alleles. Strong protection against Alzheimer's. Rare type III hyperlipidemia possible.
-
-  - rsid: rs1800629
-    gene: TNF
-    trait: TNF-alpha inflammation — chronic disease risk
-    genotypes:
-      GG:
-        effect: normal
-        description: Normal TNF-alpha production. Standard inflammatory response.
-      GA:
-        effect: elevated
-        description: Higher TNF-alpha production. Increased chronic inflammation. Anti-inflammatory lifestyle especially important after 50.
-      AA:
-        effect: significantly_elevated
-        description: Significantly elevated TNF-alpha. High chronic inflammation risk. Mediterranean diet, omega-3, and regular exercise critical.
-
-  - rsid: rs10757278
-    gene: 9p21 region
-    trait: Heart attack risk (age-dependent, increases after 50)
-    genotypes:
-      AA:
-        effect: lower_risk
-        description: Lower genetic risk for myocardial infarction at this locus.
-      AG:
-        effect: moderate_risk
-        description: One risk allele. Moderate heart attack risk. Regular cardiovascular checkups after 50.
-      GG:
-        effect: higher_risk
-        description: Two risk alleles. Higher heart attack susceptibility. Lipid panel, blood pressure, and cardiac screening important.
+        description: Two risk alleles. Stronger signal at this locus, though family history and age remain more informative than genotype alone.
+    aliases:
+      AC: CA
+    note: Most relevant for males
 
   - rsid: rs2735839
     gene: KLK3 (PSA)
-    trait: Baseline PSA levels (prostate screening relevance)
+    trait: Baseline PSA tendency
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "KLK3 rs2735839 and aggressive prostate cancer"
+        url: "https://pubmed.ncbi.nlm.nih.gov/25274378/"
     genotypes:
       GG:
-        effect: normal
-        description: Normal baseline PSA levels. Standard screening thresholds apply.
+        effect: typical
+        description: Typical PSA baseline tendency at this locus.
       GA:
         effect: lower_psa
-        description: Naturally lower PSA. Important for screening — a "normal" PSA might be relatively high for you.
+        description: Lower PSA tendency. This matters mostly for interpreting PSA values in context, not as a direct cancer-risk result.
       AA:
-        effect: significantly_lower_psa
-        description: Significantly lower baseline PSA. Discuss adjusted screening thresholds with urologist.
-    note: Relevant for males only
+        effect: markedly_lower_psa
+        description: More strongly lower PSA tendency. Screening interpretation may need more nuance because a 'normal' PSA could be relatively less reassuring.
+    aliases:
+      AG: GA
+    note: Most relevant for males

@@ -53,10 +53,48 @@ class PanelMetadataTests(unittest.TestCase):
             with patch.object(panels, "PANELS_DIR", root):
                 listed = {panel["id"]: panel for panel in list_panels()}
                 self.assertEqual(listed["focus"]["review_status"], "exploratory")
-                self.assertEqual(listed["focus"]["status"], "custom")
+                self.assertEqual(listed["focus"]["status"], "experimental")
                 self.assertEqual(listed["sleep_boost"]["review_status"], "draft")
+                self.assertEqual(listed["sleep_boost"]["status"], "draft")
                 self.assertEqual(load_panel("focus")["review_status"], "exploratory")
                 self.assertEqual(load_panel("sleep_boost")["review_status"], "draft")
+
+    def test_composite_panel_results_are_exposed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "apoe.yaml").write_text(
+                "name: APOE Test\n"
+                "description: Test panel\n"
+                "category: health\n"
+                "variants: []\n"
+                "composites:\n"
+                "  - id: apoe_profile\n"
+                "    gene: APOE\n"
+                "    trait: APOE profile\n"
+                "    components:\n"
+                "      - rs429358\n"
+                "      - rs7412\n"
+                "    genotypes:\n"
+                "      'TT|CC':\n"
+                "        label: e3/e3\n"
+                "        effect: typical\n"
+                "        description: Typical APOE profile.\n",
+                encoding="utf-8",
+            )
+
+            def fake_get_snp(rsid, subject):
+                values = {
+                    "rs429358": {"rsid": "rs429358", "chromosome": "19", "position": 0, "genotype": "TT"},
+                    "rs7412": {"rsid": "rs7412", "chromosome": "19", "position": 0, "genotype": "CC"},
+                }
+                return values.get(rsid)
+
+            with patch.object(panels, "PANELS_DIR", root), patch.object(panels, "get_snp", fake_get_snp):
+                result = analyze_panel("apoe", "stefano")
+                self.assertEqual(result["total_variants"], 1)
+                self.assertEqual(result["found_in_genome"], 1)
+                self.assertEqual(result["composite_results"][0]["label"], "e3/e3")
+                self.assertEqual(result["composite_results"][0]["effect"], "typical")
 
 
 if __name__ == "__main__":

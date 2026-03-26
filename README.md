@@ -7,13 +7,28 @@ You bring your raw genotyping file (MyHeritage, 23andMe, AncestryDNA, etc.), the
 ## What It Does
 
 - Imports raw DNA data into a personal SQLite database
-- Runs **13 curated analysis panels**: pharmacogenomics, cardiovascular, nutrition, mental health, ADHD/neurodivergence, cognitive performance, addiction, inflammation, sleep, traits, and more (78+ well-studied variants)
+- Runs a small **verified core set** plus additional **exploratory panels** kept in the repository with explicit warnings
 - Annotates your SNPs from **SNPedia, ClinVar, and Ensembl** (free, no API keys needed)
 - Maintains a **persistent context** per person — the agent remembers what it found in previous sessions
 - Supports **multiple subjects** — each person gets their own database, like git branches
 - Includes a **Streamlit dashboard** for visual exploration
 
 HDA provides the local data layer, navigation tools, curated panels, and agent-facing functions. When you use an LLM on top of HDA, the model is still generating an interpretation. That interpretation can be useful, but it can also overstate evidence, miss context, or hallucinate. Use it for exploration, not diagnosis.
+
+Current verified core panels:
+- `cardiovascular`
+- `pharmacogenomics`
+- `inflammation`
+- `nutrition_metabolism`
+- `nutrition_micronutrients`
+- `traits`
+
+Additional panels in the repo may be marked `exploratory` and require extra caution.
+
+Exploratory panels currently kept in the repository are best treated as a secondary library:
+- higher-value exploratory: `sleep`, `health_over50`
+- medium-value exploratory: `wellness`, `mental_health`
+- later / stricter review targets: `adhd_neurodivergence`, `autism_spectrum`, `addiction`, `cognitive`
 
 ## Talking to the Agent
 

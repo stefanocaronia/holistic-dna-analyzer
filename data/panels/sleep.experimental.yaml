@@ -1,120 +1,102 @@
-name: Sleep & Circadian Rhythm
-description: Genetic variants affecting sleep quality, chronotype, insomnia risk, and melatonin metabolism
+name: "Sleep & Circadian Rhythm"
+description: Focused exploratory panel for chronotype and homeostatic sleep-pressure tendencies
 category: wellness
+status: experimental
+review_status: exploratory
+version: 1
+last_reviewed: 2026-03-26
+summary: >
+  Exploratory sleep panel narrowed to a few loci with at least some direct literature
+  support for chronotype, circadian preference, or sleep homeostasis. It is useful for
+  framing tendencies, but far too limited and context-dependent for diagnosis or for
+  strong claims about insomnia, sleep need, or treatment response.
+sources:
+  - type: pubmed
+    citation: "ADA rs73598374 affects sleep EEG spectral power"
+    url: "https://pubmed.ncbi.nlm.nih.gov/22952909/"
+  - type: pubmed
+    citation: "ADA rs73598374, evening melatonin levels, and sleep quality"
+    url: "https://pubmed.ncbi.nlm.nih.gov/33981350/"
+  - type: pubmed
+    citation: "MTNR1B rs4753426 and diurnal preference / sleep habits"
+    url: "https://pubmed.ncbi.nlm.nih.gov/30508778/"
+  - type: pubmed
+    citation: "CLOCK gene variants and chronotype-related findings in EPIC"
+    url: "https://pubmed.ncbi.nlm.nih.gov/35961261/"
+limitations:
+  - Sleep traits are highly polygenic and strongly shaped by light exposure, work schedule, stress, age, and behavior.
+  - These variants describe tendencies, not fixed sleep outcomes or treatment recommendations.
+  - Several rarer or more weakly supported sleep SNPs were intentionally removed from this repository panel.
 
 variants:
-  - rsid: rs57875989
-    gene: DEC2 (BHLHE41)
-    trait: Short sleeper gene
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal sleep duration needs. Most people need 7-9 hours.
-      CT:
-        effect: short_sleeper
-        description: Carrier of short sleeper variant. May function well on less sleep than average.
-      TT:
-        effect: short_sleeper
-        description: Rare short sleeper. Can function on 4-6 hours. Extremely rare genotype.
-
-  - rsid: rs12927162
-    gene: ADA
-    trait: Deep sleep quality — adenosine metabolism
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal adenosine deaminase. Standard sleep pressure and deep sleep.
-      CT:
-        effect: deeper_sleep
-        description: Slower adenosine breakdown. Tends to have deeper, more restorative slow-wave sleep.
-      TT:
-        effect: deeper_sleep
-        description: Significantly slower adenosine metabolism. Very deep sleeper, but may feel more sleep pressure.
-
   - rsid: rs73598374
     gene: ADA
-    trait: Adenosine deaminase activity (second variant)
+    trait: Sleep homeostasis and sleep depth
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "ADA rs73598374 affects sleep EEG spectral power"
+        url: "https://pubmed.ncbi.nlm.nih.gov/22952909/"
+      - type: pubmed
+        citation: "ADA rs73598374, evening melatonin levels, and sleep quality"
+        url: "https://pubmed.ncbi.nlm.nih.gov/33981350/"
     genotypes:
-      CC:
-        effect: normal
-        description: Normal ADA activity and sleep homeostasis.
-      CT:
-        effect: variant
-        description: Altered ADA activity. May experience different sleep depth and caffeine sensitivity.
-      TT:
-        effect: significantly_altered
-        description: Significantly altered adenosine metabolism. Unusual sleep patterns possible.
-
-  - rsid: rs4753426
-    gene: MTNR1B
-    trait: Melatonin receptor — sleep onset
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal melatonin receptor. Standard sleep onset timing.
-      CT:
-        effect: variant
-        description: Altered melatonin signaling. May have slightly delayed sleep onset. Also linked to glucose metabolism.
-      TT:
-        effect: significantly_altered
-        description: Significantly altered melatonin receptor. Likely delayed sleep onset. Melatonin supplementation may help.
+      GG:
+        effect: typical
+        description: Typical ADA-related sleep homeostasis at this locus.
+      GA:
+        effect: deeper_sleep
+        description: A-allele carrier. Associated in several studies with deeper or more intense sleep and higher sleep pressure, though findings are not uniform across every sleep outcome.
+      AA:
+        effect: deeper_sleep
+        description: Rare two-allele carrier. Directionally associated with higher sleep pressure and deeper sleep physiology, but population data are limited.
+    aliases:
+      AG: GA
+      CC: GG
+      CT: GA
+      TT: AA
 
   - rsid: rs1801260
     gene: CLOCK
-    trait: Chronotype — morning vs evening person
+    trait: Chronotype tendency
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "CLOCK gene variants and chronotype-related findings in EPIC"
+        url: "https://pubmed.ncbi.nlm.nih.gov/35961261/"
     genotypes:
       TT:
-        effect: morning_type
-        description: Tends toward morning chronotype. Naturally wakes and performs best earlier in the day.
+        effect: morning_tendency
+        description: More morning-oriented tendency in some cohorts, though effect size is modest.
       TC:
         effect: intermediate
-        description: Intermediate chronotype. Adaptable sleep schedule.
+        description: Intermediate chronotype tendency. Environment and routine likely matter more than genotype here.
       CC:
-        effect: evening_type
-        description: Tends toward evening chronotype. Naturally prefers staying up late and waking later.
+        effect: evening_tendency
+        description: More evening-oriented tendency in some cohorts. This can make socially early schedules feel less natural, but the effect is not deterministic.
     aliases:
+      CT: TC
       AA: CC
       AG: TC
       GG: TT
 
-  - rsid: rs2287161
-    gene: CRY1
-    trait: Circadian rhythm length
+  - rsid: rs4753426
+    gene: MTNR1B
+    trait: Diurnal preference / circadian entrainment
+    evidence_level: low
+    sources:
+      - type: pubmed
+        citation: "MTNR1B rs4753426 and diurnal preference / sleep habits"
+        url: "https://pubmed.ncbi.nlm.nih.gov/30508778/"
     genotypes:
       CC:
-        effect: normal
-        description: Normal circadian period close to 24 hours.
-      CG:
-        effect: variant
-        description: Slightly altered circadian period. May drift from 24-hour schedule without light cues.
-      GG:
-        effect: longer_period
-        description: Longer circadian period. Natural tendency toward delayed sleep phase. Consistent light exposure helps.
-
-  - rsid: rs28532731
-    gene: PER2
-    trait: Familial advanced sleep phase
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal PER2 clock gene. Standard circadian timing.
+        effect: morning_tendency
+        description: C/C was associated with a more morning-oriented profile in one cohort study.
       CT:
-        effect: early_phase
-        description: Carrier of advanced sleep phase variant. Tends to feel sleepy very early (7-8 PM) and wake very early.
+        effect: intermediate
+        description: Mixed or intermediate tendency. This locus is plausible for circadian entrainment, but evidence remains limited.
       TT:
-        effect: strongly_early
-        description: Strong advanced sleep phase. Falls asleep by early evening, wakes at 3-4 AM. Rare but well-documented.
-
-  - rsid: rs1800888
-    gene: HTR1B
-    trait: Serotonin receptor — sleep quality
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal serotonin 1B receptor. Standard sleep regulation.
-      CT:
-        effect: variant
-        description: Altered serotonin receptor. May experience different sleep quality and mood regulation.
-      TT:
-        effect: significantly_altered
-        description: Significantly altered serotonin receptor. May benefit from sleep hygiene optimization and tryptophan-rich diet.
+        effect: later_tendency
+        description: T/T may lean away from morningness in some cohorts, but this is a weak signal and should be interpreted cautiously.
+    aliases:
+      TC: CT

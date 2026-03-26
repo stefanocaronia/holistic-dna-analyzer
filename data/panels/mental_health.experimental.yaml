@@ -1,150 +1,126 @@
-name: Mental Health & Mood
-description: Genetic variants related to depression risk, anxiety, stress response, and emotional regulation
+name: "Mental Health & Stress Response"
+description: Focused exploratory panel for stress reactivity, neuroplasticity, and a few affect-related signaling pathways
 category: health
+status: experimental
+review_status: exploratory
+version: 1
+last_reviewed: 2026-03-26
+summary: >
+  Exploratory mental-health panel narrowed to a small set of variants with at least some
+  functional or repeated literature support around neuroplasticity, catecholamine
+  clearance, HPA-axis stress regulation, and serotonin signaling. It is meant for
+  framing vulnerabilities and resilience patterns, not for diagnosing depression,
+  anxiety, PTSD, or predicting treatment response on its own.
+sources:
+  - type: pubmed
+    citation: "BDNF rs6265 meta-analysis found no clear association with major depression"
+    url: "https://pubmed.ncbi.nlm.nih.gov/23184535/"
+  - type: pubmed
+    citation: "COMT Val158Met and adult cortisol response to psychological stress"
+    url: "https://pubmed.ncbi.nlm.nih.gov/28452825/"
+  - type: pubmed
+    citation: "FKBP5 rs1360780 interaction with early-life stress in depression/PTSD meta-analysis"
+    url: "https://pubmed.ncbi.nlm.nih.gov/28850857/"
+  - type: pubmed
+    citation: "HTR1A rs6295 functional polymorphism and psychiatric outcomes"
+    url: "https://pubmed.ncbi.nlm.nih.gov/26926882/"
+limitations:
+  - These variants do not diagnose depression, anxiety, PTSD, or treatment response.
+  - Many effects are small and often depend on environment, trauma exposure, sex, ancestry, and other loci.
+  - Several serotonin, oxytocin, and antidepressant-response SNPs were intentionally removed because the evidence was weaker or the previous wording was too strong.
 
 variants:
   - rsid: rs6265
     gene: BDNF
-    trait: Brain plasticity — BDNF Val66Met
+    trait: Activity-dependent neuroplasticity
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "BDNF rs6265 meta-analysis found no clear association with major depression"
+        url: "https://pubmed.ncbi.nlm.nih.gov/23184535/"
+      - type: pubmed
+        citation: "BDNF rs6265, job stress, and burnout"
+        url: "https://pubmed.ncbi.nlm.nih.gov/34245319/"
     genotypes:
       CC:
-        effect: normal
-        description: Normal BDNF secretion. Good neuroplasticity, learning, and stress recovery.
+        effect: typical
+        description: Typical BDNF secretion profile at this locus. This does not imply immunity to mood problems, only that this specific neuroplasticity marker is not shifted in the lower-function direction.
       CT:
-        effect: reduced
-        description: Reduced BDNF release. Slightly lower neuroplasticity. Exercise strongly boosts BDNF and compensates.
+        effect: reduced_activity
+        description: Reduced activity-dependent BDNF secretion. This may modestly affect stress adaptation or learning-related plasticity, but direct links to depression are inconsistent.
       TT:
-        effect: significantly_reduced
-        description: Significantly reduced BDNF. Higher vulnerability to depression and anxiety. Exercise, meditation, and social connection are especially protective.
+        effect: lower_activity
+        description: Lower activity-dependent BDNF secretion. This can be framed as a vulnerability in stress adaptation or plasticity rather than as a direct depression marker.
     aliases:
       GG: CC
       GA: CT
       AA: TT
-
-  - rsid: rs25531
-    gene: SLC6A4
-    trait: Serotonin transporter — emotional sensitivity
-    genotypes:
-      AA:
-        effect: lower_expression
-        description: Lower serotonin reuptake (short allele equivalent). Higher emotional sensitivity, deeper processing of experiences. More responsive to environment — both positive and negative.
-      AG:
-        effect: intermediate
-        description: Intermediate serotonin transporter expression. Moderate emotional sensitivity.
-      GG:
-        effect: higher_expression
-        description: Higher serotonin reuptake. More emotionally resilient but possibly less responsive to psychotherapy nuances.
-
-  - rsid: rs4570625
-    gene: TPH2
-    trait: Serotonin production in the brain
-    genotypes:
-      GG:
-        effect: normal
-        description: Normal tryptophan hydroxylase-2 activity. Standard brain serotonin production.
-      GT:
-        effect: reduced
-        description: Reduced serotonin synthesis. May increase anxiety and emotional reactivity. Tryptophan-rich diet helpful.
-      TT:
-        effect: significantly_reduced
-        description: Significantly reduced brain serotonin production. Higher depression and anxiety vulnerability. Consider 5-HTP or tryptophan support.
+      AG: CT
 
   - rsid: rs4680
     gene: COMT
-    trait: Stress response — dopamine/norepinephrine clearance
+    trait: Catecholamine clearance under stress
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "COMT Val158Met and adult cortisol response to psychological stress"
+        url: "https://pubmed.ncbi.nlm.nih.gov/28452825/"
+      - type: pubmed
+        citation: "Physiological stress responsivity and COMT Val158Met"
+        url: "https://pubmed.ncbi.nlm.nih.gov/30628551/"
     genotypes:
       GG:
-        effect: warrior
-        description: Fast catecholamine breakdown. Better acute stress tolerance but may struggle with sustained focus tasks.
+        effect: faster_clearance
+        description: Faster catecholamine clearance. This can be advantageous in some acute-stress contexts but may also come with less sustained prefrontal dopamine tone.
       GA:
-        effect: balanced
-        description: Balanced COMT activity. Good mix of stress resilience and cognitive performance.
+        effect: intermediate
+        description: Intermediate COMT activity. Often the most context-balanced profile, though stress effects still depend heavily on environment and other variants.
       AA:
-        effect: worrier
-        description: Slow catecholamine breakdown. Higher cognitive performance under calm conditions but more vulnerable to stress and anxiety.
+        effect: slower_clearance
+        description: Slower catecholamine clearance. In some studies this aligns with higher stress sensitivity or stronger emotional reactivity, but not in a deterministic way.
     aliases:
       AG: GA
 
-  - rsid: rs6311
-    gene: HTR2A
-    trait: Serotonin 2A receptor — depression and SSRI response
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal serotonin 2A receptor density. Standard SSRI antidepressant response expected.
-      CT:
-        effect: altered
-        description: Altered receptor density. May respond differently to SSRIs. Useful info for psychiatrist if starting medication.
-      TT:
-        effect: significantly_altered
-        description: Significantly altered 5-HT2A expression. Associated with higher depression risk and variable SSRI response. Dose adjustments may be needed.
-
-  - rsid: rs1800532
-    gene: TPH1
-    trait: Peripheral serotonin — gut-brain axis
-    genotypes:
-      CC:
-        effect: normal
-        description: Normal peripheral serotonin production. Standard gut-brain signaling.
-      CA:
-        effect: altered
-        description: Altered peripheral serotonin. May influence gut motility and mood via gut-brain axis.
-      AA:
-        effect: significantly_altered
-        description: Significantly altered peripheral serotonin. Links between digestive issues and mood may be stronger.
-
-  - rsid: rs53576
-    gene: OXTR
-    trait: Oxytocin receptor — empathy and social bonding
-    genotypes:
-      GG:
-        effect: higher_empathy
-        description: Higher oxytocin receptor expression. Stronger empathy, social bonding, and sensitivity to social cues.
-      AG:
-        effect: intermediate
-        description: Intermediate oxytocin sensitivity. Balanced social-emotional processing.
-      AA:
-        effect: lower_empathy
-        description: Lower oxytocin receptor expression. More self-reliant emotional processing. Less affected by social rejection.
-
   - rsid: rs1360780
     gene: FKBP5
-    trait: Cortisol regulation — PTSD and trauma response
+    trait: HPA-axis stress sensitivity
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "FKBP5 rs1360780 interaction with early-life stress in depression/PTSD meta-analysis"
+        url: "https://pubmed.ncbi.nlm.nih.gov/28850857/"
+      - type: pubmed
+        citation: "FKBP5 systematic review / meta-analysis in depressive disorders"
+        url: "https://pubmed.ncbi.nlm.nih.gov/30791339/"
     genotypes:
       CC:
-        effect: normal
-        description: Normal cortisol feedback loop. Standard stress recovery.
+        effect: typical
+        description: Typical FKBP5-related stress feedback at this locus.
       CT:
-        effect: altered
-        description: Altered cortisol regulation. Slower stress recovery. Higher risk for prolonged stress effects after trauma.
+        effect: stress_sensitive
+        description: One T allele. This is most usefully interpreted as higher sensitivity to adverse stress exposure, especially early-life stress, not as a stand-alone diagnosis marker.
       TT:
-        effect: significantly_altered
-        description: Significantly impaired cortisol regulation. High vulnerability to PTSD and chronic stress effects. Stress management practices critical.
-
-  - rsid: rs10997875
-    gene: NTRK2
-    trait: BDNF receptor — antidepressant response
-    genotypes:
-      AA:
-        effect: normal
-        description: Normal BDNF receptor (TrkB). Standard neurotrophin signaling and expected antidepressant response.
-      AG:
-        effect: variant
-        description: Altered BDNF receptor. May affect antidepressant response timing and efficacy.
-      GG:
-        effect: significantly_altered
-        description: Significantly altered TrkB receptor. Potentially slower antidepressant response. Exercise as adjunct especially valuable.
+        effect: higher_stress_sensitivity
+        description: Two T alleles. This strengthens the possibility of greater vulnerability to prolonged stress effects, particularly in the presence of trauma or repeated adversity.
 
   - rsid: rs6295
     gene: HTR1A
-    trait: Serotonin 1A receptor — anxiety and depression baseline
+    trait: Serotonin autoreceptor regulation
+    evidence_level: low
+    sources:
+      - type: pubmed
+        citation: "HTR1A rs6295 functional polymorphism and psychiatric outcomes"
+        url: "https://pubmed.ncbi.nlm.nih.gov/26926882/"
+      - type: pubmed
+        citation: "HTR1A rs6295 and mechanisms of fear"
+        url: "https://pubmed.ncbi.nlm.nih.gov/25514753/"
     genotypes:
       CC:
-        effect: normal
-        description: Normal 5-HT1A autoreceptor. Standard serotonin feedback regulation.
+        effect: typical
+        description: Typical HTR1A-related autoreceptor regulation at this locus.
       CG:
-        effect: altered
-        description: Altered autoreceptor density. May have higher baseline anxiety. Responsive to mindfulness practices.
+        effect: altered_regulation
+        description: Altered serotonin autoreceptor regulation. This may matter more for threat sensitivity or anxious temperament than for broad depression risk.
       GG:
-        effect: significantly_altered
-        description: Significantly altered serotonin 1A. Higher depression and anxiety risk. Lower initial response to some SSRIs.
+        effect: higher_threat_sensitivity
+        description: G/G has been linked to altered 5-HT1A regulation and, in some studies, greater fear or stress-related vulnerability. Evidence is still mixed enough that this should stay exploratory.

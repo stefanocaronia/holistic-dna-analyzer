@@ -61,3 +61,21 @@ This is a maturity checklist for the project. It is intentionally not tied to a 
 - [ ] Validate the new provider imports on real 23andMe and AncestryDNA exports
 - [x] Decide and document a stable testing command for contributors
 - [ ] Improve each core panel and move it to verified status with provenance and safer wording
+
+## Exploratory Panel Triage
+
+- [x] Keep `sleep.experimental` as high-value exploratory: several chronotype/circadian ideas are useful, but the panel needs pruning before any promotion
+- [x] Keep `health_over50.experimental` as high-value exploratory: contains useful age-related screening themes, but mixes solid loci with weak or over-assertive claims
+- [x] Keep `wellness.experimental` as medium-value exploratory: some fitness traits are plausible, but overlap and behavioral interpretation are still too noisy
+- [x] Keep `mental_health.experimental` as medium/high-value exploratory: high user value, but too much risk of over-interpretation for core inclusion right now
+- [x] Treat `adhd_neurodivergence.experimental` and `autism_spectrum.experimental` with the most conservative standards because both are high-risk for over-interpretation
+- [x] Treat `addiction.experimental` and `cognitive.experimental` as exploratory-only until a stricter evidence pass is done
+- [x] Prune `sleep.experimental` to a smaller evidence-led exploratory panel with provenance metadata
+- [x] Prune `health_over50.experimental` and split out anything that belongs in core cardiovascular or APOE handling
+- [x] Prune `mental_health.experimental` to a smaller exploratory panel centered on stress response, neuroplasticity, and cautious serotonin signaling
+- [x] Prune `wellness.experimental` to a smaller exercise-focused exploratory panel
+- [x] Prune `addiction.experimental` to a smaller nicotine/alcohol exploratory panel
+- [x] Prune `cognitive.experimental` to a smaller memory/plasticity/aging exploratory panel
+- [x] Prune `adhd_neurodivergence.experimental` to a minimal exploratory panel centered on attention-regulation and medication-response signals
+- [x] Prune `autism_spectrum.experimental` to a minimal exploratory common-variant panel with explicit non-diagnostic limitations
+- [ ] Add minimum panel-level metadata (`summary`, `sources`, `limitations`) to all exploratory panels kept in the repository
