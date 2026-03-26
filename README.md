@@ -16,6 +16,7 @@ You bring your raw genotyping file (MyHeritage, 23andMe, AncestryDNA, etc.), the
 HDA provides the local data layer, navigation tools, curated panels, and agent-facing functions. When you use an LLM on top of HDA, the model is still generating an interpretation. That interpretation can be useful, but it can also overstate evidence, miss context, or hallucinate. Use it for exploration, not diagnosis.
 
 The stable Python API for agents and automation is documented in [docs/PYTHON_API.md](docs/PYTHON_API.md).
+Backup, migration, privacy, and local family-use guidance are documented in [docs/BACKUP_AND_PRIVACY.md](docs/BACKUP_AND_PRIVACY.md).
 
 This project is also developed with the help of LLM-assisted workflows. Code,
 documentation, and panel content are reviewed and curated in-repo, but
@@ -236,6 +237,8 @@ subjects:
 ## Privacy
 
 Your DNA data stays local. Raw files, databases, and context folders are all gitignored. The example file contains synthetic data only.
+
+For backup, migration, and local-family-use assumptions, see [docs/BACKUP_AND_PRIVACY.md](docs/BACKUP_AND_PRIVACY.md).
 
 ## Supported Formats
 

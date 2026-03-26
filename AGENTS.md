@@ -54,6 +54,7 @@ data/context/
 **Always use the `hda` CLI commands and the project's API functions to query data.** Do not bypass them by writing raw SQL, importing modules with sys.path hacks, or any other workaround. The tools are designed to handle all data access correctly.
 
 The stable Python surface for agents is documented in [docs/PYTHON_API.md](docs/PYTHON_API.md). Prefer `from hda.tools import ...` for new agent integrations.
+Operational guidance for backup, migration, privacy, and local family-use assumptions lives in [docs/BACKUP_AND_PRIVACY.md](docs/BACKUP_AND_PRIVACY.md).
 
 ## Environment Bootstrap
 

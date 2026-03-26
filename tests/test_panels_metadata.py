@@ -18,7 +18,15 @@ class PanelMetadataTests(unittest.TestCase):
         panel = load_panel("nutrition_metabolism")
         self.assertEqual(panel["review_status"], "verified")
 
-        result = analyze_panel("nutrition_metabolism", "stefano")
+        def fake_get_snp(rsid, subject):
+            values = {
+                "rs4988235": {"rsid": "rs4988235", "chromosome": "2", "position": 0, "genotype": "CT"},
+                "rs7903146": {"rsid": "rs7903146", "chromosome": "10", "position": 0, "genotype": "CT"},
+            }
+            return values.get(rsid)
+
+        with patch.object(panels, "get_snp", fake_get_snp):
+            result = analyze_panel("nutrition_metabolism", "stefano")
         self.assertEqual(result["review_status"], "verified")
         self.assertEqual(result["status"], "core")
         self.assertIn("sources", result)
@@ -28,7 +36,15 @@ class PanelMetadataTests(unittest.TestCase):
         panel = load_panel("nutrigenomics")
         self.assertEqual(panel["id"], "nutrition_metabolism")
 
-        result = analyze_panel("nutrition_advanced", "stefano")
+        def fake_get_snp(rsid, subject):
+            values = {
+                "rs1544410": {"rsid": "rs1544410", "chromosome": "12", "position": 0, "genotype": "GG"},
+                "rs1801394": {"rsid": "rs1801394", "chromosome": "5", "position": 0, "genotype": "AG"},
+            }
+            return values.get(rsid)
+
+        with patch.object(panels, "get_snp", fake_get_snp):
+            result = analyze_panel("nutrition_advanced", "stefano")
         self.assertEqual(result["panel_id"], "nutrition_micronutrients")
         self.assertEqual(result["requested_panel_id"], "nutrition_advanced")
 

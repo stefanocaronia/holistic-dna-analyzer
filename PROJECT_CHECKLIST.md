@@ -32,7 +32,7 @@ This is a maturity checklist for the project. It is intentionally not tied to a 
 - [x] Panel engine supports validated multi-SNP / haplotype interpretations where single SNPs are insufficient (for example APOE)
 - [x] Every panel kept in the core set is reviewed, improved, and promoted to `verified`
 - [ ] Panels have automated regression tests against fixture data
-- [ ] Annotation fetch/caching paths have automated tests
+- [x] Annotation fetch/caching paths have automated tests
 - [x] Risk summary behavior is covered by tests
 
 ## Product Readiness
@@ -46,7 +46,7 @@ This is a maturity checklist for the project. It is intentionally not tied to a 
 - [x] README includes troubleshooting for common import failures
 - [x] README explains clearly that HDA provides DNA navigation/analysis tools, while LLM-generated interpretations remain exploratory and should be validated with a qualified professional
 - [ ] Changelog or release notes process exists
-- [ ] Backup / migration guidance exists for `config.yaml`, `data/db/`, and `data/context/`
+- [x] Backup / migration guidance exists for `config.yaml`, `data/db/`, and `data/context/`
 
 ## Subject Isolation & Data Safety
 
@@ -55,7 +55,7 @@ This is a maturity checklist for the project. It is intentionally not tied to a 
 - [ ] Automated tests cover subject isolation across CLI, API tools, and dashboard flows
 - [ ] Session context loading/writing is routed through validated helper functions instead of ad hoc paths
 - [ ] Optional per-subject export / backup commands exist
-- [ ] Sensitive-data handling and local family-use assumptions are documented explicitly
+- [x] Sensitive-data handling and local family-use assumptions are documented explicitly
 - [ ] Relatedness heuristics are validated against known family relationships or pruned marker sets
 
 ## Current Focus
