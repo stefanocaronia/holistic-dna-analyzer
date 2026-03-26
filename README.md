@@ -1,4 +1,4 @@
-# Holistic DNA Analyzer
+# HDA — Holistic DNA Analyzer
 
 A Python/agent framework that can read your DNA data and answer your questions about it.
 
@@ -46,10 +46,41 @@ The agent saves its findings in `data/context/<name>/` so that next session it a
 ## Setup
 
 ```bash
-# Clone and install
+# Clone and enter the project folder
 git clone https://github.com/YOUR_USER/holistic-dna-analyzer.git
 cd holistic-dna-analyzer
-uv venv && uv pip install -e "."
+```
+
+### Activate `hda` in this folder
+
+From the project root, activate the local virtualenv so the `hda` command is available in the current shell.
+
+PowerShell:
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+If `.venv` does not exist yet:
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -e .
+```
+
+After activation, you can run:
+```powershell
+hda subjects
+```
+
+Without activating the shell, you can still call the local command directly:
+```powershell
+.\.venv\Scripts\hda.exe subjects
+```
+
+### First-time project setup
+
+```bash
+python -m pip install -e .
 
 # Configure your profile
 cp config.yaml.example config.yaml

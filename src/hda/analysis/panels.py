@@ -4,8 +4,8 @@ from pathlib import Path
 
 import yaml
 
-from dna.config import DATA_DIR, get_active_subject
-from dna.db.query import get_snp
+from hda.config import DATA_DIR, get_active_subject
+from hda.db.query import get_snp
 
 PANELS_DIR = DATA_DIR / "panels"
 

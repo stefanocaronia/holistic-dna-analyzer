@@ -4,9 +4,9 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 
-from dna.config import get_active_subject, get_subject_profile, list_subjects
-from dna.db.query import count_snps, chromosome_summary
-from dna.analysis.panels import get_risk_summary
+from hda.config import get_active_subject, get_subject_profile, list_subjects
+from hda.db.query import count_snps, chromosome_summary
+from hda.analysis.panels import get_risk_summary
 
 
 def render():

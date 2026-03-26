@@ -5,15 +5,15 @@ dicts/lists that are easy to serialize. The active subject from config.yaml
 is used as default when no subject is specified.
 """
 
-from dna.analysis.panels import (
+from hda.analysis.panels import (
     analyze_all_panels,
     analyze_panel,
     get_risk_summary,
     list_panels,
 )
-from dna.api.annotator import annotate_snp_sync
-from dna.config import get_active_subject, get_subject_profile, list_subjects
-from dna.db.query import (
+from hda.api.annotator import annotate_snp_sync
+from hda.config import get_active_subject, get_subject_profile, list_subjects
+from hda.db.query import (
     chromosome_summary,
     compare_snp,
     compare_subjects,

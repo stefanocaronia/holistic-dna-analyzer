@@ -6,9 +6,9 @@ from datetime import datetime, timezone
 
 import httpx
 
-from dna.api import clinvar, ensembl, snpedia
-from dna.config import get_active_subject, get_db_path
-from dna.db.schema import get_connection, init_db
+from hda.api import clinvar, ensembl, snpedia
+from hda.config import get_active_subject, get_db_path
+from hda.db.schema import get_connection, init_db
 
 SOURCES = ["snpedia", "clinvar", "ensembl"]
 

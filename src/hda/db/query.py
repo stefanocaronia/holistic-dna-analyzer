@@ -3,15 +3,15 @@
 import sqlite3
 from pathlib import Path
 
-from dna.config import get_db_path, get_active_subject
-from dna.db.schema import get_connection
+from hda.config import get_db_path, get_active_subject
+from hda.db.schema import get_connection
 
 
 def _conn(subject: str | None = None) -> sqlite3.Connection:
     subject = subject or get_active_subject()
     db_path = get_db_path(subject)
     if not db_path.exists():
-        raise FileNotFoundError(f"Database not found for '{subject}'. Run 'dna import {subject}' first.")
+        raise FileNotFoundError(f"Database not found for '{subject}'. Run 'hda import {subject}' first.")
     return get_connection(db_path)
 
 

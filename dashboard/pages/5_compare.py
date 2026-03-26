@@ -3,9 +3,9 @@
 import streamlit as st
 import pandas as pd
 
-from dna.config import list_subjects
-from dna.db.query import count_snps, compare_subjects
-from dna.analysis.panels import analyze_panel, list_panels
+from hda.config import list_subjects
+from hda.db.query import count_snps, compare_subjects
+from hda.analysis.panels import analyze_panel, list_panels
 
 
 def render():

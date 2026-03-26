@@ -1,5 +1,5 @@
 [project]
-name = "holistic-dna-analyzer"
+name = "hda"
 version = "0.1.0"
 description = "Holistic DNA Analyzer — a Python/agent framework that reads your DNA and answers your questions"
 requires-python = ">=3.12"
@@ -18,11 +18,11 @@ dashboard = [
 ]
 
 [project.scripts]
-hda = "dna.cli:main"
+hda = "hda.cli:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/dna"]
+packages = ["src/hda"]

@@ -5,8 +5,8 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
-from dna.config import SOURCES_DIR, get_db_path, load_config, save_config
-from dna.db.schema import get_connection, init_db
+from hda.config import SOURCES_DIR, get_db_path, load_config, save_config
+from hda.db.schema import get_connection, init_db
 
 BATCH_SIZE = 50_000
 

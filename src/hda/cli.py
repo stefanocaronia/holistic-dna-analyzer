@@ -17,7 +17,7 @@ def main():
 @click.argument("name")
 def switch(name: str):
     """Switch the active subject."""
-    from dna.config import switch_subject
+    from hda.config import switch_subject
 
     try:
         switch_subject(name)
@@ -31,8 +31,8 @@ def switch(name: str):
 @click.argument("name", required=False)
 def import_cmd(name: str | None):
     """Import a subject's source file into SQLite. Defaults to active subject."""
-    from dna.config import get_active_subject
-    from dna.db.importer import import_subject
+    from hda.config import get_active_subject
+    from hda.db.importer import import_subject
 
     name = name or get_active_subject()
     console.print(f"Importing [bold]{name}[/]...")
@@ -48,7 +48,7 @@ def import_cmd(name: str | None):
 @main.command()
 def subjects():
     """List all subjects."""
-    from dna.config import get_active_subject, list_subjects
+    from hda.config import get_active_subject, list_subjects
 
     active = get_active_subject()
     subs = list_subjects()
@@ -82,7 +82,7 @@ def subjects():
 @click.option("--subject", "-s", default=None, help="Subject key (default: active)")
 def snp(rsid: str, subject: str | None):
     """Look up a single SNP by rsid."""
-    from dna.db.query import get_snp
+    from hda.db.query import get_snp
 
     result = get_snp(rsid, subject)
     if result is None:
@@ -100,7 +100,7 @@ def snp(rsid: str, subject: str | None):
 @click.option("--subject", "-s", default=None)
 def stats(subject: str | None):
     """Show chromosome summary for a subject."""
-    from dna.db.query import chromosome_summary, count_snps
+    from hda.db.query import chromosome_summary, count_snps
 
     total = count_snps(subject)
     summary = chromosome_summary(subject)
@@ -123,7 +123,7 @@ def stats(subject: str | None):
 def annotate(rsid: str, subject: str | None, source: tuple, refresh: bool):
     """Annotate a SNP with info from online databases."""
     import asyncio
-    from dna.api.annotator import annotate_snp
+    from hda.api.annotator import annotate_snp
 
     sources = list(source) if source else None
 
@@ -151,7 +151,7 @@ def annotate(rsid: str, subject: str | None, source: tuple, refresh: bool):
 @main.command()
 def panels():
     """List available analysis panels."""
-    from dna.analysis.panels import list_panels
+    from hda.analysis.panels import list_panels
 
     all_panels = list_panels()
     table = Table(title="Available Panels")
@@ -172,7 +172,7 @@ def panels():
 @click.option("--subject", "-s", default=None, help="Subject key (default: active)")
 def analyze(panel_id: str, subject: str | None):
     """Run a panel analysis against a subject's genome."""
-    from dna.analysis.panels import analyze_panel
+    from hda.analysis.panels import analyze_panel
 
     try:
         result = analyze_panel(panel_id, subject)
@@ -215,7 +215,7 @@ def analyze(panel_id: str, subject: str | None):
 @click.option("--subject", "-s", default=None, help="Subject key (default: active)")
 def report(subject: str | None):
     """Show notable findings across all panels."""
-    from dna.analysis.panels import get_risk_summary
+    from hda.analysis.panels import get_risk_summary
 
     findings = get_risk_summary(subject)
 

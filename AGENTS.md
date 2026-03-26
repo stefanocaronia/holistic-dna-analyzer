@@ -53,6 +53,8 @@ data/context/
 
 **Always use the `hda` CLI commands and the project's API functions to query data.** Do not bypass them by writing raw SQL, importing modules with sys.path hacks, or any other workaround. The tools are designed to handle all data access correctly.
 
+**CLI activation from the project folder:** run commands from the repository root. In PowerShell, activate the local environment first with `.\.venv\Scripts\Activate.ps1` so `hda` is on `PATH`. If activation is not available, call `.\.venv\Scripts\hda.exe ...` directly.
+
 ### Preferred: CLI commands via shell
 For quick lookups and panel runs, use the `hda` CLI directly:
 ```bash
@@ -68,13 +70,13 @@ hda switch stefano           # Switch active subject
 ### Programmatic: import from the project's Python API
 When you need to do more complex queries (e.g., bulk lookups, searches with filters, comparisons), use the Python API. **Always run via the project's Python with PYTHONPATH=src**:
 ```bash
-PYTHONPATH=src .venv/Scripts/python.exe -c "from dna.tools.agent_tools import lookup_snp; print(lookup_snp('rs53576'))"
+PYTHONPATH=src .venv/Scripts/python.exe -c "from hda.tools.agent_tools import lookup_snp; print(lookup_snp('rs53576'))"
 ```
 
 Or for multi-line scripts:
 ```bash
 PYTHONPATH=src .venv/Scripts/python.exe -c "
-from dna.tools.agent_tools import run_panel, notable_findings, annotate_my_snp
+from hda.tools.agent_tools import run_panel, notable_findings, annotate_my_snp
 results = run_panel('autism_spectrum')
 for r in results['results']:
     if r['effect'] != 'normal':
@@ -82,7 +84,7 @@ for r in results['results']:
 "
 ```
 
-**Important:** The source code lives in `src/dna/`. Always set `PYTHONPATH=src` when running scripts. Do not use `sys.path.insert()` hacks.
+**Important:** The source code lives in `src/hda/`. Always set `PYTHONPATH=src` when running scripts. Do not use `sys.path.insert()` hacks.
 
 ### Key rules
 - **Panels first.** Always start with `run_panel()` or `hda analyze` for structured questions. Panels are curated and cover the most important variants per domain.
@@ -177,7 +179,7 @@ The `data/panels/` directory contains curated YAML panels, each covering a speci
 
 ## Tool Functions Reference
 
-Import and call from `dna.tools.agent_tools`:
+Import and call from `hda.tools.agent_tools`:
 
 | Function | What it does |
 |---|---|

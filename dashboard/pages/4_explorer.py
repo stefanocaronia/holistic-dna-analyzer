@@ -5,8 +5,8 @@ import asyncio
 import streamlit as st
 import pandas as pd
 
-from dna.config import get_active_subject, list_subjects
-from dna.db.query import get_snp, search_snps, count_snps
+from hda.config import get_active_subject, list_subjects
+from hda.db.query import get_snp, search_snps, count_snps
 
 
 def render():
@@ -48,7 +48,7 @@ def render():
                 # Online annotation
                 st.divider()
                 if st.button("🌐 Fetch Online Annotations", key="annotate_btn"):
-                    from dna.api.annotator import annotate_snp
+                    from hda.api.annotator import annotate_snp
 
                     with st.spinner("Querying SNPedia, ClinVar, Ensembl..."):
                         result = asyncio.run(annotate_snp(rsid, selected))

@@ -3,8 +3,8 @@
 import streamlit as st
 import pandas as pd
 
-from dna.config import get_active_subject, list_subjects
-from dna.analysis.panels import get_risk_summary
+from hda.config import get_active_subject, list_subjects
+from hda.analysis.panels import get_risk_summary
 
 
 ACTIONABLE_ADVICE = {
