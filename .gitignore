@@ -25,6 +25,8 @@ tmp/
 .vscode/
 .idea/
 *.swp
+.claude/
+PROJECT_CHECKLIST.md
 
 # Local experiments / prototypes
 dashboard/come-funziona-la-dopamina.html
