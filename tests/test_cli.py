@@ -1,4 +1,5 @@
 import unittest
+from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
@@ -99,9 +100,11 @@ class CliTests(unittest.TestCase):
         self.assertIn("Stefano", result.output)
 
     def test_dashboard_launches_streamlit_with_repo_app_path(self):
+        fake_root = Path("/repo")
+        expected_app_path = str(fake_root / "dashboard" / "app.py")
         with patch("importlib.util.find_spec", return_value=object()), patch(
             "hda.config.ROOT_DIR",
-            "F:\\repo",
+            fake_root,
         ), patch("subprocess.run", return_value=SimpleNamespace(returncode=0)) as run:
             result = self.runner.invoke(main, ["dashboard", "--", "--server.headless", "true"])
 
@@ -112,11 +115,11 @@ class CliTests(unittest.TestCase):
                 "-m",
                 "streamlit",
                 "run",
-                "F:\\repo\\dashboard\\app.py",
+                expected_app_path,
                 "--server.headless",
                 "true",
             ],
-            cwd="F:\\repo",
+            cwd=str(fake_root),
             check=False,
         )
         self.assertIn("Launching dashboard", result.output)
