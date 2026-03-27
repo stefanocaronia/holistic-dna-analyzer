@@ -42,7 +42,7 @@ Exploratory panels currently kept in the repository are best treated as a second
 
 ## Talking to the Agent
 
-This is the primary way to use the framework. Open a conversation with any AI agent that has access to this project (e.g. Claude Code, Cursor, Copilot, or any agent that can read files and run Python). The agent reads [AGENTS.md](AGENTS.md) and knows how to use all the tools.
+This is the primary way to use the framework. Open a conversation with any AI agent/CLI that has access to this project (for example Claude Code, Codex, Gemini CLI, or any agent that can read files and run Python). The agent reads [AGENTS.md](AGENTS.md) and knows how to use all the tools.
 
 **First time:**
 ```
@@ -89,47 +89,72 @@ cd holistic-dna-analyzer
 
 ### Environment Setup
 
-From the project root, create and install the local virtual environment:
+From the project root, create and install the local virtual environment.
 
-PowerShell:
+Windows PowerShell:
 ```powershell
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -e .
 ```
 
+macOS / Linux:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e .
+```
+
 If you want PDF doctor-report export in the same environment:
 
-```powershell
+```bash
 python -m pip install -e ".[export]"
 ```
 
-If `.venv` already exists, you only need:
+If `.venv` already exists, you only need to activate it:
 
+Windows PowerShell:
 ```powershell
 .\.venv\Scripts\Activate.ps1
+```
+
+macOS / Linux:
+```bash
+source .venv/bin/activate
 ```
 
 ### Activate `hda` in this folder
 
 After the virtualenv is active, `hda` is available in the current shell:
 
-```powershell
+```bash
 hda subjects
 ```
 
 Without activating the shell, call the local command directly:
 
+Windows PowerShell:
 ```powershell
 .\.venv\Scripts\hda.exe subjects
+```
+
+macOS / Linux:
+```bash
+.venv/bin/hda subjects
 ```
 
 ### First-Time Project Setup
 
 Once the environment is installed and `hda` is available:
 
+Windows PowerShell:
 ```powershell
 Copy-Item config.yaml.example config.yaml
+```
+
+macOS / Linux:
+```bash
+cp config.yaml.example config.yaml
 ```
 
 Edit `config.yaml` with your name, sex, date of birth, source file, and source format.
@@ -145,7 +170,7 @@ Supported examples:
 
 Then import it:
 
-```powershell
+```bash
 hda import
 ```
 
@@ -240,6 +265,7 @@ stable public surface. Details and examples are in [docs/PYTHON_API.md](docs/PYT
 
 Run the current automated checks from the project root:
 
+Windows PowerShell:
 ```powershell
 .\.venv\Scripts\Activate.ps1
 .\.venv\Scripts\python.exe -m pip install -e .
@@ -247,11 +273,28 @@ Run the current automated checks from the project root:
 .\.venv\Scripts\python.exe -m hda.cli panels
 ```
 
+macOS / Linux:
+```bash
+source .venv/bin/activate
+python -m pip install -e .
+python -m unittest discover -s tests -v
+python -m hda.cli panels
+```
+
 ## Dashboard
 
+Run this from the repository root.
+
+Windows PowerShell:
+```powershell
+.\.venv\Scripts\Activate.ps1
+python -m streamlit run .\dashboard\app.py
+```
+
+macOS / Linux:
 ```bash
-uv pip install -e ".[dashboard,export]"
-streamlit run dashboard/app.py
+source .venv/bin/activate
+python -m streamlit run "$(pwd)/dashboard/app.py"
 ```
 
 Five pages: Profile & Overview, Panel Reports, Notable Findings, SNP Explorer, and Compare (multi-subject).
