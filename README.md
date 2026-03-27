@@ -16,6 +16,7 @@ You bring your raw genotyping file (MyHeritage, 23andMe, AncestryDNA, etc.), the
 HDA provides the local data layer, navigation tools, curated panels, and agent-facing functions. When you use an LLM on top of HDA, the model is still generating an interpretation. That interpretation can be useful, but it can also overstate evidence, miss context, or hallucinate. Use it for exploration, not diagnosis.
 
 The stable Python API for agents and automation is documented in [docs/PYTHON_API.md](docs/PYTHON_API.md).
+The context-memory data model is documented in [docs/CONTEXT_SCHEMA.md](docs/CONTEXT_SCHEMA.md).
 Backup, migration, privacy, and local family-use guidance are documented in [docs/BACKUP_AND_PRIVACY.md](docs/BACKUP_AND_PRIVACY.md).
 
 This project is also developed with the help of LLM-assisted workflows. Code,
@@ -66,7 +67,7 @@ Agent: [runs cardiovascular, inflammation, nutrition panels; cross-references fi
 - "What should I add to my diet?"
 - "Am I prone to nicotine addiction?"
 
-The agent saves its findings in `data/context/<name>/` so that next session it already knows your profile and can build on previous analyses.
+The agent saves its findings in `data/context/<name>/` so that next session it already knows your profile and can build on previous analyses. These files stay human-readable Markdown, but now use a small YAML frontmatter block plus predictable section headings. `findings.md` is a single readable registry with human titles and stable `finding_id` metadata, not one file per finding. The preferred access layer is `hda context ...` rather than raw path inspection, and the document/block contract is defined in [docs/CONTEXT_SCHEMA.md](docs/CONTEXT_SCHEMA.md).
 
 ## Interpretation Safety
 
@@ -131,6 +132,8 @@ Supported examples:
 - `genome_john.txt` -> AncestryDNA / 23andMe
 - `genome_john.zip` -> 23andMe / AncestryDNA zipped download
 
+`data/sources/`, `data/db/`, `data/context/`, and generated outputs under `output/` are gitignored by default because they may contain personal data.
+
 Then import it:
 
 ```powershell
@@ -145,6 +148,21 @@ Besides talking to the agent, you can use the CLI directly:
 hda subjects          # List all subjects
 hda whoami            # Show the active subject profile
 hda switch <name>     # Switch active subject (like git switch)
+hda context sections  # List the standard memory sections for the active subject
+hda context show      # Show the full persistent context for the active subject
+hda context show findings  # Show one context section
+hda context migrate  # Dry-run a schema migration plan for context files
+hda context migrate --apply  # Apply deterministic migrations with backup
+hda context validate  # Check context against evidence-basis rules
+hda context validate --apply  # Apply safe automatic fixes
+hda context write profile_summary --file summary.md
+hda context replace-section profile_summary "Sleep & Recovery" --file sleep.md
+hda context upsert-block findings dopamine_reward_deficiency --file finding.md --meta domains=adhd,addiction
+hda context move-block health_actions sleep_apnea_evaluation "Alta Priorità"
+hda context archive-block findings dopamine_reward_deficiency
+hda context append-entry session_notes --title "Follow-up" --file note.md
+hda context replace-entry session_notes "2026-03-27: Follow-up" --file note.md
+hda export doctor-report  # Build a simple doctor-facing PDF
 hda import [name]     # Import DNA source file into SQLite
 hda snp <rsid>        # Look up a single SNP
 hda search ...        # Search SNPs by chromosome, position, genotype, or rsid pattern
@@ -164,7 +182,7 @@ hda report            # All notable findings across panels
 The stable agent-facing import surface is `hda.tools`:
 
 ```python
-from hda.tools import available_panels, run_panel, who_am_i
+from hda.tools import available_panels, export_doctor_report, read_context, run_panel, upsert_context_block, who_am_i
 ```
 
 Use this layer for agents, scripts, and local automation. It returns plain
@@ -174,6 +192,15 @@ Python dictionaries/lists and exposes panel review metadata such as
 Prefer the CLI for interactive work and repeatable shell usage. Use the Python
 API when you want to compose multiple operations programmatically or build
 agent-side automation on top of HDA.
+
+`export_doctor_report()` / `hda export doctor-report` writes a simple PDF by
+default to `output/pdf/doctor-report-<subject>.pdf`. This export requires
+`reportlab` in the local environment.
+
+`hda context migrate` is dry-run by default and applies only deterministic,
+versioned context migrations. Unversioned legacy files without frontmatter are
+treated as outside the supported migration contract and should be normalized
+manually first.
 
 Subject-to-subject comparison is available in both layers:
 - low-level SNP comparison via `hda compare`, `hda compare-variant`, and `search`
@@ -236,7 +263,7 @@ subjects:
 
 ## Privacy
 
-Your DNA data stays local. Raw files, databases, and context folders are all gitignored. The example file contains synthetic data only.
+Your DNA data stays local. Raw files, databases, context folders, and generated reports are gitignored. The example file contains synthetic data only.
 
 For backup, migration, and local-family-use assumptions, see [docs/BACKUP_AND_PRIVACY.md](docs/BACKUP_AND_PRIVACY.md).
 

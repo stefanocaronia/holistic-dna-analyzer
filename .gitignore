@@ -8,10 +8,12 @@ build/
 
 # Personal data — NEVER commit
 config.yaml
-data/sources/*.csv
+data/sources/*
 !data/sources/dna-example.csv
 data/db/*.db
 data/context/*/
+output/
+tmp/
 
 # IDE
 .vscode/

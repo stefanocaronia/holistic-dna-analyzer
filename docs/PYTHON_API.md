@@ -20,6 +20,9 @@ from hda.tools.agent_tools import run_panel, available_panels, who_am_i
 `hda.tools` is the preferred public import path. It re-exports the stable
 agent-facing functions from `hda.tools.agent_tools`.
 
+For the structure of the underlying context documents, see
+[docs/CONTEXT_SCHEMA.md](docs/CONTEXT_SCHEMA.md).
+
 ## Stability Contract
 
 The functions in `hda.tools` are intended to remain stable across normal
@@ -46,6 +49,23 @@ They may change more freely as the project evolves.
 
 - `who_am_i()`
 - `list_all_subjects()`
+- `list_context_sections(subject=None)`
+- `read_context(subject=None, section=None)`
+- `read_context_block(section, block_id, subject=None)`
+- `write_context_document(section, content, subject=None)`
+- `replace_context_section(section, heading, content, subject=None)`
+- `upsert_context_block(section, block_id, content, subject=None, metadata=None, title=None, destination=None)`
+- `move_context_block(section, block_id, destination, subject=None)`
+- `migrate_context(subject=None, section=None, apply=False, backup=True, backup_root=None)`
+- `archive_context_block(section, block_id, subject=None)`
+- `append_context_entry(section, title, content, subject=None, entry_date=None)`
+- `replace_context_entry(section, heading, content, subject=None)`
+- `validate_context(subject=None, apply=False)`
+- `export_doctor_report(subject=None, output_path=None)`
+
+`read_context()` returns parsed frontmatter in `metadata` plus the Markdown body in `content`.
+For findings, `read_context_block()` returns both a human-readable `heading` and a stable
+`metadata["finding_id"]` so the display title can stay readable while updates remain deterministic.
 
 ### SNP lookup and search
 
@@ -100,10 +120,54 @@ print([(panel["id"], panel["review_status"]) for panel in panels])
 print(cardio["panel_name"], cardio["review_status"], cardio["requires_disclaimer"])
 ```
 
+## Context Memory Example
+
+```python
+from hda.tools import append_context_entry, export_doctor_report, list_context_sections, read_context, upsert_context_block, validate_context
+
+sections = list_context_sections()
+summary = read_context(section="profile_summary")
+upsert_context_block(
+    "findings",
+    "dopamine_reward_deficiency",
+    "### Summary\nShort integrated conclusion.",
+    metadata={"domains": "adhd, addiction"},
+    title="Profilo dopaminergico di reward deficiency",
+)
+append_context_entry("session_notes", "Follow-up", "- User reported improvement")
+validation = validate_context(apply=False)
+pdf_path = export_doctor_report()
+
+print([section["id"] for section in sections["sections"]])
+print(summary["metadata"])
+print(summary["content"])
+print(validation["issue_count"])
+print(pdf_path)
+```
+
+By default, `export_doctor_report()` writes to `output/pdf/doctor-report-<subject>.pdf`.
+`migrate_context()` is dry-run by default and only supports versioned context
+documents that already carry YAML frontmatter plus `schema_version`.
+
 ## Command-Line Parity
 
 The Python API mirrors the CLI:
 
+- `list_context_sections()` <-> `hda context sections`
+- `read_context()` <-> `hda context show`
+- `read_context(section="findings")` <-> `hda context show findings`
+- `write_context_document("profile_summary", "...")` <-> `hda context write profile_summary --content "..."`
+- `replace_context_section("profile_summary", "Overview", "...")` <-> `hda context replace-section profile_summary "Overview" --content "..."`
+- `upsert_context_block("findings", "dopamine_reward_deficiency", "...")` <-> `hda context upsert-block findings dopamine_reward_deficiency --content "..."`
+- `move_context_block("health_actions", "sleep_apnea_evaluation", "Alta Priorità")` <-> `hda context move-block health_actions sleep_apnea_evaluation "Alta Priorità"`
+- `migrate_context()` <-> `hda context migrate`
+- `migrate_context(apply=True)` <-> `hda context migrate --apply`
+- `archive_context_block("findings", "dopamine_reward_deficiency")` <-> `hda context archive-block findings dopamine_reward_deficiency`
+- `append_context_entry("session_notes", "Follow-up", "...")` <-> `hda context append-entry session_notes --title "Follow-up" --content "..."`
+- `replace_context_entry("session_notes", "2026-03-27: Follow-up", "...")` <-> `hda context replace-entry session_notes "2026-03-27: Follow-up" --content "..."`
+- `validate_context(apply=False)` <-> `hda context validate`
+- `validate_context(apply=True)` <-> `hda context validate --apply`
+- `export_doctor_report()` <-> `hda export doctor-report`
 - `available_panels()` <-> `hda panels`
 - `run_panel("cardiovascular")` <-> `hda analyze cardiovascular`
 - `lookup_snp("rs53576")` <-> `hda snp rs53576`

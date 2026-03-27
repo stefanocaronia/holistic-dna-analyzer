@@ -77,6 +77,178 @@ class CliTests(unittest.TestCase):
         self.assertIn("stefano", result.output)
         self.assertIn("Stefano", result.output)
 
+    def test_context_sections_prints_table(self):
+        with patch(
+            "hda.context_store.list_context_sections",
+            return_value={
+                "subject": "stefano",
+                "context_path": "data/context/stefano",
+                "sections": [
+                    {
+                        "id": "profile_summary",
+                        "filename": "profile_summary.md",
+                        "description": "Integrated summary.",
+                        "path": "data/context/stefano/profile_summary.md",
+                        "exists": True,
+                        "metadata": {"last_updated": "2026-03-27"},
+                    }
+                ],
+            },
+        ):
+            result = self.runner.invoke(main, ["context", "sections"])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Context Sections", result.output)
+        self.assertIn("profile_summary", result.output)
+        self.assertIn("2026-03-27", result.output)
+
+    def test_context_show_prints_single_section(self):
+        with patch(
+            "hda.context_store.read_context",
+            return_value={
+                "subject": "stefano",
+                "context_path": "data/context/stefano",
+                "id": "findings",
+                "filename": "findings.md",
+                "path": "data/context/stefano/findings.md",
+                "exists": True,
+                "metadata": {"last_updated": "2026-03-27"},
+                "content": "# Findings\n\nExample finding",
+                "raw_content": "---\nlast_updated: 2026-03-27\n---\n# Findings\n\nExample finding",
+            },
+        ):
+            result = self.runner.invoke(main, ["context", "show", "findings"])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("findings", result.output)
+        self.assertIn("Example finding", result.output)
+
+    def test_context_write_replaces_document(self):
+        with patch(
+            "hda.context_store.write_context_document",
+            return_value={"id": "profile_summary", "subject": "stefano"},
+        ):
+            result = self.runner.invoke(
+                main,
+                ["context", "write", "profile_summary", "--content", "# Summary"],
+            )
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Updated", result.output)
+
+    def test_context_upsert_block_works(self):
+        with patch(
+            "hda.context_store.upsert_context_block",
+            return_value={"id": "findings", "subject": "stefano"},
+        ):
+            result = self.runner.invoke(
+                main,
+                [
+                    "context",
+                    "upsert-block",
+                    "findings",
+                    "dopamine_reward_deficiency",
+                    "--meta",
+                    "domains=adhd, addiction",
+                    "--content",
+                    "### Summary\nSignal",
+                ],
+            )
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Upserted block", result.output)
+
+    def test_context_append_entry_works(self):
+        with patch(
+            "hda.context_store.append_context_entry",
+            return_value={"id": "session_notes", "subject": "stefano"},
+        ):
+            result = self.runner.invoke(
+                main,
+                [
+                    "context",
+                    "append-entry",
+                    "session_notes",
+                    "--title",
+                    "Note",
+                    "--content",
+                    "- Bullet",
+                ],
+            )
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Appended entry", result.output)
+
+    def test_context_validate_prints_issues(self):
+        with patch(
+            "hda.context_validator.validate_context",
+            return_value={
+                "subject": "stefano",
+                "verified_panels": ["cardiovascular", "inflammation"],
+                "non_verified_panels": ["mental_health"],
+                "issue_count": 1,
+                "issues": [
+                    {
+                        "severity": "warning",
+                        "section": "profile_summary",
+                        "block_id": None,
+                        "fixable": True,
+                        "message": "Profile summary needs boundaries.",
+                    }
+                ],
+                "applied_fixes": [],
+            },
+        ):
+            result = self.runner.invoke(main, ["context", "validate"])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Context Validation Issues", result.output)
+        self.assertIn("Profile summary needs", result.output)
+        self.assertIn("boundaries.", result.output)
+
+    def test_context_migrate_prints_plan(self):
+        with patch(
+            "hda.context_migrator.migrate_context",
+            return_value={
+                "subject": "stefano",
+                "target_schema_version": 1,
+                "apply": False,
+                "backup_requested": True,
+                "backup_path": None,
+                "needs_migration": True,
+                "section_count": 1,
+                "migrated_count": 0,
+                "sections": [
+                    {
+                        "id": "findings",
+                        "status": "needs_migration",
+                        "current_schema_version": 0,
+                        "target_schema_version": 1,
+                        "change_count": 2,
+                        "changes": ["added YAML frontmatter", "added finding_id"],
+                        "warnings": [],
+                    }
+                ],
+            },
+        ):
+            result = self.runner.invoke(main, ["context", "migrate"])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Context migration plan", result.output)
+        self.assertIn("needs_migration", result.output)
+        self.assertIn("Dry run only", result.output)
+
+    def test_export_doctor_report_command_works(self):
+        with patch(
+            "hda.doctor_report.export_doctor_report",
+            return_value="output/pdf/doctor-report-stefano.pdf",
+        ):
+            result = self.runner.invoke(main, ["export", "doctor-report"])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Doctor report exported", result.output)
+        self.assertIn("doctor-report-stefano.pdf", result.output)
+
     def test_search_command_prints_results(self):
         with patch(
             "hda.db.query.search_snps",

@@ -18,7 +18,12 @@ Every conversation begins with an **identification step** before anything else:
    - If the user identifies themselves in their first message, use that identity.
    - Only if the subject is still ambiguous, ask a simple, friendly question such as: "Ciao! Chi sei?"
 2. **Switch only if needed.** Once you know the identity, run `hda switch <name>` only when the active subject is different or not set yet. This ensures all subsequent tool calls target the right genome and database.
-3. **Load their context.** Read all files in `data/context/<name>/` — this is the subject's accumulated knowledge base from previous sessions. It contains past findings, health notes, and anything you've previously discovered. This is your **memory** of this person.
+3. **Load their context.** Prefer the official context access layer:
+- `hda context show` to read the full subject memory
+- `hda context show <section>` to read a single section
+- `hda context sections` to inspect which standard files exist
+   - `hda context migrate` to inspect schema drift before applying writes across old versioned files
+   The context is the subject's accumulated knowledge base from previous sessions. It is your **memory** of this person.
 4. **Confirm you're ready.** Briefly acknowledge who you're talking to and any key context from previous sessions. Example: "Ciao Stefano! Ho caricato il tuo profilo e il contesto delle sessioni precedenti. Di cosa vuoi parlare?"
 
 Only after this sequence are you ready to receive questions.
@@ -40,12 +45,15 @@ data/context/
 ```
 
 ### Rules
-- **Read at session start.** Always load the full context folder when starting a conversation.
-- **Write after discoveries.** Every time you uncover a significant new finding, pattern, or recommendation, append it to the appropriate file. Don't wait for the user to ask you to save — do it automatically.
+- **Read at session start.** Always load the full context at the beginning of a conversation, preferably via `hda context show`.
+- **Write after discoveries.** Every time you uncover a significant new finding, pattern, or recommendation, save or update it in the appropriate file. Don't wait for the user to ask you to save — do it automatically.
+- **Prefer write APIs over raw edits when possible.** Use the official `hda context` write commands or `hda.tools` context-write helpers for structured updates, especially for `findings`, `health_actions`, and `session_notes`.
 - **Keep it organized.** Each file has a clear purpose. Don't duplicate information across files.
 - **Update, don't just append.** If a new analysis contradicts or refines a previous finding, update the existing entry rather than adding a conflicting one.
 - **Write in plain language.** The context files should be readable by the user too, not just by the agent. Use the same conversational style as your answers.
 - **Include dates.** Prefix new entries with the date so context ages gracefully.
+- **Use a light schema.** Keep the files human and discursive, but inside predictable headings/blocks so they remain easy to inspect and parse.
+- **Use frontmatter.** Each context file should begin with a small YAML frontmatter block so tools can read stable metadata without constraining the prose.
 
 ### What to Save
 - **profile_summary.md** — After a broad analysis session, write or update a one-page "genetic portrait" of this person. Their key strengths, vulnerabilities, and what makes their profile unique. This becomes the quick-load context for future sessions.
@@ -53,11 +61,33 @@ data/context/
 - **health_actions.md** — Consolidated, prioritized recommendations. Not a dump of per-panel advice, but an integrated action plan. Example: "HIGH PRIORITY: B12 + methylfolate supplementation (impaired MTRR + reduced MTHFR compound to restrict neurotransmitter precursors)."
 - **session_notes.md** — Things the user mentioned, concerns they raised, follow-ups promised. Example: "2026-03-24: User asked about nicotine dependence — has personal relevance. Follow up on dopamine support strategies."
 
+### Context File Schema
+
+The memory should stay **holistic and cross-panel**. Do not turn it into one section per panel or one bullet per SNP. The structure should help retrieval, not force siloed thinking.
+
+High-level rules:
+- every context file uses YAML frontmatter
+- `profile_summary.md` is a maintained snapshot, not a diary
+- `findings.md` is a stable findings registry, not a diary and not one file per finding
+- `health_actions.md` is the current prioritized plan
+- `session_notes.md` is the chronological diary
+- findings should use human-readable headings; the stable key belongs in metadata as `finding_id`
+- the model may write free prose and its own subheadings inside canonical blocks, but not invent new canonical files or break the document/block contract
+
+### Schema Philosophy
+
+- Structure is mandatory at the **document and block** level.
+- The prose inside each block stays natural and human.
+- Keep narrative freedom where synthesis matters.
+- Keep predictable headings where filtering, lookup, and future tooling matter.
+- The canonical schema and planned read/write operation model live in [docs/CONTEXT_SCHEMA.md](docs/CONTEXT_SCHEMA.md).
+
 ## How to Use the Tools
 
 **Always use the `hda` CLI commands and the project's API functions to query data.** Do not bypass them by writing raw SQL, importing modules with sys.path hacks, or any other workaround. The tools are designed to handle all data access correctly.
 
 The stable Python surface for agents is documented in [docs/PYTHON_API.md](docs/PYTHON_API.md). Prefer `from hda.tools import ...` for new agent integrations.
+The context-memory contract and future write-model are documented in [docs/CONTEXT_SCHEMA.md](docs/CONTEXT_SCHEMA.md).
 Operational guidance for backup, migration, privacy, and local family-use assumptions lives in [docs/BACKUP_AND_PRIVACY.md](docs/BACKUP_AND_PRIVACY.md).
 
 ## Environment Bootstrap
@@ -104,6 +134,8 @@ hda compare-variant rs429358 stefano marco
 hda compare-panel cardiovascular stefano marco
 hda relatedness stefano marco
 hda whoami
+hda context show
+hda context show findings
 hda annotate rs53576         # Fetch online annotations
 hda analyze cardiovascular   # Run a panel
 hda report                   # Notable findings across all panels
@@ -243,6 +275,19 @@ Import and call from `hda.tools.agent_tools`:
 |---|---|
 | `who_am_i()` | Get active subject's profile (name, sex, age, etc.) |
 | `list_all_subjects()` | List all subjects with profiles |
+| `list_context_sections(subject?)` | List the standard persistent-memory sections for a subject |
+| `read_context(subject?, section?)` | Read one or all context-memory sections for a subject |
+| `read_context_block(section, block_id, subject?)` | Read one structured block from findings, health_actions, or session_notes |
+| `write_context_document(section, content, subject?)` | Replace an entire context document while preserving frontmatter |
+| `replace_context_section(section, heading, content, subject?)` | Replace or append a `##` section in a maintained document |
+| `upsert_context_block(section, block_id, content, subject?, metadata?, title?, destination?)` | Upsert a structured block in findings or health_actions |
+| `move_context_block(section, block_id, destination, subject?)` | Move a health action block between priority sections |
+| `migrate_context(subject?, section?, apply?, backup?, backup_root?)` | Plan or apply deterministic migrations for versioned context files |
+| `archive_context_block(section, block_id, subject?)` | Archive a findings or health_actions block |
+| `append_context_entry(section, title, content, subject?, entry_date?)` | Append a dated chronological entry to session_notes |
+| `replace_context_entry(section, heading, content, subject?)` | Replace an existing chronological entry in session_notes |
+| `validate_context(subject?, apply?)` | Validate context against evidence-basis rules and optionally apply safe fixes |
+| `export_doctor_report(subject?, output_path?)` | Export a simple doctor-facing PDF report |
 | `lookup_snp(rsid, subject?)` | Look up a single SNP by rsid |
 | `search(chromosome?, position_start?, position_end?, genotype?, rsid_pattern?, subject?, limit?)` | Search SNPs with filters |
 | `get_stats(subject?)` | Total SNPs + per-chromosome breakdown |
@@ -282,6 +327,20 @@ Results are cached in the `annotations` table so each SNP is fetched only once. 
 hda subjects          # List all subjects
 hda whoami            # Show the active subject profile
 hda switch <name>     # Switch active subject
+hda context sections  # List the standard memory sections
+hda context show      # Show all context for the active subject
+hda context show findings  # Show one memory section
+hda context migrate  # Dry-run deterministic schema migration for versioned context files
+hda context migrate --apply  # Apply migration with backup
+hda context validate  # Validate context against evidence-basis rules
+hda context validate --apply  # Apply safe automatic fixes
+hda context write profile_summary --file summary.md
+hda context replace-section profile_summary "Sleep & Recovery" --file sleep.md
+hda context upsert-block findings dopamine_reward_deficiency --file finding.md --meta domains=adhd,addiction
+hda context move-block health_actions sleep_apnea_evaluation "Alta Priorità"
+hda context archive-block findings dopamine_reward_deficiency
+hda context append-entry session_notes --title "Follow-up" --file note.md
+hda export doctor-report
 hda import [name]     # Import source CSV into SQLite
 hda snp <rsid>        # Look up a SNP
 hda search ...        # Search SNPs by filters

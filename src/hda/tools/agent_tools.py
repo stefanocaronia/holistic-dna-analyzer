@@ -6,6 +6,8 @@ is used as default when no subject is specified.
 """
 
 __all__ = [
+    "append_context_entry",
+    "archive_context_block",
     "annotate",
     "annotate_my_snp",
     "available_panels",
@@ -13,13 +15,24 @@ __all__ = [
     "compare_panel",
     "compare_variant",
     "estimate_relatedness",
+    "export_doctor_report",
     "get_stats",
+    "list_context_sections",
     "list_all_subjects",
     "lookup_snp",
+    "move_context_block",
+    "migrate_context",
     "notable_findings",
+    "read_context_block",
+    "replace_context_entry",
+    "replace_context_section",
+    "read_context",
+    "validate_context",
     "run_all_panels",
     "run_panel",
     "search",
+    "upsert_context_block",
+    "write_context_document",
     "who_am_i",
 ]
 
@@ -31,6 +44,19 @@ from hda.analysis.panels import (
 )
 from hda.api.annotator import annotate_snp_sync
 from hda.config import get_active_subject, get_subject_profile, list_subjects
+from hda.context_store import append_context_entry as append_context_entry_data
+from hda.context_store import archive_context_block as archive_context_block_data
+from hda.context_store import list_context_sections as list_context_sections_data
+from hda.context_store import move_context_block as move_context_block_data
+from hda.context_store import read_context as read_context_data
+from hda.context_store import read_context_block as read_context_block_data
+from hda.context_store import replace_context_entry as replace_context_entry_data
+from hda.context_store import replace_context_section as replace_context_section_data
+from hda.context_store import upsert_context_block as upsert_context_block_data
+from hda.context_store import write_context_document as write_context_document_data
+from hda.context_migrator import migrate_context as migrate_context_data
+from hda.context_validator import validate_context as validate_context_data
+from hda.doctor_report import export_doctor_report as export_doctor_report_data
 from hda.db.query import (
     chromosome_summary,
     estimate_relatedness as estimate_subject_relatedness,
@@ -70,6 +96,91 @@ def list_all_subjects() -> dict:
     active = get_active_subject()
     subjects = list_subjects()
     return {"active": active, "subjects": subjects}
+
+
+def write_context_document(section: str, content: str, subject: str | None = None) -> dict:
+    """Replace an entire context document while preserving frontmatter."""
+    return write_context_document_data(section, content, subject)
+
+
+def replace_context_section(section: str, heading: str, content: str, subject: str | None = None) -> dict:
+    """Replace or append a `##` section inside a maintained context document."""
+    return replace_context_section_data(section, heading, content, subject)
+
+
+def list_context_sections(subject: str | None = None) -> dict:
+    """List the standard persistent-memory sections for a subject."""
+    return list_context_sections_data(subject)
+
+
+def read_context(subject: str | None = None, section: str | None = None) -> dict:
+    """Read one or all context sections for a subject."""
+    return read_context_data(subject, section)
+
+
+def read_context_block(section: str, block_id: str, subject: str | None = None) -> dict:
+    """Read one structured block from findings, health_actions, or session_notes."""
+    return read_context_block_data(section, block_id, subject)
+
+
+def upsert_context_block(
+    section: str,
+    block_id: str,
+    content: str,
+    subject: str | None = None,
+    metadata: dict | None = None,
+    title: str | None = None,
+    destination: str | None = None,
+) -> dict:
+    """Upsert a structured block inside findings or health_actions."""
+    return upsert_context_block_data(section, block_id, content, subject, metadata, title, destination)
+
+
+def move_context_block(section: str, block_id: str, destination: str, subject: str | None = None) -> dict:
+    """Move a structured block to another destination."""
+    return move_context_block_data(section, block_id, destination, subject)
+
+
+def migrate_context(
+    subject: str | None = None,
+    section: str | None = None,
+    apply: bool = False,
+    backup: bool = True,
+    backup_root: str | None = None,
+) -> dict:
+    """Plan or apply deterministic migrations to the current context schema."""
+    return migrate_context_data(subject, section, apply, backup, backup_root)
+
+
+def archive_context_block(section: str, block_id: str, subject: str | None = None) -> dict:
+    """Archive a structured block in findings or health_actions."""
+    return archive_context_block_data(section, block_id, subject)
+
+
+def append_context_entry(
+    section: str,
+    title: str,
+    content: str,
+    subject: str | None = None,
+    entry_date: str | None = None,
+) -> dict:
+    """Append a dated chronological entry to session_notes."""
+    return append_context_entry_data(section, title, content, subject, entry_date)
+
+
+def replace_context_entry(section: str, heading: str, content: str, subject: str | None = None) -> dict:
+    """Replace an existing chronological entry in session_notes."""
+    return replace_context_entry_data(section, heading, content, subject)
+
+
+def validate_context(subject: str | None = None, apply: bool = False) -> dict:
+    """Validate context documents against evidence-basis rules and optional fixes."""
+    return validate_context_data(subject, apply)
+
+
+def export_doctor_report(subject: str | None = None, output_path: str | None = None) -> str:
+    """Export a simple doctor-facing PDF report."""
+    return export_doctor_report_data(subject, output_path)
 
 
 def lookup_snp(rsid: str, subject: str | None = None) -> dict:

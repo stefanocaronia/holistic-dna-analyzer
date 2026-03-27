@@ -6,6 +6,7 @@ This project is designed for local family use. The main assets to protect are:
 - `data/db/`
 - `data/context/`
 - optionally `data/sources/` if you want to keep the original raw exports
+- optionally `output/` if you want to keep generated doctor reports or other exports
 
 ## Local Family-Use Assumptions
 
@@ -29,9 +30,11 @@ Minimum:
 Recommended:
 
 - `data/sources/`
+- `output/` if you want generated exports preserved
 
 `data/db/` contains imported SNP and annotation cache data.  
 `data/context/` contains the subject memory used by agents across sessions.
+`output/` may contain generated doctor-facing reports or other derived artifacts.
 
 ## Simple Backup Workflow
 
@@ -69,6 +72,7 @@ python -m pip install -e .
    - `data/db/`
    - `data/context/`
    - optionally `data/sources/`
+   - optionally `output/`
 5. Verify the active subject and panel list:
 
 ```powershell
@@ -97,8 +101,8 @@ This rebuilds SNP storage. Annotation cache will repopulate on demand.
 
 ## Privacy Notes
 
-- DNA data, context notes, and annotation cache should be treated as sensitive personal data.
-- Keep `config.yaml`, `data/db/`, `data/context/`, and `data/sources/` out of shared or public repos.
+- DNA data, context notes, annotation cache, and exported reports should be treated as sensitive personal data.
+- Keep `config.yaml`, `data/db/`, `data/context/`, `data/sources/`, and `output/` out of shared or public repos.
 - Be cautious when sharing screenshots, logs, or exported comparison output, especially for relatives.
 - If you use an external LLM, remember that the model output is only as private as the environment where it runs.
 

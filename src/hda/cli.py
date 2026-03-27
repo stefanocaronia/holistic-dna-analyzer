@@ -7,6 +7,24 @@ from rich.table import Table
 console = Console()
 
 
+def _load_context_body(content: str | None, file_path: str | None) -> str:
+    if bool(content) == bool(file_path):
+        raise click.UsageError("Provide exactly one of --content or --file.")
+    if file_path:
+        return click.open_file(file_path, "r", encoding="utf-8").read()
+    return content or ""
+
+
+def _parse_metadata_items(items: tuple[str, ...]) -> dict:
+    metadata = {}
+    for item in items:
+        if "=" not in item:
+            raise click.UsageError(f"Metadata item '{item}' must use key=value format.")
+        key, value = item.split("=", 1)
+        metadata[key.strip()] = value.strip()
+    return metadata
+
+
 @click.group()
 def main():
     """Holistic DNA Analyzer — read your DNA, answer your questions."""
@@ -103,6 +121,368 @@ def whoami():
         table.add_row(key.replace("_", " ").title(), str(value or "—"))
 
     console.print(table)
+
+
+@main.group()
+def context():
+    """Inspect the persistent context memory for a subject."""
+    pass
+
+
+@context.command("sections")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+def context_sections(subject: str | None):
+    """List the standard context sections and whether the files exist."""
+    from hda.context_store import list_context_sections
+
+    try:
+        payload = list_context_sections(subject)
+    except KeyError as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    table = Table(title=f"Context Sections — {payload['subject']}")
+    table.add_column("Section", style="bold")
+    table.add_column("File")
+    table.add_column("Exists", justify="center")
+    table.add_column("Updated")
+    table.add_column("Description")
+
+    for section in payload["sections"]:
+        table.add_row(
+            section["id"],
+            section["filename"],
+            "yes" if section["exists"] else "no",
+            str(section["metadata"].get("last_updated") or "—"),
+            section["description"],
+        )
+
+    console.print(table)
+
+
+@context.command("show")
+@click.argument("section", required=False)
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+def context_show(section: str | None, subject: str | None):
+    """Show one context section or all context files for a subject."""
+    from hda.context_store import read_context
+
+    try:
+        payload = read_context(subject, section)
+    except KeyError as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    if section is not None:
+        console.print(f"[bold]{payload['id']}[/] ({payload['filename']})")
+        if not payload["exists"]:
+            console.print("[yellow]Context file does not exist yet.[/]")
+            return
+        if payload["metadata"]:
+            console.print(f"[dim]{payload['metadata']}[/]")
+        console.print(payload["content"] or "", markup=False)
+        return
+
+    for index, item in enumerate(payload["sections"]):
+        if index:
+            console.print()
+        console.print(f"[bold]{item['id']}[/] ({item['filename']})")
+        if not item["exists"]:
+            console.print("[yellow]Context file does not exist yet.[/]")
+            continue
+        if item["metadata"]:
+            console.print(f"[dim]{item['metadata']}[/]")
+        console.print(item["content"] or "", markup=False)
+
+
+@context.command("validate")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--apply", "apply_fixes", is_flag=True, help="Apply safe automatic fixes where supported")
+def context_validate(subject: str | None, apply_fixes: bool):
+    """Validate context coherence against verified vs non-verified evidence."""
+    from hda.context_validator import validate_context
+
+    payload = validate_context(subject, apply_fixes)
+
+    console.print(f"Validated context for [bold]{payload['subject']}[/]")
+    console.print(f"Verified panels: {', '.join(payload['verified_panels'])}")
+
+    if not payload["issues"]:
+        console.print("[green]No context issues found.[/]")
+    else:
+        table = Table(title=f"Context Validation Issues ({payload['issue_count']})")
+        table.add_column("Severity", style="bold")
+        table.add_column("Section")
+        table.add_column("Block")
+        table.add_column("Fixable", justify="center")
+        table.add_column("Message")
+        for issue in payload["issues"]:
+            table.add_row(
+                issue["severity"],
+                issue["section"],
+                str(issue.get("block_id") or "—"),
+                "yes" if issue.get("fixable") else "no",
+                issue["message"],
+            )
+        console.print(table)
+
+    if payload["applied_fixes"]:
+        console.print("[green]Applied fixes:[/]")
+        for fix in payload["applied_fixes"]:
+            console.print(f"- {fix['section']}: {fix['message']}")
+
+
+@context.command("migrate")
+@click.argument("section", required=False)
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--apply", is_flag=True, help="Write migrated files to disk")
+@click.option("--no-backup", is_flag=True, help="Skip backup creation before applying changes")
+@click.option("--backup-dir", default=None, help="Override backup root directory")
+def context_migrate(
+    section: str | None,
+    subject: str | None,
+    apply: bool,
+    no_backup: bool,
+    backup_dir: str | None,
+):
+    """Plan or apply deterministic context-schema migrations."""
+    from hda.context_migrator import migrate_context
+
+    try:
+        payload = migrate_context(subject=subject, section=section, apply=apply, backup=not no_backup, backup_root=backup_dir)
+    except (KeyError, ValueError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    console.print(
+        f"Context migration plan for [bold]{payload['subject']}[/] -> schema v{payload['target_schema_version']}"
+    )
+    table = Table(title="Context Migration")
+    table.add_column("Section", style="bold")
+    table.add_column("Status")
+    table.add_column("Current")
+    table.add_column("Target")
+    table.add_column("Changes", justify="right")
+    for item in payload["sections"]:
+        current = "—" if item["current_schema_version"] is None else str(item["current_schema_version"])
+        table.add_row(
+            item["id"],
+            item["status"],
+            current,
+            str(item["target_schema_version"]),
+            str(item["change_count"]),
+        )
+    console.print(table)
+
+    for item in payload["sections"]:
+        if item["changes"]:
+            console.print(f"[bold]{item['id']}[/] changes:")
+            for change in item["changes"]:
+                console.print(f"- {change}")
+        for warning in item.get("warnings", []):
+            console.print(f"[yellow]Warning ({item['id']}):[/] {warning}")
+
+    if payload["backup_path"]:
+        console.print(f"[green]Backup created:[/] {payload['backup_path']}")
+
+    if apply:
+        if payload["migrated_count"]:
+            console.print(f"[green]Migrated sections:[/] {payload['migrated_count']}")
+        else:
+            console.print("[green]No migration changes were needed.[/]")
+    elif payload["needs_migration"]:
+        console.print("[yellow]Dry run only.[/] Re-run with [bold]--apply[/] to write changes.")
+    else:
+        console.print("[green]All inspected sections are already up to date.[/]")
+
+
+@context.command("write")
+@click.argument("section")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--content", default=None, help="Inline markdown body")
+@click.option("--file", "file_path", default=None, help="Path to a markdown body file")
+def context_write(section: str, subject: str | None, content: str | None, file_path: str | None):
+    """Replace an entire context document."""
+    from hda.context_store import write_context_document
+
+    try:
+        body = _load_context_body(content, file_path)
+        payload = write_context_document(section, body, subject)
+    except (KeyError, ValueError, click.UsageError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    console.print(f"[green]Updated[/] {payload['id']} for subject [bold]{payload['subject']}[/]")
+
+
+@context.command("replace-section")
+@click.argument("section")
+@click.argument("heading")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--content", default=None, help="Inline markdown body")
+@click.option("--file", "file_path", default=None, help="Path to a markdown body file")
+def context_replace_section(
+    section: str,
+    heading: str,
+    subject: str | None,
+    content: str | None,
+    file_path: str | None,
+):
+    """Replace or append a `##` section inside a maintained document."""
+    from hda.context_store import replace_context_section
+
+    try:
+        body = _load_context_body(content, file_path)
+        payload = replace_context_section(section, heading, body, subject)
+    except (KeyError, ValueError, click.UsageError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    console.print(f"[green]Updated section[/] {heading} in [bold]{payload['id']}[/]")
+
+
+@context.command("upsert-block")
+@click.argument("section")
+@click.argument("block_id")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--title", default=None, help="Human title for the block/action")
+@click.option("--destination", default=None, help="Target destination (required for health_actions)")
+@click.option("--meta", "metadata_items", multiple=True, help="Metadata item in key=value format")
+@click.option("--content", default=None, help="Inline markdown body")
+@click.option("--file", "file_path", default=None, help="Path to a markdown body file")
+def context_upsert_block(
+    section: str,
+    block_id: str,
+    subject: str | None,
+    title: str | None,
+    destination: str | None,
+    metadata_items: tuple[str, ...],
+    content: str | None,
+    file_path: str | None,
+):
+    """Upsert a structured block in findings or health_actions."""
+    from hda.context_store import upsert_context_block
+
+    try:
+        body = _load_context_body(content, file_path)
+        metadata = _parse_metadata_items(metadata_items)
+        payload = upsert_context_block(section, block_id, body, subject, metadata, title, destination)
+    except (KeyError, ValueError, click.UsageError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    console.print(f"[green]Upserted block[/] {block_id} in [bold]{payload['id']}[/]")
+
+
+@context.command("move-block")
+@click.argument("section")
+@click.argument("block_id")
+@click.argument("destination")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+def context_move_block(section: str, block_id: str, destination: str, subject: str | None):
+    """Move a structured block to another destination."""
+    from hda.context_store import move_context_block
+
+    try:
+        payload = move_context_block(section, block_id, destination, subject)
+    except (KeyError, ValueError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    console.print(f"[green]Moved block[/] {block_id} to [bold]{destination}[/]")
+
+
+@context.command("archive-block")
+@click.argument("section")
+@click.argument("block_id")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+def context_archive_block(section: str, block_id: str, subject: str | None):
+    """Archive a structured block."""
+    from hda.context_store import archive_context_block
+
+    try:
+        payload = archive_context_block(section, block_id, subject)
+    except (KeyError, ValueError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    console.print(f"[green]Archived block[/] {block_id} in [bold]{payload['id']}[/]")
+
+
+@context.command("append-entry")
+@click.argument("section")
+@click.option("--title", required=True, help="Entry title")
+@click.option("--date", "entry_date", default=None, help="ISO date for the entry heading")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--content", default=None, help="Inline markdown body")
+@click.option("--file", "file_path", default=None, help="Path to a markdown body file")
+def context_append_entry(
+    section: str,
+    title: str,
+    entry_date: str | None,
+    subject: str | None,
+    content: str | None,
+    file_path: str | None,
+):
+    """Append a dated chronological entry."""
+    from hda.context_store import append_context_entry
+
+    try:
+        body = _load_context_body(content, file_path)
+        payload = append_context_entry(section, title, body, subject, entry_date)
+    except (KeyError, ValueError, click.UsageError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    console.print(f"[green]Appended entry[/] to [bold]{payload['id']}[/]")
+
+
+@context.command("replace-entry")
+@click.argument("section")
+@click.argument("heading")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--content", default=None, help="Inline markdown body")
+@click.option("--file", "file_path", default=None, help="Path to a markdown body file")
+def context_replace_entry(
+    section: str,
+    heading: str,
+    subject: str | None,
+    content: str | None,
+    file_path: str | None,
+):
+    """Replace an existing dated chronological entry."""
+    from hda.context_store import replace_context_entry
+
+    try:
+        body = _load_context_body(content, file_path)
+        payload = replace_context_entry(section, heading, body, subject)
+    except (KeyError, ValueError, click.UsageError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    console.print(f"[green]Replaced entry[/] {heading} in [bold]{payload['id']}[/]")
+
+
+@main.group()
+def export():
+    """Export human-readable artifacts from HDA."""
+    pass
+
+
+@export.command("doctor-report")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--output", "output_path", default=None, help="Output PDF path")
+def export_doctor_report_cmd(subject: str | None, output_path: str | None):
+    """Export a simple doctor-facing PDF report."""
+    from hda.doctor_report import export_doctor_report
+
+    try:
+        path = export_doctor_report(subject, output_path)
+    except Exception as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    console.print(f"[green]Doctor report exported:[/] {path}")
 
 
 @main.command()
