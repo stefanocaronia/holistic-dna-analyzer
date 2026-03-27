@@ -111,31 +111,63 @@ Agents and users should both assume commands are run from the repository root.
 
 If the local environment is not ready yet, install it first:
 
+Windows PowerShell:
+
 ```powershell
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -e .
 ```
 
+macOS / Linux:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e .
+```
+
+If PDF export or dashboard support is needed in the same environment:
+
+```bash
+python -m pip install -e ".[export,dashboard]"
+```
+
 If `.venv` already exists, activate it before using `hda`:
+
+Windows PowerShell:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
 
+macOS / Linux:
+
+```bash
+source .venv/bin/activate
+```
+
 After activation, `hda` should resolve in the current shell:
 
-```powershell
+```bash
 hda subjects
 ```
 
 If shell activation is unavailable, call the local executable directly:
 
+Windows PowerShell:
+
 ```powershell
 .\.venv\Scripts\hda.exe subjects
 ```
 
-**CLI activation from the project folder:** run commands from the repository root. In PowerShell, activate the local environment first with `.\.venv\Scripts\Activate.ps1` so `hda` is on `PATH`. If activation is not available, call `.\.venv\Scripts\hda.exe ...` directly.
+macOS / Linux:
+
+```bash
+.venv/bin/hda subjects
+```
+
+**CLI activation from the project folder:** run commands from the repository root. Activate the local environment first so `hda` is on `PATH`. If activation is not available, call the executable in `.venv` directly.
 
 **Import formats:** `hda import` supports MyHeritage (`.csv`), 23andMe (`.txt` or `.zip`), and AncestryDNA (`.txt` or `.zip`). Prefer the subject's configured `source_format`; if missing, the importer will try to detect it from the file.
 
@@ -161,11 +193,15 @@ hda switch stefano           # Switch active subject
 
 ### Programmatic: import from the project's Python API
 Use the Python API when you need to compose multiple operations programmatically, post-process structured results, or build higher-level agent workflows. **Always run via the project's Python with PYTHONPATH=src**:
+
+Windows PowerShell:
+
 ```bash
 PYTHONPATH=src .venv/Scripts/python.exe -c "from hda.tools import lookup_snp; print(lookup_snp('rs53576'))"
 ```
 
 Or for multi-line scripts:
+
 ```bash
 PYTHONPATH=src .venv/Scripts/python.exe -c "
 from hda.tools import run_panel, notable_findings, annotate_my_snp
@@ -174,6 +210,12 @@ for r in results['results']:
     if r['effect'] not in ('normal', 'typical'):
         print(f\"{r['rsid']} ({r['gene']}): {r['genotype']} -> {r['effect']}\")
 "
+```
+
+macOS / Linux:
+
+```bash
+PYTHONPATH=src .venv/bin/python -c "from hda.tools import lookup_snp; print(lookup_snp('rs53576'))"
 ```
 
 **Important:** The source code lives in `src/hda/`. Always set `PYTHONPATH=src` when running scripts. Do not use `sys.path.insert()` hacks.
@@ -363,6 +405,7 @@ hda context upsert-block findings dopamine_reward_deficiency --file finding.md -
 hda context move-block health_actions sleep_apnea_evaluation "Alta Priorità"
 hda context archive-block findings dopamine_reward_deficiency
 hda context append-entry session_notes --title "Follow-up" --file note.md
+hda context replace-entry session_notes "2026-03-27: Follow-up" --file note.md
 hda context docs inbox
 hda context docs import
 hda context docs import --archive-only
