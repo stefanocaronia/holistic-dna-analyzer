@@ -49,6 +49,9 @@ jobs:
             'data/sources/**' \
             ':(exclude)data/db/.gitkeep' \
             ':(exclude)data/context/.gitkeep' \
+            ':(exclude)data/context/.subject-template/.gitkeep' \
+            ':(exclude)data/context/.subject-template/documents/.gitkeep' \
+            ':(exclude)data/context/.subject-template/documents_inbox/.gitkeep' \
             ':(exclude)data/sources/dna-example.csv')"
           if [ -n "$blocked" ]; then
             echo "Tracked sensitive or generated files detected:"
