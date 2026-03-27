@@ -1,4 +1,4 @@
-# HDA — Holistic DNA Analyzer
+# HDA, Holistic DNA Analyzer
 
 A Python/agent framework that can read your DNA data and answer your questions about it.
 
