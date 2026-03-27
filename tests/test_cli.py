@@ -1,4 +1,5 @@
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 from click.testing import CliRunner
@@ -96,6 +97,37 @@ class CliTests(unittest.TestCase):
         self.assertIn("Active Subject", result.output)
         self.assertIn("stefano", result.output)
         self.assertIn("Stefano", result.output)
+
+    def test_dashboard_launches_streamlit_with_repo_app_path(self):
+        with patch("importlib.util.find_spec", return_value=object()), patch(
+            "hda.config.ROOT_DIR",
+            "F:\\repo",
+        ), patch("subprocess.run", return_value=SimpleNamespace(returncode=0)) as run:
+            result = self.runner.invoke(main, ["dashboard", "--", "--server.headless", "true"])
+
+        self.assertEqual(result.exit_code, 0)
+        run.assert_called_once_with(
+            [
+                unittest.mock.ANY,
+                "-m",
+                "streamlit",
+                "run",
+                "F:\\repo\\dashboard\\app.py",
+                "--server.headless",
+                "true",
+            ],
+            cwd="F:\\repo",
+            check=False,
+        )
+        self.assertIn("Launching dashboard", result.output)
+
+    def test_dashboard_shows_install_tip_when_streamlit_missing(self):
+        with patch("importlib.util.find_spec", return_value=None):
+            result = self.runner.invoke(main, ["dashboard"])
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("Streamlit is not installed", result.output)
+        self.assertIn(".[dashboard,export]", result.output)
 
     def test_context_sections_prints_table(self):
         with patch(

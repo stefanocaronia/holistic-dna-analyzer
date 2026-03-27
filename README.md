@@ -218,6 +218,7 @@ hda panels            # List analysis panels
 hda panel-audit       # Audit panel review metadata and repository readiness
 hda analyze <panel>   # Run a panel (e.g. pharmacogenomics, cardiovascular)
 hda report            # All notable findings across panels
+hda dashboard         # Launch the Streamlit dashboard
 ```
 
 ## Python API
@@ -288,13 +289,19 @@ Run this from the repository root.
 Windows PowerShell:
 ```powershell
 .\.venv\Scripts\Activate.ps1
-python -m streamlit run .\dashboard\app.py
+hda dashboard
 ```
 
 macOS / Linux:
 ```bash
 source .venv/bin/activate
-python -m streamlit run "$(pwd)/dashboard/app.py"
+hda dashboard
+```
+
+You can also forward raw Streamlit flags, for example:
+
+```bash
+hda dashboard -- --server.port 8502
 ```
 
 Five pages: Profile & Overview, Panel Reports, Notable Findings, SNP Explorer, and Compare (multi-subject).

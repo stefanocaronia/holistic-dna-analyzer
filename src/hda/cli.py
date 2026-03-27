@@ -1,5 +1,10 @@
 """CLI entry point for Holistic DNA Analyzer (hda)."""
 
+import importlib.util
+from pathlib import Path
+import subprocess
+import sys
+
 import click
 from rich.console import Console
 from rich.table import Table
@@ -121,6 +126,31 @@ def whoami():
         table.add_row(key.replace("_", " ").title(), str(value or "—"))
 
     console.print(table)
+
+
+@main.command()
+@click.argument("streamlit_args", nargs=-1, type=click.UNPROCESSED)
+def dashboard(streamlit_args: tuple[str, ...]):
+    """Launch the Streamlit dashboard."""
+    from hda.config import ROOT_DIR
+
+    if importlib.util.find_spec("streamlit") is None:
+        console.print("[red]Streamlit is not installed in this environment.[/]")
+        console.print(
+            'Tip: install the dashboard extra with `python -m pip install -e ".[dashboard,export]"`.',
+            markup=False,
+        )
+        raise SystemExit(1)
+
+    app_path = Path(ROOT_DIR) / "dashboard" / "app.py"
+    command = [sys.executable, "-m", "streamlit", "run", str(app_path), *streamlit_args]
+    console.print(f"Launching dashboard: [bold]{app_path}[/]")
+    try:
+        completed = subprocess.run(command, cwd=str(ROOT_DIR), check=False)
+    except OSError as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+    raise SystemExit(completed.returncode)
 
 
 @main.group()

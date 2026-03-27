@@ -370,6 +370,7 @@ hda context docs list
 hda context docs add C:\reports\cbc.pdf --date 2026-03-27 --category labs
 hda export doctor-report
 hda export doctor-report --variant long
+hda dashboard
 hda import [name]     # Import source CSV into SQLite
 hda snp <rsid>        # Look up a SNP
 hda search ...        # Search SNPs by filters
