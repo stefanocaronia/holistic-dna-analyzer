@@ -22,9 +22,10 @@ Markdown files, not SQLite tables.
 
 ## Storage Model
 
-Each subject has exactly four canonical files:
+Each subject has exactly five canonical Markdown files:
 
 - `profile_summary.md`
+- `clinical_context.md`
 - `findings.md`
 - `health_actions.md`
 - `session_notes.md`
@@ -34,6 +35,42 @@ These files are the canonical storage layer.
 `hda context ...` and `hda.tools` context helpers are the official access
 layer. Write operations should use these APIs rather than inventing ad hoc file
 edits.
+
+In addition to these five canonical files, each subject may also carry a hidden
+append-only operational log at `data/context/<subject>/.audit_log.jsonl`.
+This audit file is not part of the narrative memory model. It exists only to
+trace context writes and migrations.
+
+Subjects may also carry:
+
+- a document inbox under `data/context/<subject>/documents_inbox/`, where the
+  user can drop pending PDFs or referti before import
+- a dated archive under `data/context/<subject>/documents/`, where imported
+  documents are stored canonically
+- extracted Markdown sidecars under the same dated archive, typically named
+  like `document-name.extracted.md`
+- a tracked example layout under `data/context/.subject-template/` so the empty
+  folder structure is visible in the repository
+
+These are not canonical narrative files, but they are part of the subject
+context archive.
+
+Inbox import date resolution follows a simple order:
+
+- explicit dated folder in the inbox path, for example `2026-03-27/labs/...`
+- inferred category from the filename when the file sits in the inbox root
+- explicit override passed to the import operation
+- file modification date
+- today as the final fallback
+
+Import behavior:
+
+- `hda context docs import` and `import_context_inbox()` integrate by default
+- integration means:
+  - archive the original document
+  - create or refresh an extracted Markdown sidecar
+  - add or update a compact index entry in `clinical_context.md`
+- `--archive-only` / `integrate=False` skips sidecar and context-index updates
 
 ## File-Level Contract
 
@@ -52,7 +89,7 @@ schema_version: 1
 Required frontmatter fields:
 
 - `subject`: configured subject key
-- `doc_type`: one of `profile_summary`, `findings`, `health_actions`, `session_notes`
+- `doc_type`: one of `profile_summary`, `clinical_context`, `findings`, `health_actions`, `session_notes`
 - `title`: human-readable title
 - `last_updated`: ISO date of latest meaningful edit
 - `schema_version`: current schema version, starting at `1`
@@ -92,6 +129,37 @@ Write policy:
 - `replace` entire document
 - `replace_section`
 - no append-only diary behavior
+
+### `clinical_context.md`
+
+Purpose:
+- non-genetic intake profile
+- medications, diagnoses, symptoms, family history, labs, and care logistics
+- stable answers to targeted questions the agent asks because DNA alone is insufficient
+- compact index of imported clinical documents and their salient summaries, not a raw dump of extracted text
+
+Behavior:
+- maintained document
+- updated in place
+- not chronological
+
+Recommended top-level headings:
+
+- `## Known Conditions & Active Symptoms`
+- `## Current Medications & Supplements`
+- `## Family History`
+- `## Recent Labs & Imaging`
+- `## Care Team & Pending Tests`
+- `## Lifestyle Context`
+
+Write policy:
+- `write_context_document`
+- `replace_context_section`
+
+Question-asking rule:
+- when a meaningful interpretation depends on non-genetic context, the agent
+  should ask a small number of targeted questions and save the stable answers
+  here instead of burying them in `session_notes.md`
 
 ### `findings.md`
 
@@ -251,12 +319,17 @@ Available read operations:
 - `list_context_sections(subject=None)`
 - `read_context(subject=None, section=None)`
 - `read_context_block(section, block_id, subject=None)`
+- `read_context_audit(subject=None, limit=50)`
+- `list_context_inbox(subject=None)`
+- `list_context_documents(subject=None)`
 - `validate_context(subject=None, apply=False)`
 
 Available write operations:
 
 - `write_context_document(section, content)`
 - `replace_context_section(section, heading, content)`
+- `import_context_inbox(subject=None, document_date=None, category=None, move=True)`
+- `import_context_document(source_path, subject=None, document_date=None, category=None, title=None, notes=None, move=False)`
 - `upsert_context_block(section, block_id, content, subject=None, metadata=None, title=None, destination=None)`
 - `move_context_block(section, block_id, destination)`
 - `archive_context_block(section, block_id)`
@@ -266,9 +339,29 @@ Available write operations:
 Operation limits by document type:
 
 - `profile_summary`: `write_context_document`, `replace_context_section`
+- `clinical_context`: `write_context_document`, `replace_context_section`
 - `findings`: `upsert_context_block`, `archive_context_block`
 - `health_actions`: `upsert_context_block`, `move_context_block`, `archive_context_block`
 - `session_notes`: `append_context_entry`, `replace_context_entry`
+
+Document archive operations:
+
+- `list_context_inbox(subject=None)`
+- `import_context_inbox(...)`
+- `list_context_documents(subject=None)`
+- `import_context_document(...)`
+- `hda context docs inbox`
+- `hda context docs import`
+- `hda context docs list`
+- `hda context docs add ...`
+
+The audit trail is read-only through the public API:
+
+- `read_context_audit(subject=None, limit=50)`
+- `hda context audit`
+
+Audit entries are appended automatically by supported write and migration
+operations. Agents should not treat the audit log as user-facing context.
 
 ## Migration Guidance
 

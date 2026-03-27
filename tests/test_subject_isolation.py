@@ -1,9 +1,14 @@
 import tempfile
 import unittest
+import sqlite3
 from pathlib import Path
 from unittest.mock import patch
 
+from click.testing import CliRunner
+
 import hda.config as config
+from hda.cli import main
+from hda.tools import list_context_sections, lookup_snp
 
 
 class SubjectIsolationTests(unittest.TestCase):
@@ -20,6 +25,12 @@ class SubjectIsolationTests(unittest.TestCase):
             "    name: Bob\n",
             encoding="utf-8",
         )
+        db_dir = self.root / "data" / "db"
+        db_dir.mkdir(parents=True)
+        self._write_subject_db(db_dir / "alice.db", "AA")
+        self._write_subject_db(db_dir / "bob.db", "GG")
+        (self.root / "data" / "context" / "alice").mkdir(parents=True)
+        (self.root / "data" / "context" / "bob").mkdir(parents=True)
 
         patches = [
             patch.object(config, "ROOT_DIR", self.root),
@@ -31,11 +42,19 @@ class SubjectIsolationTests(unittest.TestCase):
         self.patchers = patches
         for p in self.patchers:
             p.start()
+        self.runner = CliRunner()
 
     def tearDown(self):
         for p in reversed(self.patchers):
             p.stop()
         self.tempdir.cleanup()
+
+    def _write_subject_db(self, path: Path, genotype: str):
+        conn = sqlite3.connect(path)
+        conn.execute("CREATE TABLE snps (rsid TEXT, chromosome TEXT, position INTEGER, genotype TEXT)")
+        conn.execute("INSERT INTO snps VALUES (?, ?, ?, ?)", ("rs1", "1", 12345, genotype))
+        conn.commit()
+        conn.close()
 
     def test_get_db_path_requires_configured_subject(self):
         self.assertEqual(config.get_db_path("alice"), self.root / "data" / "db" / "alice.db")
@@ -53,6 +72,38 @@ class SubjectIsolationTests(unittest.TestCase):
 
         with self.assertRaises(KeyError):
             config.switch_subject("mallory")
+
+    def test_api_lookup_snp_respects_active_subject_and_explicit_subject(self):
+        self.assertEqual(lookup_snp("rs1")["subject"], "alice")
+        self.assertEqual(lookup_snp("rs1")["genotype"], "AA")
+
+        self.assertEqual(lookup_snp("rs1", subject="bob")["subject"], "bob")
+        self.assertEqual(lookup_snp("rs1", subject="bob")["genotype"], "GG")
+
+        with self.assertRaises(KeyError):
+            lookup_snp("rs1", subject="mallory")
+
+    def test_api_context_lookup_rejects_unconfigured_subject(self):
+        payload = list_context_sections("alice")
+        self.assertEqual(payload["subject"], "alice")
+
+        with self.assertRaises(KeyError):
+            list_context_sections("mallory")
+
+    def test_cli_snp_routes_to_selected_subject_and_rejects_unknown_subject(self):
+        active_result = self.runner.invoke(main, ["snp", "rs1"])
+        self.assertEqual(active_result.exit_code, 0)
+        self.assertIn("AA", active_result.output)
+        self.assertNotIn("GG", active_result.output)
+
+        explicit_result = self.runner.invoke(main, ["snp", "rs1", "--subject", "bob"])
+        self.assertEqual(explicit_result.exit_code, 0)
+        self.assertIn("GG", explicit_result.output)
+        self.assertNotIn("AA", explicit_result.output)
+
+        invalid_result = self.runner.invoke(main, ["snp", "rs1", "--subject", "mallory"])
+        self.assertEqual(invalid_result.exit_code, 1)
+        self.assertIn("mallory", invalid_result.output)
 
 
 if __name__ == "__main__":

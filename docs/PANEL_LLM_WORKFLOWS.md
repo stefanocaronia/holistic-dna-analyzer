@@ -10,6 +10,7 @@ There are two different workflows:
 2. **Verify a panel for core inclusion**
 
 An LLM can assist with both, but the rules are different.
+The repository lifecycle and required metadata are defined in [docs/PANEL_REVIEW_WORKFLOW.md](docs/PANEL_REVIEW_WORKFLOW.md).
 
 ## Workflow A: Draft a Panel
 
@@ -35,6 +36,7 @@ Use this when exploring a new topic or building a personal/custom panel.
 - Mark the panel as draft or keep it local until reviewed
 - Prefer neutral effects like `altered`, `reduced`, `variant`, `unclear`
 - Include explicit limitations when evidence is mixed
+- If the file is versioned, use a draft-appropriate `review_outcome` such as `needs_sources` or `needs_weaker_language`
 
 ### LLM Instruction Template
 
@@ -74,6 +76,7 @@ To be considered core, a panel should:
 - avoid diagnostic or treatment claims
 - avoid overstated behavioral/psychiatric conclusions
 - be understandable without hidden assumptions
+- end with an explicit repository decision in metadata, not just a narrative opinion
 
 ### LLM Instruction Template
 
@@ -100,3 +103,5 @@ Prefer rejecting a variant over overstating confidence.
 - `needs_weaker_language`
 - `experimental_only`
 - `reject`
+
+Use `hda panel-audit` after edits to confirm the panel still matches the repository workflow.

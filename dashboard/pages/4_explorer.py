@@ -5,23 +5,18 @@ import asyncio
 import streamlit as st
 import pandas as pd
 
-from hda.config import get_active_subject, list_subjects
+from dashboard.subject_selector import select_subject
 from hda.db.query import get_snp, search_snps, count_snps
 
 
 def render():
     st.title("🔍 HDA — SNP Explorer")
 
-    subjects = list_subjects()
-    active = get_active_subject()
-    subject_keys = list(subjects.keys())
-
-    selected = st.sidebar.selectbox(
-        "Subject",
-        subject_keys,
-        index=subject_keys.index(active) if active in subject_keys else 0,
-        key="explorer_subject",
-    )
+    try:
+        selected = select_subject(st.sidebar, key="explorer_subject")
+    except RuntimeError as e:
+        st.error(str(e))
+        return
 
     tab1, tab2 = st.tabs(["Search by rsid", "Browse by Region"])
 

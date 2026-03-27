@@ -4,7 +4,8 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 
-from hda.config import get_active_subject, get_subject_profile, list_subjects
+from dashboard.subject_selector import select_subject
+from hda.config import get_subject_profile
 from hda.db.query import count_snps, chromosome_summary
 from hda.analysis.panels import get_risk_summary
 
@@ -13,16 +14,11 @@ def render():
     st.title("👤 HDA — Profile & Overview")
 
     # Subject selector
-    subjects = list_subjects()
-    active = get_active_subject()
-    subject_keys = list(subjects.keys())
-
-    selected = st.sidebar.selectbox(
-        "Subject",
-        subject_keys,
-        index=subject_keys.index(active) if active in subject_keys else 0,
-        key="profile_subject",
-    )
+    try:
+        selected = select_subject(st.sidebar, key="profile_subject")
+    except RuntimeError as e:
+        st.error(str(e))
+        return
 
     profile = get_subject_profile(selected)
 

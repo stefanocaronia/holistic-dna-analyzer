@@ -5,6 +5,10 @@ status: core
 review_status: verified
 version: 1
 last_reviewed: 2026-03-26
+review_outcome: approved_for_core
+review_notes: >
+  Reviewed for repository inclusion as a core metabolism panel with comparatively stable common-variant signals and
+  pragmatic wording.
 summary: >
   Curated nutrition-metabolism panel focused on relatively stable, commonly used associations
   for lactose persistence, iron overload risk, type 2 diabetes susceptibility,

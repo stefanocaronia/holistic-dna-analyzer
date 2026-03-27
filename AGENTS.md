@@ -22,6 +22,7 @@ Every conversation begins with an **identification step** before anything else:
 - `hda context show` to read the full subject memory
 - `hda context show <section>` to read a single section
 - `hda context sections` to inspect which standard files exist
+   - `hda context audit` to inspect recent context mutations when you need traceability
    - `hda context migrate` to inspect schema drift before applying writes across old versioned files
    The context is the subject's accumulated knowledge base from previous sessions. It is your **memory** of this person.
 4. **Confirm you're ready.** Briefly acknowledge who you're talking to and any key context from previous sessions. Example: "Ciao Stefano! Ho caricato il tuo profilo e il contesto delle sessioni precedenti. Di cosa vuoi parlare?"
@@ -37,29 +38,41 @@ Each subject has a personal context folder at `data/context/<name>/`. This is wh
 data/context/
 ├── stefano/
 │   ├── profile_summary.md     # One-page integrated profile: who this person is genetically
+│   ├── clinical_context.md    # Non-genetic context: meds, diagnoses, family history, labs
 │   ├── findings.md            # All notable findings discovered across sessions
 │   ├── health_actions.md      # Actionable recommendations synthesized from findings
-│   └── session_notes.md       # Important things learned in conversations (preferences, concerns, follow-ups)
+│   ├── session_notes.md       # Important things learned in conversations (preferences, concerns, follow-ups)
+│   ├── documents_inbox/       # Drop zone for pending PDFs/referti/exams before import
+│   └── documents/             # Dated PDFs/referti/exams copied into the subject archive
 └── marco/
     └── ...
 ```
+
+The repository also carries a tracked example layout under
+`data/context/.subject-template/` so the empty inbox/archive folders are
+visible even though real subject folders stay gitignored.
 
 ### Rules
 - **Read at session start.** Always load the full context at the beginning of a conversation, preferably via `hda context show`.
 - **Write after discoveries.** Every time you uncover a significant new finding, pattern, or recommendation, save or update it in the appropriate file. Don't wait for the user to ask you to save — do it automatically.
 - **Prefer write APIs over raw edits when possible.** Use the official `hda context` write commands or `hda.tools` context-write helpers for structured updates, especially for `findings`, `health_actions`, and `session_notes`.
+- **Ask for missing non-genetic context when it matters.** If the interpretation depends on medications, known diagnoses, family history, recent labs, symptoms, or pending exams, ask concise targeted questions and save stable answers in `clinical_context.md`.
 - **Keep it organized.** Each file has a clear purpose. Don't duplicate information across files.
 - **Update, don't just append.** If a new analysis contradicts or refines a previous finding, update the existing entry rather than adding a conflicting one.
 - **Write in plain language.** The context files should be readable by the user too, not just by the agent. Use the same conversational style as your answers.
 - **Include dates.** Prefix new entries with the date so context ages gracefully.
 - **Use a light schema.** Keep the files human and discursive, but inside predictable headings/blocks so they remain easy to inspect and parse.
 - **Use frontmatter.** Each context file should begin with a small YAML frontmatter block so tools can read stable metadata without constraining the prose.
+- **Keep audit separate from memory.** Structured writes and migrations append to `.audit_log.jsonl`, but that operational log is not a fifth canonical memory file and should not be used as narrative context.
 
 ### What to Save
 - **profile_summary.md** — After a broad analysis session, write or update a one-page "genetic portrait" of this person. Their key strengths, vulnerabilities, and what makes their profile unique. This becomes the quick-load context for future sessions.
+- **clinical_context.md** — Stable non-genetic context. Current medications and supplements, diagnoses, active symptoms, family history, labs, imaging, doctors seen, pending tests, and other intake-style information that DNA cannot tell you. Keep it concise: for imported documents it should work as an index and summary layer, not a full document dump.
 - **findings.md** — Individual findings with enough detail to avoid re-analyzing. Example: "2026-03-24: Dopamine profile — fast DAT1 clearance + reduced D2 receptors + intermediate COMT = reward-seeking tendency with shorter satisfaction window. Consistent across ADHD, addiction, and pharmacogenomics panels."
 - **health_actions.md** — Consolidated, prioritized recommendations. Not a dump of per-panel advice, but an integrated action plan. Example: "HIGH PRIORITY: B12 + methylfolate supplementation (impaired MTRR + reduced MTHFR compound to restrict neurotransmitter precursors)."
 - **session_notes.md** — Things the user mentioned, concerns they raised, follow-ups promised. Example: "2026-03-24: User asked about nicotine dependence — has personal relevance. Follow up on dopamine support strategies."
+- **documents_inbox/** — Preferred drop zone for user-provided PDFs/referti. Users can copy files here directly and then import them in batch.
+- **documents/** — Dated PDF/referto archive for labs, imaging, prescriptions, and visit summaries. Imports should keep the original file and, by default, create an extracted Markdown sidecar in the same dated folder. `clinical_context.md` should then point to those archived files instead of absorbing the full extracted text.
 
 ### Context File Schema
 
@@ -68,6 +81,8 @@ The memory should stay **holistic and cross-panel**. Do not turn it into one sec
 High-level rules:
 - every context file uses YAML frontmatter
 - `profile_summary.md` is a maintained snapshot, not a diary
+- `clinical_context.md` is a maintained non-genetic intake profile, not a diary
+- imported clinical documents should be indexed there, not pasted there in full
 - `findings.md` is a stable findings registry, not a diary and not one file per finding
 - `health_actions.md` is the current prioritized plan
 - `session_notes.md` is the chronological diary
@@ -165,12 +180,13 @@ for r in results['results']:
 
 ### Panel Editing Rules
 
-If you create or review analysis panels, follow [docs/PANEL_SCHEMA.md](docs/PANEL_SCHEMA.md) and [docs/PANEL_LLM_WORKFLOWS.md](docs/PANEL_LLM_WORKFLOWS.md).
+If you create or review analysis panels, follow [docs/PANEL_SCHEMA.md](docs/PANEL_SCHEMA.md), [docs/PANEL_LLM_WORKFLOWS.md](docs/PANEL_LLM_WORKFLOWS.md), and [docs/PANEL_REVIEW_WORKFLOW.md](docs/PANEL_REVIEW_WORKFLOW.md).
 
 - Do not mark a panel as core/verified just because an LLM drafted it
 - Do not invent provenance or citations
 - Prefer conservative language, especially for neuropsychiatric or behavioral panels
 - If evidence is weak or mixed, keep the panel local/unverified instead of promoting it to the repository
+- Every versioned repository panel should carry an explicit review decision in metadata (`review_outcome` + `review_notes`)
 - If a panel's `review_status` is not `verified`, any user-facing interpretation must include an explicit disclaimer that the panel is exploratory / not part of the verified core set
 - Agent tool responses for panels may include `requires_disclaimer` and `interpretation_warning`; treat them as mandatory guidance, not optional hints
 
@@ -278,6 +294,11 @@ Import and call from `hda.tools.agent_tools`:
 | `list_context_sections(subject?)` | List the standard persistent-memory sections for a subject |
 | `read_context(subject?, section?)` | Read one or all context-memory sections for a subject |
 | `read_context_block(section, block_id, subject?)` | Read one structured block from findings, health_actions, or session_notes |
+| `read_context_audit(subject?, limit?)` | Read recent append-only context audit events for traceability |
+| `list_context_inbox(subject?)` | List pending clinical files dropped into a subject inbox before import |
+| `list_context_documents(subject?)` | List dated PDFs and other archived clinical documents for a subject |
+| `import_context_inbox(subject?, document_date?, category?, move?, integrate?)` | Import every pending inbox document into the dated subject archive and, by default, integrate it into the document index |
+| `import_context_document(source_path, subject?, document_date?, category?, title?, notes?, move?, integrate?)` | Copy or move a clinical document into the subject archive and, by default, create sidecar/index integration |
 | `write_context_document(section, content, subject?)` | Replace an entire context document while preserving frontmatter |
 | `replace_context_section(section, heading, content, subject?)` | Replace or append a `##` section in a maintained document |
 | `upsert_context_block(section, block_id, content, subject?, metadata?, title?, destination?)` | Upsert a structured block in findings or health_actions |
@@ -287,7 +308,7 @@ Import and call from `hda.tools.agent_tools`:
 | `append_context_entry(section, title, content, subject?, entry_date?)` | Append a dated chronological entry to session_notes |
 | `replace_context_entry(section, heading, content, subject?)` | Replace an existing chronological entry in session_notes |
 | `validate_context(subject?, apply?)` | Validate context against evidence-basis rules and optionally apply safe fixes |
-| `export_doctor_report(subject?, output_path?)` | Export a simple doctor-facing PDF report |
+| `export_doctor_report(subject?, output_path?, variant?)` | Export a doctor-facing PDF report in `short` or `long` form |
 | `lookup_snp(rsid, subject?)` | Look up a single SNP by rsid |
 | `search(chromosome?, position_start?, position_end?, genotype?, rsid_pattern?, subject?, limit?)` | Search SNPs with filters |
 | `get_stats(subject?)` | Total SNPs + per-chromosome breakdown |
@@ -330,6 +351,8 @@ hda switch <name>     # Switch active subject
 hda context sections  # List the standard memory sections
 hda context show      # Show all context for the active subject
 hda context show findings  # Show one memory section
+hda context show clinical_context  # Show non-genetic clinical context
+hda context audit  # Show recent context write/migration events
 hda context migrate  # Dry-run deterministic schema migration for versioned context files
 hda context migrate --apply  # Apply migration with backup
 hda context validate  # Validate context against evidence-basis rules
@@ -340,7 +363,13 @@ hda context upsert-block findings dopamine_reward_deficiency --file finding.md -
 hda context move-block health_actions sleep_apnea_evaluation "Alta Priorità"
 hda context archive-block findings dopamine_reward_deficiency
 hda context append-entry session_notes --title "Follow-up" --file note.md
+hda context docs inbox
+hda context docs import
+hda context docs import --archive-only
+hda context docs list
+hda context docs add C:\reports\cbc.pdf --date 2026-03-27 --category labs
 hda export doctor-report
+hda export doctor-report --variant long
 hda import [name]     # Import source CSV into SQLite
 hda snp <rsid>        # Look up a SNP
 hda search ...        # Search SNPs by filters
@@ -359,3 +388,4 @@ hda report            # Notable findings across all panels
 - All positions use **GRCh37/hg19** reference genome (build37)
 - Genotypes are on the **forward (+) strand**
 - This data is for **research and personal exploration**, not medical diagnosis
+- PDF doctor-report export depends on the optional `export` environment extra

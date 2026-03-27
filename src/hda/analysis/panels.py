@@ -16,6 +16,13 @@ PANEL_ID_ALIASES = {
     "nutrigenomics": "nutrition_metabolism",
     "nutrition_advanced": "nutrition_micronutrients",
 }
+PANEL_REVIEW_OUTCOMES = {
+    "approved_for_core",
+    "experimental_only",
+    "needs_sources",
+    "needs_weaker_language",
+    "reject",
+}
 
 
 def _require_mapping(data: object, path: Path) -> dict:
@@ -38,8 +45,21 @@ def _validate_panel_definition(path: Path, panel_id: str, data: dict, inferred_r
     """Validate the panel schema used by the runtime."""
     review_status = data.get("review_status") or inferred_review_status or "verified"
     status = data.get("status")
+    review_outcome = data.get("review_outcome")
+    review_notes = data.get("review_notes")
 
-    required_panel_fields = ("name", "description", "category", "summary", "sources", "limitations")
+    required_panel_fields = (
+        "name",
+        "description",
+        "category",
+        "summary",
+        "sources",
+        "limitations",
+        "version",
+        "last_reviewed",
+        "review_outcome",
+        "review_notes",
+    )
     missing_panel_fields = [field for field in required_panel_fields if not data.get(field)]
     if missing_panel_fields:
         raise ValueError(
@@ -54,6 +74,13 @@ def _validate_panel_definition(path: Path, panel_id: str, data: dict, inferred_r
         raise ValueError(f"Panel '{panel_id}' must define 'variants' as a list.")
     if data.get("composites") is not None and not isinstance(data.get("composites"), list):
         raise ValueError(f"Panel '{panel_id}' must define 'composites' as a list when present.")
+    if review_outcome not in PANEL_REVIEW_OUTCOMES:
+        raise ValueError(
+            f"Panel '{panel_id}' has invalid review_outcome '{review_outcome}'. "
+            f"Allowed: {sorted(PANEL_REVIEW_OUTCOMES)}."
+        )
+    if not isinstance(review_notes, str):
+        raise ValueError(f"Panel '{panel_id}' must define 'review_notes' as a string.")
 
     if review_status == "verified" and status not in (None, "core"):
         raise ValueError(f"Verified panel '{panel_id}' must have status 'core'.")
@@ -61,6 +88,15 @@ def _validate_panel_definition(path: Path, panel_id: str, data: dict, inferred_r
         raise ValueError(f"Exploratory panel '{panel_id}' must have status 'experimental'.")
     if review_status == "draft" and status not in (None, "draft"):
         raise ValueError(f"Draft panel '{panel_id}' must have status 'draft'.")
+    if review_status == "verified" and review_outcome != "approved_for_core":
+        raise ValueError(f"Verified panel '{panel_id}' must have review_outcome 'approved_for_core'.")
+    if review_status == "exploratory" and review_outcome != "experimental_only":
+        raise ValueError(f"Exploratory panel '{panel_id}' must have review_outcome 'experimental_only'.")
+    if review_status == "draft" and review_outcome not in {"needs_sources", "needs_weaker_language", "reject"}:
+        raise ValueError(
+            f"Draft panel '{panel_id}' must have review_outcome in "
+            "{'needs_sources', 'needs_weaker_language', 'reject'}."
+        )
 
     for variant in data.get("variants", []):
         missing_variant_fields = [
@@ -118,6 +154,8 @@ def _panel_metadata(panel_id: str, data: dict, inferred_review_status: str | Non
         "review_status": review_status,
         "version": data.get("version"),
         "last_reviewed": data.get("last_reviewed"),
+        "review_outcome": data.get("review_outcome"),
+        "review_notes": data.get("review_notes", ""),
         "summary": data.get("summary", ""),
         "sources": data.get("sources", []),
         "limitations": data.get("limitations", []),
@@ -158,6 +196,44 @@ def load_panel(panel_id: str) -> dict:
     _validate_panel_definition(path, canonical_id, data, inferred_review_status)
     metadata = _panel_metadata(canonical_id, data, inferred_review_status)
     return {**data, **metadata}
+
+
+def audit_panels() -> list[dict]:
+    """Audit repository panels against the panel review workflow and schema."""
+    audits = []
+    for path in sorted(PANELS_DIR.glob("*.yaml")):
+        panel_id, inferred_review_status = _split_panel_filename(path)
+        try:
+            with open(path, "r", encoding="utf-8") as fh:
+                data = _require_mapping(yaml.safe_load(fh), path)
+            _validate_panel_definition(path, panel_id, data, inferred_review_status)
+            metadata = _panel_metadata(panel_id, data, inferred_review_status)
+            audits.append(
+                {
+                    "id": panel_id,
+                    "path": str(path),
+                    "status": metadata["status"],
+                    "review_status": metadata["review_status"],
+                    "review_outcome": metadata.get("review_outcome"),
+                    "last_reviewed": metadata.get("last_reviewed"),
+                    "ready": metadata.get("review_outcome") in {"approved_for_core", "experimental_only"},
+                    "issues": [],
+                }
+            )
+        except Exception as e:
+            audits.append(
+                {
+                    "id": panel_id,
+                    "path": str(path),
+                    "status": "invalid",
+                    "review_status": inferred_review_status or "verified",
+                    "review_outcome": None,
+                    "last_reviewed": None,
+                    "ready": False,
+                    "issues": [str(e)],
+                }
+            )
+    return audits
 
 
 def analyze_panel(panel_id: str, subject: str | None = None) -> dict:

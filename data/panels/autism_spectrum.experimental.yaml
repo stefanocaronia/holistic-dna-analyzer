@@ -5,6 +5,9 @@ status: experimental
 review_status: exploratory
 version: 1
 last_reviewed: 2026-03-26
+review_outcome: experimental_only
+review_notes: >
+  Kept exploratory because common-variant autism signals are too weak and non-diagnostic for any trusted default use.
 summary: >
   Minimal exploratory panel covering a few common variants that have appeared in
   autism association studies. These are not diagnostic, have small effect sizes,

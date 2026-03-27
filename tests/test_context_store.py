@@ -4,6 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import hda.config as config
+from hda.context_audit import read_context_audit
 from hda.context_store import (
     append_context_entry,
     archive_context_block,
@@ -80,9 +81,10 @@ class ContextStoreTests(unittest.TestCase):
         payload = list_context_sections()
 
         self.assertEqual(payload["subject"], "alice")
-        self.assertEqual(len(payload["sections"]), 4)
+        self.assertEqual(len(payload["sections"]), 5)
         by_id = {section["id"]: section for section in payload["sections"]}
         self.assertTrue(by_id["profile_summary"]["exists"])
+        self.assertFalse(by_id["clinical_context"]["exists"])
         self.assertFalse(by_id["findings"]["exists"])
         self.assertEqual(by_id["profile_summary"]["metadata"]["doc_type"], "profile_summary")
 
@@ -90,10 +92,11 @@ class ContextStoreTests(unittest.TestCase):
         payload = read_context()
 
         self.assertEqual(payload["subject"], "alice")
-        self.assertEqual(len(payload["sections"]), 4)
+        self.assertEqual(len(payload["sections"]), 5)
         by_id = {section["id"]: section for section in payload["sections"]}
         self.assertIn("# Summary", by_id["profile_summary"]["content"])
         self.assertEqual(by_id["profile_summary"]["metadata"]["subject"], "alice")
+        self.assertIsNone(by_id["clinical_context"]["content"])
         self.assertIsNone(by_id["health_actions"]["content"])
 
     def test_write_context_document_updates_last_updated_line(self):
@@ -111,6 +114,17 @@ class ContextStoreTests(unittest.TestCase):
 
         self.assertIn("Replaced overview", payload["content"])
         self.assertNotIn("Original overview", payload["content"])
+
+    def test_replace_context_section_supports_clinical_context(self):
+        payload = replace_context_section(
+            "clinical_context",
+            "Current Medications & Supplements",
+            "- Olmesartan 20 mg\n- Vitamin D 2000 IU",
+        )
+
+        self.assertEqual(payload["id"], "clinical_context")
+        self.assertIn("Current Medications & Supplements", payload["content"])
+        self.assertIn("Olmesartan 20 mg", payload["content"])
 
     def test_upsert_context_block_creates_and_updates_finding(self):
         first = upsert_context_block(
@@ -196,6 +210,35 @@ class ContextStoreTests(unittest.TestCase):
 
         block = read_context_block("session_notes", "2026-03-28: New note")
         self.assertIn("Replaced bullet", block["content"])
+
+    def test_context_writes_append_audit_entries(self):
+        upsert_context_block(
+            "findings",
+            "dopamine_reward_deficiency",
+            "### Summary\nSignal\n",
+        )
+        append_context_entry(
+            "session_notes",
+            "New note",
+            "- Bullet one",
+            entry_date="2026-03-28",
+        )
+
+        audit = read_context_audit()
+
+        self.assertEqual(audit["subject"], "alice")
+        self.assertEqual([entry["event_type"] for entry in audit["entries"]], ["upsert_block", "append_entry"])
+        self.assertEqual(audit["entries"][0]["details"]["block_id"], "dopamine_reward_deficiency")
+        self.assertEqual(audit["entries"][1]["details"]["heading"], "2026-03-28: New note")
+
+    def test_context_audit_limit_returns_latest_entries(self):
+        write_context_document("profile_summary", "# Summary\n\n## Overview\nUpdated once\n")
+        replace_context_section("profile_summary", "Overview", "Updated twice")
+
+        audit = read_context_audit(limit=1)
+
+        self.assertEqual(len(audit["entries"]), 1)
+        self.assertEqual(audit["entries"][0]["event_type"], "replace_section")
 
 
 if __name__ == "__main__":

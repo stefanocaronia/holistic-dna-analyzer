@@ -5,6 +5,9 @@ status: experimental
 review_status: exploratory
 version: 1
 last_reviewed: 2026-03-26
+review_outcome: experimental_only
+review_notes: >
+  Kept exploratory because memory and cognitive-aging signals remain too context-dependent for a trusted default panel.
 summary: >
   Exploratory cognitive panel narrowed to a few loci with at least some literature support
   for episodic memory, neuroplasticity, or cognitive-aging resilience. It avoids claims

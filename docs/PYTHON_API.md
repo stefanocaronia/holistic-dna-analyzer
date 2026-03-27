@@ -52,6 +52,11 @@ They may change more freely as the project evolves.
 - `list_context_sections(subject=None)`
 - `read_context(subject=None, section=None)`
 - `read_context_block(section, block_id, subject=None)`
+- `read_context_audit(subject=None, limit=50)`
+- `list_context_inbox(subject=None)`
+- `list_context_documents(subject=None)`
+- `import_context_inbox(subject=None, document_date=None, category=None, move=True, integrate=True)`
+- `import_context_document(source_path, subject=None, document_date=None, category=None, title=None, notes=None, move=False, integrate=True)`
 - `write_context_document(section, content, subject=None)`
 - `replace_context_section(section, heading, content, subject=None)`
 - `upsert_context_block(section, block_id, content, subject=None, metadata=None, title=None, destination=None)`
@@ -61,11 +66,20 @@ They may change more freely as the project evolves.
 - `append_context_entry(section, title, content, subject=None, entry_date=None)`
 - `replace_context_entry(section, heading, content, subject=None)`
 - `validate_context(subject=None, apply=False)`
-- `export_doctor_report(subject=None, output_path=None)`
+- `export_doctor_report(subject=None, output_path=None, variant="short")`
 
 `read_context()` returns parsed frontmatter in `metadata` plus the Markdown body in `content`.
 For findings, `read_context_block()` returns both a human-readable `heading` and a stable
 `metadata["finding_id"]` so the display title can stay readable while updates remain deterministic.
+`read_context_audit()` returns the recent append-only operational history for
+context writes and migrations. This is for traceability, not user-facing memory.
+`list_context_inbox()` and `import_context_inbox()` manage the preferred
+drop-folder flow under `data/context/<subject>/documents_inbox/`.
+`list_context_documents()` and `import_context_document()` manage the final
+dated archive under `data/context/<subject>/documents/`.
+When integration is enabled (the default), each imported document also gets an
+extracted Markdown sidecar in the archive and a compact index entry in
+`clinical_context.md`.
 
 ### SNP lookup and search
 
@@ -123,7 +137,7 @@ print(cardio["panel_name"], cardio["review_status"], cardio["requires_disclaimer
 ## Context Memory Example
 
 ```python
-from hda.tools import append_context_entry, export_doctor_report, list_context_sections, read_context, upsert_context_block, validate_context
+from hda.tools import append_context_entry, export_doctor_report, import_context_document, import_context_inbox, list_context_documents, list_context_inbox, list_context_sections, read_context, upsert_context_block, validate_context
 
 sections = list_context_sections()
 summary = read_context(section="profile_summary")
@@ -136,16 +150,27 @@ upsert_context_block(
 )
 append_context_entry("session_notes", "Follow-up", "- User reported improvement")
 validation = validate_context(apply=False)
-pdf_path = export_doctor_report()
+inbox = list_context_inbox()
+import_context_inbox()
+import_context_document("C:/reports/cbc.pdf", document_date="2026-03-27", category="labs", title="CBC")
+docs = list_context_documents()
+pdf_path = export_doctor_report(variant="short")
+full_pdf_path = export_doctor_report(variant="long")
 
 print([section["id"] for section in sections["sections"]])
 print(summary["metadata"])
 print(summary["content"])
 print(validation["issue_count"])
+print(inbox["count"])
+print(docs["count"])
 print(pdf_path)
+print(full_pdf_path)
 ```
 
-By default, `export_doctor_report()` writes to `output/pdf/doctor-report-<subject>.pdf`.
+By default, `export_doctor_report()` writes the short report to
+`output/pdf/doctor-report-<subject>.pdf`. The long variant writes by default to
+`output/pdf/doctor-report-<subject>-long.pdf`. PDF export depends on the
+optional `export` extra.
 `migrate_context()` is dry-run by default and only supports versioned context
 documents that already carry YAML frontmatter plus `schema_version`.
 
@@ -156,6 +181,12 @@ The Python API mirrors the CLI:
 - `list_context_sections()` <-> `hda context sections`
 - `read_context()` <-> `hda context show`
 - `read_context(section="findings")` <-> `hda context show findings`
+- `read_context_audit()` <-> `hda context audit`
+- `list_context_inbox()` <-> `hda context docs inbox`
+- `import_context_inbox()` <-> `hda context docs import`
+- `import_context_inbox(integrate=False)` <-> `hda context docs import --archive-only`
+- `list_context_documents()` <-> `hda context docs list`
+- `import_context_document(...)` <-> `hda context docs add ...`
 - `write_context_document("profile_summary", "...")` <-> `hda context write profile_summary --content "..."`
 - `replace_context_section("profile_summary", "Overview", "...")` <-> `hda context replace-section profile_summary "Overview" --content "..."`
 - `upsert_context_block("findings", "dopamine_reward_deficiency", "...")` <-> `hda context upsert-block findings dopamine_reward_deficiency --content "..."`
@@ -167,7 +198,8 @@ The Python API mirrors the CLI:
 - `replace_context_entry("session_notes", "2026-03-27: Follow-up", "...")` <-> `hda context replace-entry session_notes "2026-03-27: Follow-up" --content "..."`
 - `validate_context(apply=False)` <-> `hda context validate`
 - `validate_context(apply=True)` <-> `hda context validate --apply`
-- `export_doctor_report()` <-> `hda export doctor-report`
+- `export_doctor_report(variant="short")` <-> `hda export doctor-report`
+- `export_doctor_report(variant="long")` <-> `hda export doctor-report --variant long`
 - `available_panels()` <-> `hda panels`
 - `run_panel("cardiovascular")` <-> `hda analyze cardiovascular`
 - `lookup_snp("rs53576")` <-> `hda snp rs53576`

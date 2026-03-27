@@ -13,11 +13,16 @@ import re
 import yaml
 
 from hda.config import get_active_subject, get_context_path
+from hda.context_audit import append_context_audit
 
 CONTEXT_SECTIONS: dict[str, dict[str, str]] = {
     "profile_summary": {
         "filename": "profile_summary.md",
         "description": "Integrated one-page genetic portrait for quick session startup.",
+    },
+    "clinical_context": {
+        "filename": "clinical_context.md",
+        "description": "Non-genetic health context: medications, diagnoses, family history, labs, and intake details.",
     },
     "findings": {
         "filename": "findings.md",
@@ -78,6 +83,8 @@ def _default_title(subject: str, section: str) -> str:
     pretty_subject = subject.replace("_", " ").title()
     if section == "profile_summary":
         return f"{pretty_subject} — Genetic Profile Summary"
+    if section == "clinical_context":
+        return f"{pretty_subject} — Clinical Context"
     if section == "health_actions":
         return f"{pretty_subject} — Recommended Health Actions"
     if section == "session_notes":
@@ -378,7 +385,9 @@ def write_context_document(section: str, content: str, subject: str | None = Non
     _, metadata, _ = _read_existing(subject, section)
     metadata = {**metadata, "subject": subject, "doc_type": section, "last_updated": _today_iso()}
     body = _ensure_section_title(_sync_last_updated_line(content, metadata["last_updated"]), subject, section)
-    return _write_section(subject, section, metadata, body)
+    payload = _write_section(subject, section, metadata, body)
+    append_context_audit("write_document", subject=subject, section=section, details={"mode": "replace_document"})
+    return payload
 
 
 def replace_context_section(
@@ -390,8 +399,8 @@ def replace_context_section(
     """Replace or append a `##` section inside a maintained document."""
     subject = subject or get_active_subject()
     section = validate_context_section(section)
-    if section not in {"profile_summary", "health_actions"}:
-        raise ValueError("replace_context_section is only supported for profile_summary and health_actions")
+    if section not in {"profile_summary", "clinical_context", "health_actions"}:
+        raise ValueError("replace_context_section is only supported for profile_summary, clinical_context, and health_actions")
 
     _, metadata, body = _read_existing(subject, section)
     preamble, blocks = _split_blocks(body, 2)
@@ -409,7 +418,9 @@ def replace_context_section(
     metadata["last_updated"] = _today_iso()
     new_body = _join_blocks(preamble, blocks, 2)
     new_body = _ensure_section_title(_sync_last_updated_line(new_body, metadata["last_updated"]), subject, section)
-    return _write_section(subject, section, metadata, new_body)
+    payload = _write_section(subject, section, metadata, new_body)
+    append_context_audit("replace_section", subject=subject, section=section, details={"heading": heading})
+    return payload
 
 
 def upsert_context_block(
@@ -420,6 +431,7 @@ def upsert_context_block(
     metadata: dict | None = None,
     title: str | None = None,
     destination: str | None = None,
+    _skip_audit: bool = False,
 ) -> dict:
     """Upsert a structured block inside findings or health_actions."""
     subject = subject or get_active_subject()
@@ -427,9 +439,25 @@ def upsert_context_block(
     metadata = dict(metadata or {})
 
     if section == "findings":
-        return _upsert_finding(subject, block_id, content, metadata)
+        payload = _upsert_finding(subject, block_id, content, metadata)
+        if not _skip_audit:
+            append_context_audit(
+                "upsert_block",
+                subject=subject,
+                section=section,
+                details={"block_id": block_id, "title": title or block_id},
+            )
+        return payload
     if section == "health_actions":
-        return _upsert_health_action(subject, block_id, title, content, metadata, destination)
+        payload = _upsert_health_action(subject, block_id, title, content, metadata, destination)
+        if not _skip_audit:
+            append_context_audit(
+                "upsert_block",
+                subject=subject,
+                section=section,
+                details={"block_id": block_id, "title": title or block_id, "destination": destination},
+            )
+        return payload
     raise ValueError("upsert_context_block is only supported for findings and health_actions")
 
 
@@ -494,7 +522,14 @@ def move_context_block(section: str, block_id: str, destination: str, subject: s
     file_metadata["last_updated"] = _today_iso()
     new_body = _join_blocks(doc_preamble, blocks, 2)
     new_body = _ensure_section_title(_sync_last_updated_line(new_body, file_metadata["last_updated"]), subject, section)
-    return _write_section(subject, section, file_metadata, new_body)
+    payload = _write_section(subject, section, file_metadata, new_body)
+    append_context_audit(
+        "move_block",
+        subject=subject,
+        section=section,
+        details={"block_id": block_id, "destination": destination},
+    )
+    return payload
 
 
 def archive_context_block(section: str, block_id: str, subject: str | None = None) -> dict:
@@ -505,7 +540,9 @@ def archive_context_block(section: str, block_id: str, subject: str | None = Non
     if section == "findings":
         block = read_context_block(section, block_id, subject)
         metadata = {**block["metadata"], "status": "archived", "updated": _today_iso()}
-        return upsert_context_block(section, block_id, block["content"], subject=subject, metadata=metadata)
+        payload = upsert_context_block(section, block_id, block["content"], subject=subject, metadata=metadata, _skip_audit=True)
+        append_context_audit("archive_block", subject=subject, section=section, details={"block_id": block_id})
+        return payload
 
     if section == "health_actions":
         block = read_context_block(section, block_id, subject)
@@ -518,7 +555,9 @@ def archive_context_block(section: str, block_id: str, subject: str | None = Non
             metadata=metadata,
             title=block["heading"],
             destination="Bassa Priorità",
+            _skip_audit=True,
         )
+        append_context_audit("archive_block", subject=subject, section=section, details={"block_id": block_id})
         return result
 
     raise ValueError("archive_context_block is only supported for findings and health_actions")
@@ -546,7 +585,14 @@ def append_context_entry(
     metadata["last_updated"] = _today_iso()
     new_body = _join_blocks(doc_preamble, blocks, 2)
     new_body = _ensure_section_title(new_body, subject, section)
-    return _write_section(subject, section, metadata, new_body)
+    payload = _write_section(subject, section, metadata, new_body)
+    append_context_audit(
+        "append_entry",
+        subject=subject,
+        section=section,
+        details={"heading": heading},
+    )
+    return payload
 
 
 def replace_context_entry(
@@ -575,7 +621,14 @@ def replace_context_entry(
     metadata["last_updated"] = _today_iso()
     new_body = _join_blocks(doc_preamble, blocks, 2)
     new_body = _ensure_section_title(new_body, subject, section)
-    return _write_section(subject, section, metadata, new_body)
+    payload = _write_section(subject, section, metadata, new_body)
+    append_context_audit(
+        "replace_entry",
+        subject=subject,
+        section=section,
+        details={"heading": heading},
+    )
+    return payload
 
 
 def _upsert_finding(subject: str, block_id: str, content: str, metadata: dict) -> dict:

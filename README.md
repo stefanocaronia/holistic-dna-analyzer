@@ -18,6 +18,7 @@ HDA provides the local data layer, navigation tools, curated panels, and agent-f
 The stable Python API for agents and automation is documented in [docs/PYTHON_API.md](docs/PYTHON_API.md).
 The context-memory data model is documented in [docs/CONTEXT_SCHEMA.md](docs/CONTEXT_SCHEMA.md).
 Backup, migration, privacy, and local family-use guidance are documented in [docs/BACKUP_AND_PRIVACY.md](docs/BACKUP_AND_PRIVACY.md).
+Panel lifecycle and promotion rules are documented in [docs/PANEL_REVIEW_WORKFLOW.md](docs/PANEL_REVIEW_WORKFLOW.md).
 
 This project is also developed with the help of LLM-assisted workflows. Code,
 documentation, and panel content are reviewed and curated in-repo, but
@@ -67,7 +68,9 @@ Agent: [runs cardiovascular, inflammation, nutrition panels; cross-references fi
 - "What should I add to my diet?"
 - "Am I prone to nicotine addiction?"
 
-The agent saves its findings in `data/context/<name>/` so that next session it already knows your profile and can build on previous analyses. These files stay human-readable Markdown, but now use a small YAML frontmatter block plus predictable section headings. `findings.md` is a single readable registry with human titles and stable `finding_id` metadata, not one file per finding. The preferred access layer is `hda context ...` rather than raw path inspection, and the document/block contract is defined in [docs/CONTEXT_SCHEMA.md](docs/CONTEXT_SCHEMA.md).
+The agent saves its findings in `data/context/<name>/` so that next session it already knows your profile and can build on previous analyses. These files stay human-readable Markdown, but now use a small YAML frontmatter block plus predictable section headings. `findings.md` is a single readable registry with human titles and stable `finding_id` metadata, not one file per finding. `clinical_context.md` is where non-genetic information lives: medications, diagnoses, family history, labs, pending evaluations, and other intake-style details. It should stay concise: for imported documents it acts as an index and summary layer, not as a dump of full referti. The preferred access layer is `hda context ...` rather than raw path inspection, and the document/block contract is defined in [docs/CONTEXT_SCHEMA.md](docs/CONTEXT_SCHEMA.md).
+Supported writes and migrations also append a lightweight `.audit_log.jsonl` per subject so context changes stay traceable without turning the memory itself into a database.
+You can also drop dated PDFs or other referti into `data/context/<name>/documents_inbox/` and then import them in batch with `hda context docs import`. Imported files are archived under `data/context/<name>/documents/`, and by default each imported document also gets an extracted Markdown sidecar like `esami-sangue.extracted.md`. `clinical_context.md` then keeps only an index entry and a short summary pointing to those archived files. If the inbox path already contains a date like `documents_inbox/2026-03-27/labs/...`, that date wins; otherwise the importer falls back to the file timestamp unless you override it explicitly. If the file sits in the inbox root, HDA also applies a light filename heuristic (`esami-sangue`, `emocromo`, `cbc`, `eco`, `holter`, etc.) before falling back to `general`. Use `--archive-only` only if you explicitly want to skip sidecar/index integration. The repository now ships a tracked template at `data/context/.subject-template/` that shows the expected empty folder layout. `hda context docs add ...` remains available when you want to target one file explicitly.
 
 ## Interpretation Safety
 
@@ -93,6 +96,12 @@ PowerShell:
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -e .
+```
+
+If you want PDF doctor-report export in the same environment:
+
+```powershell
+python -m pip install -e ".[export]"
 ```
 
 If `.venv` already exists, you only need:
@@ -151,6 +160,8 @@ hda switch <name>     # Switch active subject (like git switch)
 hda context sections  # List the standard memory sections for the active subject
 hda context show      # Show the full persistent context for the active subject
 hda context show findings  # Show one context section
+hda context show clinical_context  # Show non-genetic clinical context
+hda context audit  # Show recent context write/migration events
 hda context migrate  # Dry-run a schema migration plan for context files
 hda context migrate --apply  # Apply deterministic migrations with backup
 hda context validate  # Check context against evidence-basis rules
@@ -162,7 +173,13 @@ hda context move-block health_actions sleep_apnea_evaluation "Alta Priorità"
 hda context archive-block findings dopamine_reward_deficiency
 hda context append-entry session_notes --title "Follow-up" --file note.md
 hda context replace-entry session_notes "2026-03-27: Follow-up" --file note.md
-hda export doctor-report  # Build a simple doctor-facing PDF
+hda context docs inbox
+hda context docs import
+hda context docs import --archive-only
+hda context docs list
+hda context docs add C:\reports\cbc.pdf --date 2026-03-27 --category labs
+hda export doctor-report  # Build the short doctor-facing PDF
+hda export doctor-report --variant long  # Include exploratory/contextual sections
 hda import [name]     # Import DNA source file into SQLite
 hda snp <rsid>        # Look up a single SNP
 hda search ...        # Search SNPs by chromosome, position, genotype, or rsid pattern
@@ -173,6 +190,7 @@ hda relatedness a b   # Heuristic relatedness summary between two subjects
 hda stats             # Chromosome summary
 hda annotate <rsid>   # Fetch online annotations (SNPedia, ClinVar, Ensembl)
 hda panels            # List analysis panels
+hda panel-audit       # Audit panel review metadata and repository readiness
 hda analyze <panel>   # Run a panel (e.g. pharmacogenomics, cardiovascular)
 hda report            # All notable findings across panels
 ```
@@ -193,14 +211,22 @@ Prefer the CLI for interactive work and repeatable shell usage. Use the Python
 API when you want to compose multiple operations programmatically or build
 agent-side automation on top of HDA.
 
-`export_doctor_report()` / `hda export doctor-report` writes a simple PDF by
-default to `output/pdf/doctor-report-<subject>.pdf`. This export requires
-`reportlab` in the local environment.
+`export_doctor_report()` / `hda export doctor-report` writes the short clinical
+PDF by default to `output/pdf/doctor-report-<subject>.pdf`. Use
+`--variant long` (or `variant="long"` in Python) to include exploratory themes,
+interpretation boundaries, and context-validator notes; the default long-form
+filename is `output/pdf/doctor-report-<subject>-long.pdf`. This export requires
+the `export` extra in the local environment (`pip install -e ".[export]"`).
 
 `hda context migrate` is dry-run by default and applies only deterministic,
 versioned context migrations. Unversioned legacy files without frontmatter are
 treated as outside the supported migration contract and should be normalized
 manually first.
+
+Context writes and migrations also maintain a lightweight append-only audit log
+at `data/context/<subject>/.audit_log.jsonl`. Read it through
+`read_context_audit()` or `hda context audit`; do not treat it as a fifth
+user-facing memory document.
 
 Subject-to-subject comparison is available in both layers:
 - low-level SNP comparison via `hda compare`, `hda compare-variant`, and `search`
@@ -224,7 +250,7 @@ Run the current automated checks from the project root:
 ## Dashboard
 
 ```bash
-uv pip install -e ".[dashboard]"
+uv pip install -e ".[dashboard,export]"
 streamlit run dashboard/app.py
 ```
 

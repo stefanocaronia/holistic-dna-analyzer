@@ -14,6 +14,7 @@ should follow it exactly.
 - Exploratory panels may stay in the repository if they are clearly marked and documented as non-core.
 - Draft or user-customized panels should stay local unless they are promoted after review.
 - A panel is not considered core just because an LLM drafted it.
+- The lifecycle and promotion rules are defined in [docs/PANEL_REVIEW_WORKFLOW.md](docs/PANEL_REVIEW_WORKFLOW.md).
 
 ## Panel File Naming
 
@@ -37,6 +38,9 @@ status: core
 review_status: verified
 version: 1
 last_reviewed: 2026-03-26
+review_outcome: approved_for_core
+review_notes: >
+  Reviewed for repository inclusion and kept intentionally narrow.
 summary: >
   Curated panel for relatively stable nutrient-metabolism associations.
 sources:
@@ -82,6 +86,7 @@ variants:
 - Plain `.yaml` files default to `status=core`.
 - `.experimental.yaml` files default to `status=experimental`.
 - `.draft.yaml` files default to `status=draft`.
+- `review_outcome` and `review_notes` are required for versioned repository panels.
 - `sources` must exist at panel level.
 - `evidence_level` should exist for each variant.
 - Descriptions must avoid diagnostic claims.

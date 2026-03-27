@@ -5,6 +5,10 @@ status: core
 review_status: verified
 version: 1
 last_reviewed: 2026-03-26
+review_outcome: approved_for_core
+review_notes: >
+  Reviewed for repository inclusion and kept intentionally conservative around medication and caffeine-response
+  markers with clearer evidence support.
 summary: >
   Curated pharmacogenomics panel limited to a few comparatively strong, commonly used
   associations affecting clopidogrel activation, caffeine handling, and opioid response.

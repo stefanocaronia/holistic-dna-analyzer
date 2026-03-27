@@ -5,6 +5,10 @@ status: core
 review_status: verified
 version: 1
 last_reviewed: 2026-03-26
+review_outcome: approved_for_core
+review_notes: >
+  Reviewed for repository inclusion with scope limited to stronger immune and gut-inflammation loci that remain
+  useful without overstating causal claims.
 summary: >
   Curated inflammation panel narrowed to a small set of immune-regulation variants with
   comparatively stronger support than many popular cytokine SNP claims. It focuses on

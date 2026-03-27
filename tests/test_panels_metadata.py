@@ -55,6 +55,10 @@ class PanelMetadataTests(unittest.TestCase):
                 "name: Focus\n"
                 "description: Experimental focus panel\n"
                 "category: health\n"
+                "version: 1\n"
+                "last_reviewed: 2026-03-27\n"
+                "review_outcome: experimental_only\n"
+                "review_notes: Kept exploratory after review.\n"
                 "summary: Test summary\n"
                 "sources:\n"
                 "  - type: pubmed\n"
@@ -68,6 +72,10 @@ class PanelMetadataTests(unittest.TestCase):
                 "name: Sleep Boost\n"
                 "description: Draft panel\n"
                 "category: wellness\n"
+                "version: 1\n"
+                "last_reviewed: 2026-03-27\n"
+                "review_outcome: needs_sources\n"
+                "review_notes: Needs stronger provenance before repository inclusion.\n"
                 "summary: Test summary\n"
                 "sources:\n"
                 "  - type: pubmed\n"
@@ -94,6 +102,10 @@ class PanelMetadataTests(unittest.TestCase):
                 "name: APOE Test\n"
                 "description: Test panel\n"
                 "category: health\n"
+                "version: 1\n"
+                "last_reviewed: 2026-03-27\n"
+                "review_outcome: approved_for_core\n"
+                "review_notes: Composite interpretation reviewed for repository inclusion.\n"
                 "summary: Test summary\n"
                 "sources:\n"
                 "  - type: pubmed\n"
@@ -137,6 +149,10 @@ class PanelMetadataTests(unittest.TestCase):
                 "name: Broken\n"
                 "description: Broken panel\n"
                 "category: health\n"
+                "version: 1\n"
+                "last_reviewed: 2026-03-27\n"
+                "review_outcome: approved_for_core\n"
+                "review_notes: Test.\n"
                 "variants:\n"
                 "  - rsid: rs1\n"
                 "    gene: TEST\n"
@@ -196,6 +212,31 @@ class PanelMetadataTests(unittest.TestCase):
         self.assertEqual(summary[0]["rsid"], "rs2")
         self.assertEqual(summary[1]["rsid"], "rs3,rs4")
         self.assertEqual(summary[1]["genotype"], "e3/e4")
+
+    def test_invalid_review_outcome_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "broken_review.experimental.yaml").write_text(
+                "name: Broken Review\n"
+                "description: Experimental panel with invalid review outcome\n"
+                "category: health\n"
+                "version: 1\n"
+                "last_reviewed: 2026-03-27\n"
+                "review_outcome: approved_for_core\n"
+                "review_notes: Wrong outcome for exploratory panel.\n"
+                "summary: Test summary\n"
+                "sources:\n"
+                "  - type: pubmed\n"
+                "    id: '1'\n"
+                "limitations:\n"
+                "  - Test limitation\n"
+                "variants: []\n",
+                encoding="utf-8",
+            )
+
+            with patch.object(panels, "PANELS_DIR", root):
+                with self.assertRaises(ValueError):
+                    load_panel("broken_review")
 
 
 if __name__ == "__main__":

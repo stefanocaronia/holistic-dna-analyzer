@@ -65,6 +65,26 @@ class CliTests(unittest.TestCase):
         self.assertIn("Review", result.output)
         self.assertIn("verified", result.output)
 
+    def test_panel_audit_prints_review_table(self):
+        with patch(
+            "hda.analysis.panels.audit_panels",
+            return_value=[
+                {
+                    "id": "cardiovascular",
+                    "status": "core",
+                    "review_status": "verified",
+                    "review_outcome": "approved_for_core",
+                    "last_reviewed": "2026-03-27",
+                    "issues": [],
+                }
+            ],
+        ):
+            result = self.runner.invoke(main, ["panel-audit"])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Panel Review Audit", result.output)
+        self.assertIn("approved_for", result.output)
+
     def test_whoami_prints_active_subject(self):
         with patch("hda.config.get_active_subject", return_value="stefano"), patch(
             "hda.config.get_subject_profile",
@@ -179,6 +199,119 @@ class CliTests(unittest.TestCase):
         self.assertEqual(result.exit_code, 0)
         self.assertIn("Appended entry", result.output)
 
+    def test_context_docs_list_prints_documents(self):
+        with patch(
+            "hda.context_documents.list_context_documents",
+            return_value={
+                "subject": "stefano",
+                "documents": [
+                    {
+                        "document_date": "2026-03-27",
+                        "category": "labs",
+                        "title": "CBC Report",
+                        "filename": "cbc-report.pdf",
+                        "notes": "PCP upload",
+                    }
+                ],
+            },
+        ):
+            result = self.runner.invoke(main, ["context", "docs", "list"])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Clinical Documents", result.output)
+        self.assertIn("CBC Report", result.output)
+
+    def test_context_docs_inbox_prints_pending_files(self):
+        with patch(
+            "hda.context_documents.list_context_inbox",
+            return_value={
+                "subject": "stefano",
+                "inbox_path": "data/context/stefano/documents_inbox",
+                "documents": [
+                    {
+                        "document_date": "2026-03-27",
+                        "category": "labs",
+                        "title": "CBC Report",
+                        "filename": "cbc-report.pdf",
+                        "relative_path": "2026-03-27/labs/cbc-report.pdf",
+                    }
+                ],
+            },
+        ):
+            result = self.runner.invoke(main, ["context", "docs", "inbox"])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Pending Inbox Documents", result.output)
+        self.assertIn("cbc-report.pdf", result.output)
+
+    def test_context_docs_import_imports_all_pending_files(self):
+        with patch(
+            "hda.context_documents.import_context_inbox",
+            return_value={
+                "subject": "stefano",
+                "imported": [
+                    {
+                        "document_date": "2026-03-27",
+                        "category": "labs",
+                        "title": "CBC Report",
+                        "filename": "cbc-report.pdf",
+                        "relative_path": "documents/2026-03-27/labs/cbc-report.pdf",
+                    }
+                ],
+            },
+        ) as import_context_inbox:
+            result = self.runner.invoke(main, ["context", "docs", "import"])
+
+        self.assertEqual(result.exit_code, 0)
+        import_context_inbox.assert_called_once_with(
+            subject=None,
+            document_date=None,
+            category=None,
+            move=True,
+            integrate=True,
+        )
+        self.assertIn("Imported Documents", result.output)
+        self.assertIn("cbc-report.pdf", result.output)
+
+    def test_context_docs_add_stores_document(self):
+        with patch(
+            "hda.context_documents.import_context_document",
+            return_value={
+                "subject": "stefano",
+                "document": {
+                    "filename": "cbc-report.pdf",
+                    "relative_path": "documents/2026-03-27/labs/cbc-report.pdf",
+                },
+            },
+        ) as import_context_document:
+            result = self.runner.invoke(
+                main,
+                [
+                    "context",
+                    "docs",
+                    "add",
+                    "C:\\reports\\cbc-report.pdf",
+                    "--date",
+                    "2026-03-27",
+                    "--category",
+                    "labs",
+                ],
+            )
+
+        self.assertEqual(result.exit_code, 0)
+        import_context_document.assert_called_once_with(
+            "C:\\reports\\cbc-report.pdf",
+            subject=None,
+            document_date="2026-03-27",
+            category="labs",
+            title=None,
+            notes=None,
+            move=False,
+            integrate=True,
+        )
+        self.assertIn("Stored document", result.output)
+        self.assertIn("cbc-report.pdf", result.output)
+
     def test_context_validate_prints_issues(self):
         with patch(
             "hda.context_validator.validate_context",
@@ -238,14 +371,39 @@ class CliTests(unittest.TestCase):
         self.assertIn("needs_migration", result.output)
         self.assertIn("Dry run only", result.output)
 
+    def test_context_audit_prints_recent_events(self):
+        with patch(
+            "hda.context_audit.read_context_audit",
+            return_value={
+                "subject": "stefano",
+                "path": "data/context/stefano/.audit_log.jsonl",
+                "entries": [
+                    {
+                        "timestamp": "2026-03-27T12:00:00Z",
+                        "subject": "stefano",
+                        "event_type": "upsert_block",
+                        "section": "findings",
+                        "details": {"block_id": "dopamine_reward_deficiency"},
+                    }
+                ],
+            },
+        ):
+            result = self.runner.invoke(main, ["context", "audit"])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Context audit for stefano", result.output)
+        self.assertIn("upsert_block", result.output)
+        self.assertIn("block_id=dopamine_reward", result.output)
+
     def test_export_doctor_report_command_works(self):
         with patch(
             "hda.doctor_report.export_doctor_report",
             return_value="output/pdf/doctor-report-stefano.pdf",
-        ):
-            result = self.runner.invoke(main, ["export", "doctor-report"])
+        ) as export_doctor_report:
+            result = self.runner.invoke(main, ["export", "doctor-report", "--variant", "long"])
 
         self.assertEqual(result.exit_code, 0)
+        export_doctor_report.assert_called_once_with(None, None, variant="long")
         self.assertIn("Doctor report exported", result.output)
         self.assertIn("doctor-report-stefano.pdf", result.output)
 

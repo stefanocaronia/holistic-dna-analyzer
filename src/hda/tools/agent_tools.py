@@ -17,12 +17,17 @@ __all__ = [
     "estimate_relatedness",
     "export_doctor_report",
     "get_stats",
+    "import_context_inbox",
+    "import_context_document",
+    "list_context_inbox",
+    "list_context_documents",
     "list_context_sections",
     "list_all_subjects",
     "lookup_snp",
     "move_context_block",
     "migrate_context",
     "notable_findings",
+    "read_context_audit",
     "read_context_block",
     "replace_context_entry",
     "replace_context_section",
@@ -44,7 +49,12 @@ from hda.analysis.panels import (
 )
 from hda.api.annotator import annotate_snp_sync
 from hda.config import get_active_subject, get_subject_profile, list_subjects
+from hda.context_documents import import_context_inbox as import_context_inbox_data
+from hda.context_documents import import_context_document as import_context_document_data
+from hda.context_documents import list_context_inbox as list_context_inbox_data
+from hda.context_documents import list_context_documents as list_context_documents_data
 from hda.context_store import append_context_entry as append_context_entry_data
+from hda.context_audit import read_context_audit as read_context_audit_data
 from hda.context_store import archive_context_block as archive_context_block_data
 from hda.context_store import list_context_sections as list_context_sections_data
 from hda.context_store import move_context_block as move_context_block_data
@@ -98,6 +108,41 @@ def list_all_subjects() -> dict:
     return {"active": active, "subjects": subjects}
 
 
+def list_context_documents(subject: str | None = None) -> dict:
+    """List stored clinical documents for a subject."""
+    return list_context_documents_data(subject)
+
+
+def list_context_inbox(subject: str | None = None) -> dict:
+    """List pending files dropped into the subject document inbox."""
+    return list_context_inbox_data(subject)
+
+
+def import_context_document(
+    source_path: str,
+    subject: str | None = None,
+    document_date: str | None = None,
+    category: str | None = None,
+    title: str | None = None,
+    notes: str | None = None,
+    move: bool = False,
+    integrate: bool = True,
+) -> dict:
+    """Import a clinical document into the subject context archive."""
+    return import_context_document_data(source_path, subject, document_date, category, title, notes, move, integrate)
+
+
+def import_context_inbox(
+    subject: str | None = None,
+    document_date: str | None = None,
+    category: str | None = None,
+    move: bool = True,
+    integrate: bool = True,
+) -> dict:
+    """Import every pending file from the subject document inbox."""
+    return import_context_inbox_data(subject, document_date, category, move, integrate)
+
+
 def write_context_document(section: str, content: str, subject: str | None = None) -> dict:
     """Replace an entire context document while preserving frontmatter."""
     return write_context_document_data(section, content, subject)
@@ -121,6 +166,11 @@ def read_context(subject: str | None = None, section: str | None = None) -> dict
 def read_context_block(section: str, block_id: str, subject: str | None = None) -> dict:
     """Read one structured block from findings, health_actions, or session_notes."""
     return read_context_block_data(section, block_id, subject)
+
+
+def read_context_audit(subject: str | None = None, limit: int = 50) -> dict:
+    """Read recent audit events for a subject context folder."""
+    return read_context_audit_data(subject, limit)
 
 
 def upsert_context_block(
@@ -178,9 +228,13 @@ def validate_context(subject: str | None = None, apply: bool = False) -> dict:
     return validate_context_data(subject, apply)
 
 
-def export_doctor_report(subject: str | None = None, output_path: str | None = None) -> str:
-    """Export a simple doctor-facing PDF report."""
-    return export_doctor_report_data(subject, output_path)
+def export_doctor_report(
+    subject: str | None = None,
+    output_path: str | None = None,
+    variant: str = "short",
+) -> str:
+    """Export a doctor-facing PDF report in short or long form."""
+    return export_doctor_report_data(subject, output_path, variant)
 
 
 def lookup_snp(rsid: str, subject: str | None = None) -> dict:

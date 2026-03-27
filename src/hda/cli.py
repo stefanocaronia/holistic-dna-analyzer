@@ -195,6 +195,39 @@ def context_show(section: str | None, subject: str | None):
         console.print(item["content"] or "", markup=False)
 
 
+@context.command("audit")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--limit", type=int, default=20, show_default=True, help="Maximum number of recent audit entries")
+def context_audit(subject: str | None, limit: int):
+    """Show recent context audit events for a subject."""
+    from hda.context_audit import read_context_audit
+
+    try:
+        payload = read_context_audit(subject, limit)
+    except KeyError as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+    console.print(f"Context audit for [bold]{payload['subject']}[/]")
+    if not payload["entries"]:
+        console.print("[yellow]No audit entries found.[/]")
+        return
+
+    table = Table(title="Context Audit Trail")
+    table.add_column("Timestamp", style="dim")
+    table.add_column("Event", style="bold")
+    table.add_column("Section")
+    table.add_column("Details")
+    for entry in payload["entries"]:
+        detail_text = ", ".join(f"{key}={value}" for key, value in entry.get("details", {}).items()) or "—"
+        table.add_row(
+            entry.get("timestamp", "—"),
+            entry.get("event_type", "—"),
+            str(entry.get("section") or "—"),
+            detail_text,
+        )
+    console.print(table)
+
+
 @context.command("validate")
 @click.option("--subject", "-s", default=None, help="Subject key (default: active)")
 @click.option("--apply", "apply_fixes", is_flag=True, help="Apply safe automatic fixes where supported")
@@ -202,7 +235,11 @@ def context_validate(subject: str | None, apply_fixes: bool):
     """Validate context coherence against verified vs non-verified evidence."""
     from hda.context_validator import validate_context
 
-    payload = validate_context(subject, apply_fixes)
+    try:
+        payload = validate_context(subject, apply_fixes)
+    except KeyError as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
 
     console.print(f"Validated context for [bold]{payload['subject']}[/]")
     console.print(f"Verified panels: {', '.join(payload['verified_panels'])}")
@@ -463,6 +500,174 @@ def context_replace_entry(
     console.print(f"[green]Replaced entry[/] {heading} in [bold]{payload['id']}[/]")
 
 
+@context.group("docs")
+def context_docs():
+    """Manage dated clinical documents under a subject context folder."""
+    pass
+
+
+@context_docs.command("list")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+def context_docs_list(subject: str | None):
+    """List archived clinical documents for a subject."""
+    from hda.context_documents import list_context_documents
+
+    try:
+        payload = list_context_documents(subject)
+    except KeyError as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    console.print(f"Context documents for [bold]{payload['subject']}[/]")
+    if not payload["documents"]:
+        console.print("[yellow]No context documents found.[/]")
+        return
+
+    table = Table(title="Clinical Documents")
+    table.add_column("Date", style="bold")
+    table.add_column("Category")
+    table.add_column("Title")
+    table.add_column("File")
+    table.add_column("Notes")
+    for item in payload["documents"]:
+        table.add_row(
+            str(item.get("document_date") or "—"),
+            str(item.get("category") or "general"),
+            str(item.get("title") or "—"),
+            str(item.get("filename") or "—"),
+            str(item.get("notes") or "—"),
+        )
+    console.print(table)
+
+
+@context_docs.command("inbox")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+def context_docs_inbox(subject: str | None):
+    """List files waiting in the subject document inbox."""
+    from hda.context_documents import list_context_inbox
+
+    try:
+        payload = list_context_inbox(subject)
+    except KeyError as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    console.print(f"Document inbox for [bold]{payload['subject']}[/]: {payload['inbox_path']}")
+    if not payload["documents"]:
+        console.print("[yellow]Inbox is empty.[/]")
+        return
+
+    table = Table(title="Pending Inbox Documents")
+    table.add_column("Date", style="bold")
+    table.add_column("Category")
+    table.add_column("Title")
+    table.add_column("File")
+    table.add_column("Inbox Path")
+    for item in payload["documents"]:
+        table.add_row(
+            str(item.get("document_date") or "—"),
+            str(item.get("category") or "general"),
+            str(item.get("title") or "—"),
+            str(item.get("filename") or "—"),
+            str(item.get("relative_path") or "—"),
+        )
+    console.print(table)
+
+
+@context_docs.command("import")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--date", "document_date", default=None, help="Override document date for all imported files")
+@click.option("--category", default=None, help="Override category for all imported files")
+@click.option("--move/--copy", default=True, show_default=True, help="Move or copy files out of the inbox")
+@click.option("--integrate/--archive-only", default=True, show_default=True, help="Update clinical_context and sidecar markdown")
+def context_docs_import(
+    subject: str | None,
+    document_date: str | None,
+    category: str | None,
+    move: bool,
+    integrate: bool,
+):
+    """Import every pending file from the subject document inbox."""
+    from hda.context_documents import import_context_inbox
+
+    try:
+        payload = import_context_inbox(
+            subject=subject,
+            document_date=document_date,
+            category=category,
+            move=move,
+            integrate=integrate,
+        )
+    except (FileNotFoundError, KeyError, ValueError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    console.print(f"Document inbox import for [bold]{payload['subject']}[/]")
+    if not payload["imported"]:
+        console.print("[yellow]No inbox documents to import.[/]")
+        return
+
+    table = Table(title="Imported Documents")
+    table.add_column("Date", style="bold")
+    table.add_column("Category")
+    table.add_column("Title")
+    table.add_column("File")
+    table.add_column("Archive Path")
+    for item in payload["imported"]:
+        table.add_row(
+            str(item.get("document_date") or "—"),
+            str(item.get("category") or "general"),
+            str(item.get("title") or "—"),
+            str(item.get("filename") or "—"),
+            str(item.get("relative_path") or "—"),
+        )
+    console.print(table)
+
+
+@context_docs.command("add")
+@click.argument("source_path")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--date", "document_date", default=None, help="Document date (ISO YYYY-MM-DD)")
+@click.option("--category", default="general", show_default=True, help="Document category, e.g. labs, imaging, visit")
+@click.option("--title", default=None, help="Display title")
+@click.option("--notes", default=None, help="Short notes to persist in the manifest")
+@click.option("--move", is_flag=True, help="Move instead of copying the source file")
+@click.option("--integrate/--archive-only", default=True, show_default=True, help="Update clinical_context and sidecar markdown")
+def context_docs_add(
+    source_path: str,
+    subject: str | None,
+    document_date: str | None,
+    category: str,
+    title: str | None,
+    notes: str | None,
+    move: bool,
+    integrate: bool,
+):
+    """Copy or move a clinical document into the subject context archive."""
+    from hda.context_documents import import_context_document
+
+    try:
+        payload = import_context_document(
+            source_path,
+            subject=subject,
+            document_date=document_date,
+            category=category,
+            title=title,
+            notes=notes,
+            move=move,
+            integrate=integrate,
+        )
+    except (FileNotFoundError, KeyError, ValueError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    doc = payload["document"]
+    console.print(
+        f"[green]Stored document[/] {doc['filename']} for [bold]{payload['subject']}[/] "
+        f"under {doc['relative_path']}"
+    )
+
+
 @main.group()
 def export():
     """Export human-readable artifacts from HDA."""
@@ -472,12 +677,19 @@ def export():
 @export.command("doctor-report")
 @click.option("--subject", "-s", default=None, help="Subject key (default: active)")
 @click.option("--output", "output_path", default=None, help="Output PDF path")
-def export_doctor_report_cmd(subject: str | None, output_path: str | None):
-    """Export a simple doctor-facing PDF report."""
+@click.option(
+    "--variant",
+    type=click.Choice(["short", "long"], case_sensitive=False),
+    default="short",
+    show_default=True,
+    help="Report variant",
+)
+def export_doctor_report_cmd(subject: str | None, output_path: str | None, variant: str):
+    """Export a doctor-facing PDF report."""
     from hda.doctor_report import export_doctor_report
 
     try:
-        path = export_doctor_report(subject, output_path)
+        path = export_doctor_report(subject, output_path, variant=variant)
     except Exception as e:
         console.print(f"[red]{e}[/]")
         raise SystemExit(1)
@@ -492,7 +704,11 @@ def snp(rsid: str, subject: str | None):
     """Look up a single SNP by rsid."""
     from hda.db.query import get_snp
 
-    result = get_snp(rsid, subject)
+    try:
+        result = get_snp(rsid, subject)
+    except (FileNotFoundError, KeyError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
     if result is None:
         console.print(f"[yellow]SNP {rsid} not found.[/]")
         raise SystemExit(1)
@@ -557,8 +773,12 @@ def stats(subject: str | None):
     """Show chromosome summary for a subject."""
     from hda.db.query import chromosome_summary, count_snps
 
-    total = count_snps(subject)
-    summary = chromosome_summary(subject)
+    try:
+        total = count_snps(subject)
+        summary = chromosome_summary(subject)
+    except (FileNotFoundError, KeyError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
 
     table = Table(title=f"Chromosome Summary ({total:,} total SNPs)")
     table.add_column("Chromosome", justify="right")
@@ -749,8 +969,12 @@ def annotate(rsid: str, subject: str | None, source: tuple, refresh: bool):
 
     sources = list(source) if source else None
 
-    with console.status(f"Fetching annotations for [bold]{rsid}[/]..."):
-        result = asyncio.run(annotate_snp(rsid, subject, sources, refresh))
+    try:
+        with console.status(f"Fetching annotations for [bold]{rsid}[/]..."):
+            result = asyncio.run(annotate_snp(rsid, subject, sources, refresh))
+    except (FileNotFoundError, KeyError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
 
     if not result.get("sources"):
         console.print(f"[yellow]No annotations found for {rsid}.[/]")
@@ -797,6 +1021,42 @@ def panels():
     console.print(table)
 
 
+@main.command("panel-audit")
+def panel_audit():
+    """Audit panel review metadata and repository-readiness state."""
+    from hda.analysis.panels import audit_panels
+
+    audits = audit_panels()
+    table = Table(title="Panel Review Audit")
+    table.add_column("ID", style="bold")
+    table.add_column("Status")
+    table.add_column("Review")
+    table.add_column("Outcome")
+    table.add_column("Last Reviewed")
+    table.add_column("Issues", justify="right")
+
+    for item in audits:
+        table.add_row(
+            item["id"],
+            item["status"],
+            item["review_status"],
+            str(item.get("review_outcome") or "—"),
+            str(item.get("last_reviewed") or "—"),
+            str(len(item.get("issues", []))),
+        )
+
+    console.print(table)
+
+    problem_count = 0
+    for item in audits:
+        for issue in item.get("issues", []):
+            problem_count += 1
+            console.print(f"[red]{item['id']}:[/] {issue}")
+
+    if problem_count:
+        raise SystemExit(1)
+
+
 @main.command()
 @click.argument("panel_id")
 @click.option("--subject", "-s", default=None, help="Subject key (default: active)")
@@ -806,7 +1066,7 @@ def analyze(panel_id: str, subject: str | None):
 
     try:
         result = analyze_panel(panel_id, subject)
-    except FileNotFoundError as e:
+    except (FileNotFoundError, KeyError) as e:
         console.print(f"[red]{e}[/]")
         raise SystemExit(1)
 
@@ -893,7 +1153,11 @@ def report(subject: str | None):
     """Show notable findings across all panels."""
     from hda.analysis.panels import get_risk_summary
 
-    findings = get_risk_summary(subject)
+    try:
+        findings = get_risk_summary(subject)
+    except (FileNotFoundError, KeyError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
 
     if not findings:
         console.print("[green]No notable findings across all panels.[/]")

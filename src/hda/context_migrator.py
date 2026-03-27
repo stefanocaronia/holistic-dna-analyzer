@@ -6,6 +6,7 @@ import re
 import shutil
 
 from hda.config import get_active_subject, get_context_path
+from hda.context_audit import append_context_audit
 from hda.context_store import (
     CONTEXT_SECTIONS,
     CURRENT_CONTEXT_SCHEMA_VERSION,
@@ -203,7 +204,7 @@ def _normalize_current_document(subject: str, section: str, body: str, metadata:
 
     body = _ensure_section_title(body, subject, section)
 
-    if section in {"profile_summary", "health_actions"}:
+    if section in {"profile_summary", "clinical_context", "health_actions"}:
         synced = _sync_last_updated_line(body, metadata["last_updated"])
         if synced != body:
             changes.append("synchronized in-body Last updated line")
@@ -329,6 +330,12 @@ def migrate_context(
         for section_id, migrated_raw in pending_writes.items():
             path = context_path / CONTEXT_SECTIONS[section_id]["filename"]
             path.write_text(migrated_raw, encoding="utf-8")
+            append_context_audit(
+                "migrate_section",
+                subject=subject,
+                section=section_id,
+                details={"target_schema_version": CURRENT_CONTEXT_SCHEMA_VERSION},
+            )
         for plan in plan_sections:
             if plan["id"] in pending_writes:
                 plan["applied"] = True

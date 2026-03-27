@@ -12,6 +12,12 @@ data/sources/*
 !data/sources/dna-example.csv
 data/db/*.db
 data/context/*/
+!data/context/.subject-template/
+!data/context/.subject-template/.gitkeep
+!data/context/.subject-template/documents/
+!data/context/.subject-template/documents/.gitkeep
+!data/context/.subject-template/documents_inbox/
+!data/context/.subject-template/documents_inbox/.gitkeep
 output/
 tmp/
 

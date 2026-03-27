@@ -5,6 +5,10 @@ status: experimental
 review_status: exploratory
 version: 1
 last_reviewed: 2026-03-26
+review_outcome: experimental_only
+review_notes: >
+  Kept exploratory because some nicotine and alcohol markers are plausible, but the domain remains vulnerable to
+  overstatement and context omissions.
 summary: >
   Exploratory addiction panel narrowed to a few loci with comparatively strong support for
   nicotine dependence or alcohol-response biology. It avoids broad personality claims and

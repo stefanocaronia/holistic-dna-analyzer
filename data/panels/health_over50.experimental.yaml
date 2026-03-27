@@ -5,6 +5,10 @@ status: experimental
 review_status: exploratory
 version: 1
 last_reviewed: 2026-03-26
+review_outcome: experimental_only
+review_notes: >
+  Kept exploratory because it mixes useful screening prompts with context-heavy interpretation that should not be
+  promoted to a trusted default panel.
 summary: >
   Exploratory panel for age-related screening themes. It now focuses on a smaller subset
   of loci with more defensible links to prostate-cancer susceptibility, PSA baseline

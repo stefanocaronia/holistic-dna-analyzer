@@ -5,6 +5,10 @@ status: experimental
 review_status: exploratory
 version: 1
 last_reviewed: 2026-03-26
+review_outcome: experimental_only
+review_notes: >
+  Kept in the repository as exploratory because the user value is real, but the chip-level evidence remains too thin
+  for trusted-core inclusion.
 summary: >
   Exploratory sleep panel narrowed to a few loci with at least some direct literature
   support for chronotype, circadian preference, or sleep homeostasis. It is useful for

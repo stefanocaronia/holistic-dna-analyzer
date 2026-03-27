@@ -5,6 +5,10 @@ status: core
 review_status: verified
 version: 1
 last_reviewed: 2026-03-26
+review_outcome: approved_for_core
+review_notes: >
+  Reviewed for repository inclusion and intentionally limited to comparatively stable cardiovascular markers with
+  explicit provenance and conservative wording.
 summary: >
   Curated cardiovascular panel limited to a small number of comparatively stable markers:
   APOE isoform status, interpreted as a composite from rs429358 and rs7412, and the

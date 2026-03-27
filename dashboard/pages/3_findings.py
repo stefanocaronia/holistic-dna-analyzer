@@ -3,7 +3,7 @@
 import streamlit as st
 import pandas as pd
 
-from hda.config import get_active_subject, list_subjects
+from dashboard.subject_selector import select_subject
 from hda.analysis.panels import get_risk_summary
 
 
@@ -28,16 +28,11 @@ ACTIONABLE_ADVICE = {
 def render():
     st.title("⚠️ HDA — Notable Findings")
 
-    subjects = list_subjects()
-    active = get_active_subject()
-    subject_keys = list(subjects.keys())
-
-    selected = st.sidebar.selectbox(
-        "Subject",
-        subject_keys,
-        index=subject_keys.index(active) if active in subject_keys else 0,
-        key="findings_subject",
-    )
+    try:
+        selected = select_subject(st.sidebar, key="findings_subject")
+    except RuntimeError as e:
+        st.error(str(e))
+        return
 
     try:
         findings = get_risk_summary(selected)

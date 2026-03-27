@@ -5,6 +5,10 @@ status: core
 review_status: verified
 version: 1
 last_reviewed: 2026-03-26
+review_outcome: approved_for_core
+review_notes: >
+  Reviewed for repository inclusion after narrowing to micronutrient tendencies with usable provenance and avoiding
+  deterministic supplement claims.
 summary: >
   Curated micronutrient-focused panel covering vitamin A conversion, vitamin D transport,
   B12-related absorption tendencies, vitamin B6 level associations, and omega-3 fatty acid

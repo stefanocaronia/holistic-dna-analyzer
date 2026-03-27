@@ -9,6 +9,10 @@ This is a maturity checklist for the project. It is intentionally not tied to a 
 - [x] Public Python API is documented as a stable surface
 - [x] CLI commands have automated coverage for success and failure paths
 - [x] CI runs smoke checks automatically on every change
+- [x] Persistent context has a documented schema, stable API surface, and automated tests
+- [x] Context validation exists for verified vs exploratory evidence boundaries
+- [x] Versioned context migration exists for supported schema changes
+- [x] Doctor-facing PDF export exists
 
 ## Import Pipeline
 
@@ -27,11 +31,12 @@ This is a maturity checklist for the project. It is intentionally not tied to a 
 - [x] Panel-driven analysis exists and is usable through CLI and agent tools
 - [x] Core panel schema and provenance requirements are enforced consistently
 - [x] Panel filename conventions (`.yaml`, `.experimental.yaml`, `.draft.yaml`) are enforced consistently
+- [x] Panel review lifecycle is documented and audited (`draft` -> `experimental` -> `verified`)
 - [x] Core panels include panel-level provenance metadata
 - [x] Core panels include variant-level evidence metadata
 - [x] Panel engine supports validated multi-SNP / haplotype interpretations where single SNPs are insufficient (for example APOE)
 - [x] Every panel kept in the core set is reviewed, improved, and promoted to `verified`
-- [ ] Panels have automated regression tests against fixture data
+- [x] Panels have automated regression tests against fixture data
 - [x] Annotation fetch/caching paths have automated tests
 - [x] Risk summary behavior is covered by tests
 
@@ -52,10 +57,12 @@ This is a maturity checklist for the project. It is intentionally not tied to a 
 
 - [x] Database access only accepts configured subject keys
 - [x] Context folder paths are derived from configured subject keys
-- [ ] Automated tests cover subject isolation across CLI, API tools, and dashboard flows
-- [ ] Session context loading/writing is routed through validated helper functions instead of ad hoc paths
+- [x] Automated tests cover subject isolation across CLI, API tools, and dashboard flows
+- [x] Session context loading/writing is routed through validated helper functions instead of ad hoc paths
 - [ ] Optional per-subject export / backup commands exist
 - [x] Sensitive-data handling and local family-use assumptions are documented explicitly
+- [x] Repository ignores raw sources, subject context, generated reports, and temp artifacts by default
+- [x] CI checks that sensitive user data paths are not accidentally tracked
 - [ ] Relatedness heuristics are validated against known family relationships or pruned marker sets
 
 ## Current Focus
@@ -65,6 +72,15 @@ This is a maturity checklist for the project. It is intentionally not tied to a 
 - [ ] Validate the new provider imports on real 23andMe and AncestryDNA exports
 - [x] Decide and document a stable testing command for contributors
 - [x] Improve each core panel and move it to verified status with provenance and safer wording
+- [x] Introduce structured context memory with schema, validation, migration, and doctor-report export
+
+## Next Priorities
+
+- [x] Add semantic guardrails that detect duplicated findings or contradictions across `profile_summary`, `findings`, and `health_actions`
+- [x] Add audit trail metadata for context writes and migrations
+- [x] Improve doctor export into short/long report variants and clearer verified vs exploratory separation
+- [ ] Add optional backup/export CLI commands per subject
+- [x] Clarify dependency tiers (`core` vs export/dashboard extras) in packaging and docs
 
 ## Exploratory Panel Triage
 

@@ -3,7 +3,7 @@
 import streamlit as st
 import pandas as pd
 
-from hda.config import list_subjects
+from dashboard.subject_selector import get_dashboard_subject_state
 from hda.db.query import count_snps, compare_subjects
 from hda.analysis.panels import analyze_panel, list_panels
 
@@ -11,8 +11,11 @@ from hda.analysis.panels import analyze_panel, list_panels
 def render():
     st.title("🔀 HDA — Compare Subjects")
 
-    subjects = list_subjects()
-    subject_keys = list(subjects.keys())
+    try:
+        _, subject_keys, _ = get_dashboard_subject_state()
+    except RuntimeError as e:
+        st.error(str(e))
+        return
 
     if len(subject_keys) < 2:
         st.info("You need at least 2 subjects to compare. Add another subject to `config.yaml` and import their data.")

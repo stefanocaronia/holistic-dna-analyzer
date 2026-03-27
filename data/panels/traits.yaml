@@ -5,6 +5,10 @@ status: core
 review_status: verified
 version: 1
 last_reviewed: 2026-03-26
+review_outcome: approved_for_core
+review_notes: >
+  Reviewed for repository inclusion because the retained visible-trait associations are relatively stable and low-risk
+  from an interpretation standpoint.
 summary: >
   Curated physical-trait panel focused on a small set of highly recognizable genotype-phenotype
   associations for eye colour, red-hair tendency, and earwax/body-odour type.

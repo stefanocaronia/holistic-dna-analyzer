@@ -1,0 +1,187 @@
+subject:
+  key: fixture_subject
+  name: Fixture Subject
+
+snps:
+  - rsid: rs1333049
+    chromosome: "9"
+    position: 1
+    genotype: CC
+  - rsid: rs429358
+    chromosome: "19"
+    position: 2
+    genotype: TC
+  - rsid: rs7412
+    chromosome: "19"
+    position: 3
+    genotype: CC
+  - rsid: rs3024505
+    chromosome: "1"
+    position: 4
+    genotype: CT
+  - rsid: rs2476601
+    chromosome: "1"
+    position: 5
+    genotype: GA
+  - rsid: rs1800871
+    chromosome: "1"
+    position: 6
+    genotype: TT
+  - rsid: rs4988235
+    chromosome: "2"
+    position: 7
+    genotype: GG
+  - rsid: rs1801282
+    chromosome: "3"
+    position: 8
+    genotype: CG
+  - rsid: rs9939609
+    chromosome: "16"
+    position: 9
+    genotype: AA
+  - rsid: rs1800562
+    chromosome: "6"
+    position: 10
+    genotype: GA
+  - rsid: rs7903146
+    chromosome: "10"
+    position: 11
+    genotype: CT
+  - rsid: rs12934922
+    chromosome: "16"
+    position: 12
+    genotype: AT
+  - rsid: rs2282679
+    chromosome: "4"
+    position: 13
+    genotype: GG
+  - rsid: rs602662
+    chromosome: "19"
+    position: 14
+    genotype: AA
+  - rsid: rs4654748
+    chromosome: "1"
+    position: 15
+    genotype: CT
+  - rsid: rs174546
+    chromosome: "11"
+    position: 16
+    genotype: TT
+  - rsid: rs7501331
+    chromosome: "16"
+    position: 17
+    genotype: CT
+  - rsid: rs4588
+    chromosome: "4"
+    position: 18
+    genotype: GT
+  - rsid: rs4244285
+    chromosome: "10"
+    position: 19
+    genotype: GA
+  - rsid: rs762551
+    chromosome: "15"
+    position: 20
+    genotype: AC
+  - rsid: rs1799971
+    chromosome: "6"
+    position: 21
+    genotype: AG
+  - rsid: rs12913832
+    chromosome: "15"
+    position: 22
+    genotype: AG
+  - rsid: rs1805007
+    chromosome: "16"
+    position: 23
+    genotype: CT
+  - rsid: rs17822931
+    chromosome: "16"
+    position: 24
+    genotype: TT
+
+expected_panels:
+  cardiovascular:
+    variants:
+      rs1333049: higher_risk
+    composites:
+      apoe_isoform: increased_risk
+  inflammation:
+    variants:
+      rs3024505: moderate_risk
+      rs2476601: increased_risk
+      rs1800871: higher_risk
+  nutrition_metabolism:
+    variants:
+      rs4988235: lactose_intolerant
+      rs1801282: protective
+      rs9939609: higher_risk
+      rs1800562: carrier
+      rs7903146: moderate_risk
+  nutrition_micronutrients:
+    variants:
+      rs12934922: reduced
+      rs2282679: significantly_reduced
+      rs602662: reduced
+      rs4654748: reduced
+      rs174546: poor
+      rs7501331: reduced
+      rs4588: reduced
+  pharmacogenomics:
+    variants:
+      rs4244285: star2_carrier
+      rs762551: slower_caffeine_clearance
+      rs1799971: altered
+  traits:
+    variants:
+      rs12913832: mixed
+      rs1805007: carrier
+      rs17822931: dry
+
+expected_notable:
+  - rsid: rs1333049
+    panel_review_status: verified
+  - rsid: rs429358,rs7412
+    panel_review_status: verified
+  - rsid: rs3024505
+    panel_review_status: verified
+  - rsid: rs2476601
+    panel_review_status: verified
+  - rsid: rs1800871
+    panel_review_status: verified
+  - rsid: rs4988235
+    panel_review_status: verified
+  - rsid: rs9939609
+    panel_review_status: verified
+  - rsid: rs1800562
+    panel_review_status: verified
+  - rsid: rs7903146
+    panel_review_status: verified
+  - rsid: rs12934922
+    panel_review_status: verified
+  - rsid: rs2282679
+    panel_review_status: verified
+  - rsid: rs602662
+    panel_review_status: verified
+  - rsid: rs4654748
+    panel_review_status: verified
+  - rsid: rs174546
+    panel_review_status: verified
+  - rsid: rs7501331
+    panel_review_status: verified
+  - rsid: rs4588
+    panel_review_status: verified
+  - rsid: rs4244285
+    panel_review_status: verified
+  - rsid: rs762551
+    panel_review_status: verified
+  - rsid: rs1799971
+    panel_review_status: verified
+  - rsid: rs12913832
+    panel_review_status: verified
+  - rsid: rs1805007
+    panel_review_status: verified
+  - rsid: rs17822931
+    panel_review_status: verified
+  - rsid: rs9939609
+    panel_review_status: exploratory

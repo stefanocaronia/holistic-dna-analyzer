@@ -4,6 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import hda.config as config
+from hda.context_audit import read_context_audit
 from hda.context_migrator import migrate_context
 
 
@@ -96,6 +97,10 @@ class ContextMigratorTests(unittest.TestCase):
         backed_up_findings = (backup_dir / "findings.md").read_text(encoding="utf-8")
         self.assertIn("schema_version: 0", backed_up_findings)
         self.assertIn("## dopamine_reward_deficiency", backed_up_findings)
+
+        audit = read_context_audit()
+        self.assertEqual([entry["event_type"] for entry in audit["entries"]], ["migrate_section", "migrate_section"])
+        self.assertEqual({entry["section"] for entry in audit["entries"]}, {"findings", "health_actions"})
 
     def test_migrate_context_skips_unversioned_documents(self):
         unversioned = self.root / "data" / "context" / "alice" / "session_notes.md"

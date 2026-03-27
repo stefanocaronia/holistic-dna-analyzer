@@ -27,7 +27,31 @@ jobs:
         run: python -m unittest discover -s tests -v
 
       - name: CLI smoke test
-        run: python -m hda.cli panels
+        run: |
+          python -m hda.cli panels
+          python -m hda.cli panel-audit
+          python -m hda.cli context --help
+          python -m hda.cli export --help
 
       - name: Agent API smoke test
-        run: python -c "from hda.tools import available_panels; print(len(available_panels()))"
+        run: python -c "from hda.tools import available_panels, migrate_context; print(len(available_panels())); print(callable(migrate_context))"
+
+      - name: Guard against tracked sensitive data
+        shell: bash
+        run: |
+          set -euo pipefail
+          blocked="$(git ls-files \
+            'config.yaml' \
+            'data/db/**' \
+            'data/context/**' \
+            'output/**' \
+            'tmp/**' \
+            'data/sources/**' \
+            ':(exclude)data/db/.gitkeep' \
+            ':(exclude)data/context/.gitkeep' \
+            ':(exclude)data/sources/dna-example.csv')"
+          if [ -n "$blocked" ]; then
+            echo "Tracked sensitive or generated files detected:"
+            echo "$blocked"
+            exit 1
+          fi
