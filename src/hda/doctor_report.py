@@ -296,7 +296,7 @@ def export_doctor_report(
     except ImportError as e:
         raise RuntimeError(
             "PDF export requires reportlab. Install the export extras with "
-            "'.\\.venv\\Scripts\\python.exe -m pip install -e .[export]'."
+            "'python -m pip install -e \".[export]\"'."
         ) from e
 
     subject = subject or get_active_subject()
