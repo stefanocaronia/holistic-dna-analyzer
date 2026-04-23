@@ -93,6 +93,8 @@ extracted Markdown sidecar in the archive and a compact index entry in
 - `compare(subject_a, subject_b, only_different=True, chromosome=None, limit=100)`
 - `compare_panel(panel_id, subject_a, subject_b)`
 - `estimate_relatedness(subject_a, subject_b)`
+- `estimate_ancestry(subject=None, force_refresh=False, min_markers=6)`
+- `estimate_neanderthal_ancestry(subject=None, force_refresh=False)`
 
 ### Annotation
 
@@ -208,6 +210,8 @@ The Python API mirrors the CLI:
 - `compare_variant("rs429358", "alice", "bob")` <-> `hda compare-variant rs429358 alice bob`
 - `compare_panel("cardiovascular", "alice", "bob")` <-> `hda compare-panel cardiovascular alice bob`
 - `estimate_relatedness("alice", "bob")` <-> `hda relatedness alice bob`
+- `estimate_ancestry()` <-> `hda ancestry`
+- `estimate_neanderthal_ancestry()` <-> `hda neanderthal`
 - `notable_findings()` <-> `hda report`
 
 If you are building an agent, prefer the Python API. If you are scripting from

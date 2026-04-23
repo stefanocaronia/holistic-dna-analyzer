@@ -14,6 +14,8 @@ __all__ = [
     "compare",
     "compare_panel",
     "compare_variant",
+    "estimate_ancestry",
+    "estimate_neanderthal_ancestry",
     "estimate_relatedness",
     "export_doctor_report",
     "get_stats",
@@ -47,6 +49,8 @@ from hda.analysis.panels import (
     get_risk_summary,
     list_panels,
 )
+from hda.ancestry import estimate_ancestry as estimate_subject_ancestry
+from hda.neanderthal import estimate_neanderthal_ancestry as estimate_subject_neanderthal_ancestry
 from hda.api.annotator import annotate_snp_sync
 from hda.config import get_active_subject, get_subject_profile, list_subjects
 from hda.context_documents import import_context_inbox as import_context_inbox_data
@@ -438,6 +442,23 @@ def compare_panel(panel_id: str, subject_a: str, subject_b: str) -> dict:
 def estimate_relatedness(subject_a: str, subject_b: str) -> dict:
     """Estimate rough genetic relatedness between two subjects."""
     return estimate_subject_relatedness(subject_a, subject_b)
+
+
+def estimate_ancestry(
+    subject: str | None = None,
+    force_refresh: bool = False,
+    min_markers: int = 6,
+) -> dict:
+    """Estimate coarse ancestry fit across 1000 Genomes superpopulations."""
+    return estimate_subject_ancestry(subject=subject, force_refresh=force_refresh, min_markers=min_markers)
+
+
+def estimate_neanderthal_ancestry(
+    subject: str | None = None,
+    force_refresh: bool = False,
+) -> dict:
+    """Count a starter panel of Neanderthal-associated alleles."""
+    return estimate_subject_neanderthal_ancestry(subject=subject, force_refresh=force_refresh)
 
 
 def annotate(

@@ -180,6 +180,8 @@ hda compare stefano marco
 hda compare-variant rs429358 stefano marco
 hda compare-panel cardiovascular stefano marco
 hda relatedness stefano marco
+hda ancestry
+hda neanderthal
 hda whoami
 hda context show
 hda context show findings
@@ -236,6 +238,8 @@ If you create or review analysis panels, follow [docs/PANEL_SCHEMA.md](docs/PANE
 - **Panels first.** Always start with `run_panel()` or `hda analyze` for structured questions. Panels are curated and cover the most important variants per domain.
 - **Use panel comparison for trait differences.** If the user asks how two relatives differ on a specific domain, prefer `compare_panel(...)` or `hda compare-panel ...` over ad hoc SNP diffing.
 - **Use relatedness heuristics carefully.** `estimate_relatedness(...)` and `hda relatedness ...` are exploratory IBS-style summaries, not formal kinship inference.
+- **Treat ancestry as coarse superpopulation fit only.** `estimate_ancestry(...)` and `hda ancestry` are exploratory macro-ancestry tools over 1000 Genomes reference groups, not ethnicity or nationality detectors.
+- **Treat Neanderthal output as a marker-count score, not a percentage.** `estimate_neanderthal_ancestry(...)` and `hda neanderthal` count a starter panel of Neanderthal-associated alleles and should never be presented as exact `% Neanderthal DNA`.
 - **Annotate for depth.** Use `annotate_my_snp()` or `hda annotate` when you need online database context for a specific SNP.
 - **Search for exploration.** Use `search()` when you need to scan a genomic region or find variants by pattern.
 - **Don't reinvent panels.** If a relevant panel exists, use it. Don't manually look up 30 SNPs one by one when a panel covers them.
@@ -358,6 +362,8 @@ Import and call from `hda.tools.agent_tools`:
 | `compare(subject_a, subject_b, only_different?, chromosome?, limit?)` | Bulk compare SNPs between subjects |
 | `compare_panel(panel_id, subject_a, subject_b)` | Compare one curated panel between two subjects |
 | `estimate_relatedness(subject_a, subject_b)` | Heuristic relatedness summary from shared SNP overlap |
+| `estimate_ancestry(subject?, force_refresh?, min_markers?)` | Exploratory coarse ancestry fit across 1000 Genomes superpopulations |
+| `estimate_neanderthal_ancestry(subject?, force_refresh?)` | Exploratory count of a starter panel of Neanderthal-associated alleles |
 | `annotate(rsid, subject?, sources?, force_refresh?)` | Fetch annotations from online DBs (SNPedia, ClinVar, Ensembl). Cached locally |
 | `annotate_my_snp(rsid, sources?)` | Look up genotype + annotate in one call |
 | `available_panels()` | List all analysis panels |
@@ -421,6 +427,8 @@ hda compare a b       # Compare two subjects
 hda compare-variant <rsid> <a> <b>  # Compare one SNP between two subjects
 hda compare-panel <panel> <a> <b>   # Compare one panel between two subjects
 hda relatedness <a> <b>             # Heuristic relatedness summary
+hda ancestry                        # Exploratory coarse ancestry fit
+hda neanderthal                     # Exploratory count of Neanderthal-associated alleles
 hda stats             # Chromosome summary
 hda annotate <rsid>   # Fetch online annotations
 hda panels            # List available analysis panels

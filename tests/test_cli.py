@@ -537,6 +537,65 @@ class CliTests(unittest.TestCase):
         self.assertIn("possibly_first_degree_or_very_close", result.output)
         self.assertIn("Exploratory only.", result.output)
 
+    def test_ancestry_command_prints_scores(self):
+        with patch(
+            "hda.tools.estimate_ancestry",
+            return_value={
+                "subject": "stefano",
+                "status": "ok",
+                "candidate_markers": 14,
+                "markers_in_genome": 12,
+                "markers_with_reference_data": 12,
+                "markers_used": 9,
+                "confidence": "moderate",
+                "interpretation_warning": "Exploratory only.",
+                "scores": [
+                    {"population": "EUR", "label": "Europe", "probability": 0.72},
+                    {"population": "SAS", "label": "South Asia", "probability": 0.18},
+                ],
+            },
+        ):
+            result = self.runner.invoke(main, ["ancestry"])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Exploratory ancestry fit", result.output)
+        self.assertIn("Europe", result.output)
+        self.assertIn("72.0%", result.output)
+        self.assertIn("Marker Coverage", result.output)
+
+    def test_neanderthal_command_prints_summary(self):
+        with patch(
+            "hda.tools.estimate_neanderthal_ancestry",
+            return_value={
+                "subject": "stefano",
+                "status": "ok",
+                "observed_copy_count": 12,
+                "positive_markers": 9,
+                "markers_found": 24,
+                "candidate_markers": 30,
+                "interpretation_warning": "Exploratory only.",
+                "comparisons": [
+                    {
+                        "population": "EUR",
+                        "label": "Europe",
+                        "expected_copy_count": 10.4,
+                        "percentile": 0.79,
+                        "comparison": "within_expected_range",
+                    }
+                ],
+                "positive_marker_examples": [
+                    {"rsid": "rs4849721", "copies": 1, "trait": "Blushing / sweat during a workout"}
+                ],
+            },
+        ):
+            result = self.runner.invoke(main, ["neanderthal"])
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("Exploratory Neanderthal variant count", result.output)
+        self.assertIn("12 copies", result.output)
+        self.assertIn("Rough Superpopulation Comparison", result.output)
+        self.assertIn("rs4849721", result.output)
+
     def test_analyze_exploratory_panel_prints_warning(self):
         with patch(
             "hda.analysis.panels.analyze_panel",

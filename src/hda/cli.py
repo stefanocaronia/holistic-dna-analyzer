@@ -1025,6 +1025,116 @@ def annotate(rsid: str, subject: str | None, source: tuple, refresh: bool):
 
 
 @main.command()
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--refresh", is_flag=True, help="Bypass cached Ensembl population frequencies")
+@click.option("--min-markers", type=int, default=6, show_default=True, help="Minimum informative markers required")
+def ancestry(subject: str | None, refresh: bool, min_markers: int):
+    """Estimate coarse ancestry fit across 1000 Genomes superpopulations."""
+    from hda.tools import estimate_ancestry
+
+    try:
+        result = estimate_ancestry(subject=subject, force_refresh=refresh, min_markers=min_markers)
+    except (FileNotFoundError, KeyError, ValueError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    console.print(
+        f"[bold]Exploratory ancestry fit[/] — {result['subject']} "
+        f"({result['markers_used']}/{result['candidate_markers']} informative markers used)"
+    )
+    console.print(f"[yellow]Note:[/] {result['interpretation_warning']}")
+
+    if result["status"] != "ok":
+        console.print(
+            f"[yellow]Coverage warning:[/] only {result['markers_used']} informative markers were usable; "
+            "treat the ranking as especially weak."
+        )
+
+    table = Table(title="1000 Genomes Superpopulation Fit")
+    table.add_column("Population", style="bold")
+    table.add_column("Label")
+    table.add_column("Probability", justify="right")
+    for score in result["scores"]:
+        table.add_row(
+            score["population"],
+            score["label"],
+            f"{score['probability']:.1%}",
+        )
+    console.print(table)
+
+    marker_table = Table(title="Marker Coverage")
+    marker_table.add_column("Metric", style="bold")
+    marker_table.add_column("Value")
+    marker_table.add_row("Candidate markers", str(result["candidate_markers"]))
+    marker_table.add_row("Markers in genome", str(result["markers_in_genome"]))
+    marker_table.add_row("Markers with reference data", str(result["markers_with_reference_data"]))
+    marker_table.add_row("Markers used", str(result["markers_used"]))
+    marker_table.add_row("Confidence", result["confidence"])
+    console.print(marker_table)
+
+
+@main.command("neanderthal")
+@click.option("--subject", "-s", default=None, help="Subject key (default: active)")
+@click.option("--refresh", is_flag=True, help="Bypass cached Ensembl population frequencies")
+def neanderthal_cmd(subject: str | None, refresh: bool):
+    """Count a starter panel of Neanderthal-associated alleles."""
+    from hda.tools import estimate_neanderthal_ancestry
+
+    try:
+        result = estimate_neanderthal_ancestry(subject=subject, force_refresh=refresh)
+    except (FileNotFoundError, KeyError, ValueError) as e:
+        console.print(f"[red]{e}[/]")
+        raise SystemExit(1)
+
+    console.print(
+        f"[bold]Exploratory Neanderthal variant count[/] — {result['subject']} "
+        f"({result['observed_copy_count']} copies across {result['markers_found']}/{result['candidate_markers']} markers)"
+    )
+    console.print(f"[yellow]Note:[/] {result['interpretation_warning']}")
+
+    if result["status"] != "ok":
+        console.print("[yellow]Coverage warning:[/] marker coverage is limited on this chip.")
+
+    summary = Table(title="Neanderthal Marker Summary")
+    summary.add_column("Metric", style="bold")
+    summary.add_column("Value")
+    summary.add_row("Observed copy count", str(result["observed_copy_count"]))
+    summary.add_row("Positive markers", str(result["positive_markers"]))
+    summary.add_row("Markers found", str(result["markers_found"]))
+    summary.add_row("Candidate markers", str(result["candidate_markers"]))
+    console.print(summary)
+
+    comparison_table = Table(title="Rough Superpopulation Comparison")
+    comparison_table.add_column("Population", style="bold")
+    comparison_table.add_column("Label")
+    comparison_table.add_column("Expected copies", justify="right")
+    comparison_table.add_column("Percentile", justify="right")
+    comparison_table.add_column("Comparison")
+    for row in result["comparisons"]:
+        comparison_table.add_row(
+            row["population"],
+            row["label"],
+            f"{row['expected_copy_count']:.2f}",
+            f"{row['percentile']:.1%}",
+            row["comparison"],
+        )
+    console.print(comparison_table)
+
+    if result["positive_marker_examples"]:
+        marker_table = Table(title="Positive Marker Examples")
+        marker_table.add_column("rsid", style="bold")
+        marker_table.add_column("Copies", justify="center")
+        marker_table.add_column("Trait / locus")
+        for row in result["positive_marker_examples"]:
+            marker_table.add_row(
+                row["rsid"],
+                str(row["copies"]),
+                row["trait"],
+            )
+        console.print(marker_table)
+
+
+@main.command()
 def panels():
     """List available analysis panels."""
     from hda.analysis.panels import list_panels

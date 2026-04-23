@@ -15,6 +15,8 @@ class AgentApiTests(unittest.TestCase):
             "compare",
             "compare_panel",
             "compare_variant",
+            "estimate_ancestry",
+            "estimate_neanderthal_ancestry",
             "estimate_relatedness",
             "export_doctor_report",
             "get_stats",

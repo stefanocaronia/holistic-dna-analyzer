@@ -19,7 +19,7 @@ async def fetch_snp(rsid: str, client: httpx.AsyncClient | None = None) -> dict 
     try:
         # Use GRCh37 endpoint since our data is build37
         resp = await client.get(
-            f"{GRCH37_URL}/variation/human/{rsid}",
+            f"{GRCH37_URL}/variation/human/{rsid}?pops=1",
             headers={"Content-Type": "application/json"},
         )
 
@@ -72,6 +72,7 @@ async def fetch_snp(rsid: str, client: httpx.AsyncClient | None = None) -> dict 
             "clinical_significance": ", ".join(clinical) if clinical else None,
             "consequence": ", ".join(sorted(consequences)) if consequences else None,
             "population_frequency": str(top_freqs) if top_freqs else None,
+            "populations": populations,
             "ancestral_allele": data.get("ancestral_allele"),
             "minor_allele": data.get("minor_allele"),
             "maf": data.get("MAF"),

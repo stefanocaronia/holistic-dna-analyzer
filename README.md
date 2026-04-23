@@ -234,7 +234,17 @@ Direct comparisons are built in:
 hda compare stefano marco
 hda compare-panel cardiovascular stefano marco
 hda relatedness stefano marco
+hda ancestry
+hda neanderthal
 ```
+
+`hda ancestry` is intentionally coarse and exploratory. It estimates fit to
+1000 Genomes macro-populations (AFR / AMR / EAS / EUR / SAS), not ethnicity,
+nationality, or recent family origin.
+
+`hda neanderthal` is also exploratory and does **not** estimate a genome-wide
+percent Neanderthal. It counts copies of a starter panel of
+Neanderthal-associated variants that are present on the chip.
 
 ## Dashboard
 
@@ -352,6 +362,8 @@ hda compare stefano marco                          # Compare raw SNP differences
 hda compare-variant rs429358 stefano marco        # Compare one SNP between two subjects
 hda compare-panel cardiovascular stefano marco    # Compare one curated panel between two subjects
 hda relatedness stefano marco                     # Get a heuristic relatedness estimate
+hda ancestry                                      # Exploratory coarse ancestry fit
+hda neanderthal                                   # Exploratory Neanderthal-associated variant count
 ```
 
 ### Context memory
@@ -405,6 +417,8 @@ The stable agent-facing import surface is `hda.tools`:
 ```python
 from hda.tools import (
     available_panels,
+    estimate_ancestry,
+    estimate_neanderthal_ancestry,
     export_doctor_report,
     read_context,
     run_panel,
