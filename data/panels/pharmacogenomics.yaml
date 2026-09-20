@@ -3,12 +3,15 @@ description: Conservative pharmacogenomics panel focused on a small set of bette
 category: health
 status: core
 review_status: verified
-version: 1
-last_reviewed: 2026-03-26
+version: 2
+last_reviewed: 2026-09-20
 review_outcome: approved_for_core
 review_notes: >
   Reviewed for repository inclusion and kept intentionally conservative around medication and caffeine-response
-  markers with clearer evidence support.
+  markers with clearer evidence support. Re-reviewed 2026-09-20: CPIC clopidogrel guidance (2022 update) is still
+  current; added the CYP2C19*17 increased-function marker (rs12248560) because consumer GSA exports often lack
+  rs4244285 (*2) while carrying *17, so the panel otherwise returned nothing for CYP2C19. Existing interpretations
+  unchanged.
 summary: >
   Curated pharmacogenomics panel limited to a few comparatively strong, commonly used
   associations affecting clopidogrel activation, caffeine handling, and opioid response.
@@ -23,8 +26,12 @@ sources:
   - type: pubmed
     citation: "CYP1A2 rs762551, coffee intake, and kidney dysfunction"
     url: "https://pubmed.ncbi.nlm.nih.gov/36701157/"
+  - type: pubmed
+    citation: "CPIC Guideline for CYP2C19 Genotype and Clopidogrel Therapy: 2022 Update"
+    url: "https://pubmed.ncbi.nlm.nih.gov/35034351/"
 limitations:
   - Single SNPs do not reconstruct full star-allele diplotypes or full pharmacogenomic phenotypes.
+  - Consumer chips frequently omit rs4244285 (CYP2C19*2); a typical result on *17 alone does not exclude a *2 or *3 loss-of-function allele.
   - Medication choice and dosing require clinician review and should not be based on this panel alone.
   - This core panel intentionally excludes weaker or more behavior-oriented claims.
 
@@ -49,6 +56,27 @@ variants:
         description: Homozygous for the CYP2C19*2-associated reduced-function allele. Stronger chance of reduced clopidogrel activation, though full phenotype still depends on the rest of the CYP2C19 genotype.
     aliases:
       AG: GA
+
+  - rsid: rs12248560
+    gene: CYP2C19
+    trait: CYP2C19*17 increased-function allele
+    evidence_level: high
+    sources:
+      - type: pubmed
+        citation: "CPIC Guideline for CYP2C19 Genotype and Clopidogrel Therapy: 2022 Update"
+        url: "https://pubmed.ncbi.nlm.nih.gov/35034351/"
+    genotypes:
+      CC:
+        effect: no_star17
+        description: No CYP2C19*17 increased-function allele at this locus. Does not exclude reduced-function alleles (*2, *3) if those positions are missing from the chip.
+      CT:
+        effect: star17_carrier
+        description: Carrier of one CYP2C19*17 increased-function allele. In the absence of a loss-of-function allele this corresponds to a rapid-metabolizer tendency; clopidogrel activation is at least normal, and some drugs cleared by CYP2C19 (for example several proton-pump inhibitors and some SSRIs) may be cleared faster.
+      TT:
+        effect: star17_homozygous
+        description: Two CYP2C19*17 alleles. Ultrarapid-metabolizer tendency when no loss-of-function allele is present. CPIC notes possible faster clearance of some CYP2C19 substrates; dosing decisions still require clinician review.
+    aliases:
+      TC: CT
 
   - rsid: rs762551
     gene: CYP1A2

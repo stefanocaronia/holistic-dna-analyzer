@@ -3,12 +3,15 @@ description: Focused exploratory panel for chronotype and homeostatic sleep-pres
 category: wellness
 status: experimental
 review_status: exploratory
-version: 1
-last_reviewed: 2026-03-26
+version: 2
+last_reviewed: 2026-09-20
 review_outcome: experimental_only
 review_notes: >
   Kept in the repository as exploratory because the user value is real, but the chip-level evidence remains too thin
-  for trusted-core inclusion.
+  for trusted-core inclusion. Re-reviewed 2026-09-20: chronotype loci unchanged; added MTNR1B rs10830963, which is
+  better supported than rs4753426 (GWAS-level fasting-glucose signal plus controlled studies on melatonin offset and
+  dinner timing) and is usually present on consumer chips. Still exploratory: the trait is sleep/meal-timing
+  interaction with glucose handling, not a sleep-disorder marker.
 summary: >
   Exploratory sleep panel narrowed to a few loci with at least some direct literature
   support for chronotype, circadian preference, or sleep homeostasis. It is useful for
@@ -27,6 +30,18 @@ sources:
   - type: pubmed
     citation: "CLOCK gene variants and chronotype-related findings in EPIC"
     url: "https://pubmed.ncbi.nlm.nih.gov/35961261/"
+  - type: pubmed
+    citation: "Impact of common diabetes risk variant in MTNR1B on sleep, circadian, and melatonin physiology"
+    url: "https://pubmed.ncbi.nlm.nih.gov/26868293/"
+  - type: pubmed
+    citation: "MTNR1B risk variant worsens the effect of melatonin on glucose tolerance"
+    url: "https://pubmed.ncbi.nlm.nih.gov/26440713/"
+  - type: pubmed
+    citation: "Late dinner impairs glucose tolerance in MTNR1B risk allele carriers: randomized cross-over study"
+    url: "https://pubmed.ncbi.nlm.nih.gov/28455106/"
+  - type: pubmed
+    citation: "Interplay of dinner timing and MTNR1B risk variant on glucose tolerance and insulin secretion"
+    url: "https://pubmed.ncbi.nlm.nih.gov/35015083/"
 limitations:
   - Sleep traits are highly polygenic and strongly shaped by light exposure, work schedule, stress, age, and behavior.
   - These variants describe tendencies, not fixed sleep outcomes or treatment recommendations.
@@ -104,3 +119,30 @@ variants:
         description: T/T may lean away from morningness in some cohorts, but this is a weak signal and should be interpreted cautiously.
     aliases:
       TC: CT
+
+  - rsid: rs10830963
+    gene: MTNR1B
+    trait: Melatonin signalling window and meal-timing sensitivity
+    evidence_level: medium
+    sources:
+      - type: pubmed
+        citation: "Impact of common diabetes risk variant in MTNR1B on sleep, circadian, and melatonin physiology"
+        url: "https://pubmed.ncbi.nlm.nih.gov/26868293/"
+      - type: pubmed
+        citation: "Late dinner impairs glucose tolerance in MTNR1B risk allele carriers: randomized cross-over study"
+        url: "https://pubmed.ncbi.nlm.nih.gov/28455106/"
+      - type: pubmed
+        citation: "Interplay of dinner timing and MTNR1B risk variant on glucose tolerance and insulin secretion"
+        url: "https://pubmed.ncbi.nlm.nih.gov/35015083/"
+    genotypes:
+      CC:
+        effect: typical
+        description: No G risk allele. Melatonin offset in the morning is not expected to be delayed by this variant, and the late-dinner glucose penalty seen in G carriers does not apply through this locus.
+      CG:
+        effect: later_melatonin_offset
+        description: One G allele. Associated with a longer melatonin window and later morning offset; controlled studies show worse glucose tolerance when dinner is eaten close to bedtime. Practical lever is meal timing, not a sleep disorder.
+      GG:
+        effect: later_melatonin_offset_strong
+        description: Two G alleles. Stronger version of the same tendency, with the clearest late-dinner glucose penalty in cross-over trials. Still probabilistic and modest in absolute terms.
+    aliases:
+      GC: CG
