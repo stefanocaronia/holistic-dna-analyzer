@@ -493,3 +493,11 @@ python -m hda.cli panels
 ## License
 
 MIT
+
+## Development notes
+
+Developed with the help of AI coding agents. Everything is designed, reviewed and tested by the project maintainer.
+
+**We encourage everyone to use AI for their own purposes.**  
+The means of production should belong to the people.  
+Fight corporate control of technology, not our right to use it.
